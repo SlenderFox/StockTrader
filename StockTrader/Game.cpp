@@ -1,7 +1,7 @@
 /*------------------------------------------------------
 	File Name: Game.cpp
 	Author: Dylan Glenister
-	Modified: 17/12/19 (dd/mm/yy)
+	Modified: 20/12/19 (dd/mm/yy)
 ------------------------------------------------------*/
 
 #include "Game.h"
@@ -14,14 +14,16 @@ using std::cout;
 using std::cin;
 using std::endl;
 
-Game::Game() : m_endDay(false), m_gameOver(false)
+Game::Game() : m_gameOver(false), m_endDay(false)
 {
-	m_companies = new Companies[5];
+	m_companies = new Companies[5]();
+	m_player = new Player();
 }
 
 Game::~Game()
 {
 	delete[] m_companies;
+	delete m_player;
 }
 
 bool Game::Startup()
@@ -37,9 +39,54 @@ bool Game::Startup()
 	return true;
 }
 
+void Game::Update()
+{
+	// Ends game when year ends
+	if (m_day == 365)
+	{
+		m_gameOver = true;
+		return;
+	}
+
+	StepDay();
+	m_player->UpdateMoneyName();
+}
+
+void Game::Draw()
+{
+	system("cls");
+
+	// Print the title and short description of game
+	DrawHeader();
+
+	// Print out info about the currently selected company
+	DrawGraph();
+
+	// Print out info about the player
+	DrawInfo();
+}
+
+void Game::UserInput()
+{
+	int command = GetCommand();
+
+	switch (m_player->ExecuteCommand(command))
+	{
+	case 1:
+		m_endDay = true;
+		break;
+	case 2:
+		FormInt();
+		GotoDay(m_targetDay);
+		break;
+	default:
+		break;
+	}
+}
+
 bool Game::InitialiseCompanies()
 {
-	//Creates 5 companies stored on the heap
+	// Creates 5 new empty companies
 	m_companies = new Companies[5];
 
 	// Initialises each company
@@ -48,41 +95,34 @@ bool Game::InitialiseCompanies()
 		switch (i)
 		{
 		case 0:
-			m_companies[i].InitializeCompany(i, "Flat");
+			m_companies[i].InitializeCompany(i, "Flat", 20);
 			break;
 		case 1:
-			m_companies[i].InitializeCompany(i, "Growth");
+			m_companies[i].InitializeCompany(i, "Growth", 20);
 			break;
 		case 2:
-			m_companies[i].InitializeCompany(i, "UpNDown");
+			m_companies[i].InitializeCompany(i, "UpNDown", 20);
 			break;
 		case 3:
-			m_companies[i].InitializeCompany(i, "FalseHope");
+			m_companies[i].InitializeCompany(i, "FalseHope", 20);
 			break;
 		case 4:
-			m_companies[i].InitializeCompany(i, "TwinPeaks");
+			m_companies[i].InitializeCompany(i, "TwinPeaks", 20);
 			break;
 		}
 	}
 
 	// Sets default selected company
-	m_player.m_currentlySelected = 0;
+	m_player->m_currentlySelected = 0;
 
 	return true;
 }
 
-void Game::ImportGraph(char compGraphArr[20][78])
+void Game::LoadCompanyData()
 {
-	for (int y = 0; y < 20; y++)
-	{
-		for (int x = 0; x < 78; x++)
-		{
-			m_graphArray[y][x] = compGraphArr[y][x];
-		}
-	}
 }
 
-void Game::GotoDay(int pTargetDay)
+void Game::GotoDay(short pTargetDay)
 {
 	if (pTargetDay <= m_day) return;
 
@@ -98,19 +138,15 @@ void Game::StepDay()
 	// Makes sure that the user wants the day to end
 	if (m_endDay)
 	{
-		// For ever day except the first one update the company value
+		// For every day except the first one update the company value
 		if (m_day != 1)
 		{
 			for (int i = 0; i < 5; i++)
 			{
 				m_companies[i].UpdateValue();
+				// Updates the data array for each company
+				m_companies[i].UpdateCompanyData();
 			}
-		}
-
-		// Updates the graph for each company
-		for (int i = 0; i < 5; i++)
-		{
-			m_companies[i].UpdateCompGraph();
 		}
 
 		m_day++;
@@ -125,9 +161,9 @@ void Game::FormInt()
 	the number can be between 1 and 3 digits. This means that the number will
 	always have a ones digit, so making it the first value was the easiest way.*/
 
-	int hundreds = 0;
-	int tens = 0;
-	int ones = 0;
+	byte hundreds = 0;
+	byte tens = 0;
+	byte ones = 0;
 
 	ones = m_arrTargetDay[0];
 
@@ -149,56 +185,6 @@ void Game::FormInt()
 		m_targetDay = 365;
 }
 
-void Game::Update()
-{
-	// Ends game when year ends
-	if (m_day == 365)
-	{
-		m_gameOver = true;
-		return;
-	}
-
-	StepDay();
-	m_player.UpdateMoneyName();
-}
-
-void Game::Draw()
-{
-	system("cls");
-
-	// Print the title and short description of game
-	DrawHeader();
-
-	// Print out info about the currently selected company
-	DrawGraph();
-
-	// Print out info about the player
-	DrawInfo();
-}
-
-void Game::UserInput()
-{
-	int command = GetCommand();
-
-	switch (m_player.ExecuteCommand(command))
-	{
-	case 1:
-		m_endDay = true;
-		break;
-	case 2:
-		FormInt();
-		GotoDay(m_targetDay);
-		break;
-	default:
-		break;
-	}
-}
-
-bool Game::IsGameOver()
-{
-	return m_gameOver;
-}
-
 void Game::DrawHeader()
 {
 	cout << INDENT << INDENT << INDENT << INDENT << "Stock Trader" << endl;
@@ -211,7 +197,7 @@ void Game::DrawHeader()
 void Game::DrawGraph()
 {
 	// Prints currently selected company name
-	cout << m_companies[m_player.m_currentlySelected].GetName() << endl;
+	cout << m_companies[m_player->m_currentlySelected].GetName() << endl;
 
 	// Top edge of graph box
 	cout << TOP_LEFT;
@@ -222,7 +208,7 @@ void Game::DrawGraph()
 	cout << TOP_RIGHT;
 
 	// Loads graph of currently selected company
-	ImportGraph(m_companies[m_player.m_currentlySelected].m_companyArray);
+	LoadCompanyData();
 
 	// Two for loops that print out the graph into the edge box
 	for (int y = 0; y < 20; y++)
@@ -230,7 +216,7 @@ void Game::DrawGraph()
 		cout << VERTICAL;
 		for (int x = 0; x < 78; x++)
 		{
-			cout << m_graphArray[y][x];
+			cout << m_currentGraph[y][x];
 		}
 		cout << VERTICAL;
 	}
@@ -254,7 +240,7 @@ void Game::DrawInfo()
 			<< m_companies[i].GetCurrentValue();
 	}
 
-	cout << endl << "Money: " << /*m_player.moneyName*/ m_player.m_money << endl;
+	cout << endl << "Money: " << /*m_player.moneyName*/ m_player->m_money << endl;
 
 	cout << endl << endl;
 	for (int i = 0; i < 80; i++)

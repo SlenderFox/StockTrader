@@ -16,7 +16,7 @@ int main()
 		return 0;
 
 	// Game loop
-	while (!game->IsGameOver())
+	while (!game->m_gameOver)
 	{
 		game->Update();
 		game->Draw();

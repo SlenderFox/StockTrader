@@ -1,40 +1,42 @@
 /*--------------------------------------------------------
 	File Name: Player.cpp
 	Author: Dylan Glenister
-	Modified: 17/12/19 (dd/mm/yy)
+	Modified: 20/12/19 (dd/mm/yy)
 --------------------------------------------------------*/
 
 #include "Player.h"
-#include "GameDefines.h"
-#include "Game.h"
 #include <iostream>
 #include <string>
 
 using std::cout;
 using std::cin;
 
-Player::Player() {}
+Player::Player()
+{
+}
 
-Player::~Player() {}
+Player::~Player()
+{
+}
 
-int Player::ExecuteCommand(int command)
+int Player::ExecuteCommand(short pCommand)
 {
 	// Requests to select one of the companies
-	if (command <= TWINPEAKS)
+	if (pCommand <= TWINPEAKS)
 	{
-		m_currentlySelected = command;
+		m_currentlySelected = pCommand;
 		return 0;
 	}
 	else
 	{
 		// Requests for the current day to be ended
-		if (command == ENDDAY)
+		if (pCommand == ENDDAY)
 		{
 			return 1;
 		}
 
 		// Displays commands
-		if (command == HELP)
+		if (pCommand == HELP)
 		{
 			cout << "\nCommands are:\n"
 				<< "'help'                  | Lists these commands\n"
@@ -50,7 +52,7 @@ int Player::ExecuteCommand(int command)
 		}
 
 		// Requests to fast forward
-		if (command == FASTFORWARD)
+		if (pCommand == FASTFORWARD)
 		{
 			return 2;
 		}

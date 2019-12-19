@@ -1,10 +1,16 @@
 /*----------------------------------------------
 	File Name: GameDefines.h
 	Author: Dylan Glenister
-	Modified: 17/12/19 (dd/mm/yy)
+	Modified: 20/12/19 (dd/mm/yy)
+
+	Holds constant, global variables
 ----------------------------------------------*/
 
 #pragma once
+typedef unsigned char byte;
+
+const byte WIDTH = 80;	//The character width of the console window
+const byte DETAIL = 30;	//How many lines high the graph is
 
 // Character storage
 // Double lines
@@ -21,27 +27,23 @@ const char* const FLAT_LINE = "\xC4";
 const char* const INDENT = "\t";
 
 // Input controls
-//enum Input
-//{
-//	FLAT,
-//	GROWTH,
-//	UPNDOWN,
-//	FALSEHOPE,
-//	TWINPEAKS,
-//	BUY,
-//	SELL,
-//	ENDDAY,
-//	HELP,
-//	FASTFORWARD
-//};
+const enum Input
+{
+	HELP = 0,
+	ENDDAY,
+	FASTFORWARD,
+	SELECT,
+	BUY,
+	SELL
+};
 
-const int FLAT = 0;
-const int GROWTH = 1;
-const int UPNDOWN = 2;
-const int FALSEHOPE = 3;
-const int TWINPEAKS = 4;
-const int BUY = 5;
-const int SELL = 6;
-const int ENDDAY = 7;
-const int HELP = 8;
-const int FASTFORWARD = 9;
+// The different types of companies avaliable
+const enum CompanyType
+{
+	UNDEFINED = 0,
+	FLAT,
+	GROWTH,
+	UPNDOWN,
+	FALSEHOPE,
+	TWINPEAKS
+};
