@@ -16,14 +16,14 @@ int main()
 		return 0;
 
 	// Game loop
-	while (!game->m_gameOver)
+	while (!game->GetGameOver())
 	{
 		game->Update();
 		game->Draw();
 		game->UserInput();
 	} // End game loop
 
-	std::cout << std::endl << INDENT << "Press 'Enter' to exit the program.";
+	std::cout << std::endl << "\tPress 'Enter' to exit the program.";
 	std::cin.clear();
 	std::cin.ignore(std::cin.rdbuf()->in_avail());
 	std::cin.get();

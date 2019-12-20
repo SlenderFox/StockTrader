@@ -7,10 +7,13 @@
 ----------------------------------------------*/
 
 #pragma once
+// Exactly 1 byte of information (from 0-255)
 typedef unsigned char byte;
+// A signed variant of byte (from -128-127)
+typedef signed char sbyte;
 
-const byte WIDTH = 80;	//The character width of the console window
-const byte DETAIL = 30;	//How many lines high the graph is
+const byte WIDTH = 50;	//The character width of the console window
+const byte DETAIL = 20;	//How many lines high the graph is
 
 // Character storage
 // Double lines
@@ -24,23 +27,27 @@ const char* const HORIZONTAL = "\xCD";
 const char* const FORWARD_SLASH = "\x2F";
 const char* const BACK_SLASH = "\x5C";
 const char* const FLAT_LINE = "\xC4";
-const char* const INDENT = "\t";
 
 // Input controls
 const enum Input
 {
-	HELP = 0,
+	HELP,
 	ENDDAY,
 	FASTFORWARD,
-	SELECT,
 	BUY,
-	SELL
+	SELL,
+	SELECT_ONE,
+	SELECT_TWO,
+	SELECT_THREE,
+	SELECT_FOUR,
+	SELECT_FIVE,
+	INVALID
 };
 
 // The different types of companies avaliable
-const enum CompanyType
+const enum class CompanyType
 {
-	UNDEFINED = 0,
+	UNDEFINED,
 	FLAT,
 	GROWTH,
 	UPNDOWN,

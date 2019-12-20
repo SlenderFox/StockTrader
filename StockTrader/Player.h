@@ -3,8 +3,7 @@
 	Author: Dylan Glenister
 	Modified: 20/12/19 (dd/mm/yy)
 
-	The player class executes commands and holds the players
-		money
+	The player class stores player money and stocks
 --------------------------------------------------------*/
 
 #pragma once
@@ -14,14 +13,13 @@ class Player
 {
 	// Functions
 public:
-	Player();
-	~Player();
+	Player() {}
+	~Player() {}
 
-	int ExecuteCommand(short);	//Function to handle commands
-	void UpdateMoneyName();		//Updates the players money each day
+	int GetMoney() const { return m_money; }		//Returns how much money the player has
 
 	// Variables
-public:
+private:
 	char m_moneyName[15] = "$10,000";	//Used for displaying the players money
 	int m_money = 10000;						//The players money
 };
