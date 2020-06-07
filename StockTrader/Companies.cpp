@@ -29,76 +29,20 @@ void Companies::InitializeCompany(CompanyType pType, string pName, unsigned shor
 	}
 }
 
-void Companies::UpdateValue(byte pFloor, byte pRange)
+void Companies::UpdateCompanyValue(byte pFloor, byte pRange)
 {
 	byte newValue = pFloor + rand() % pRange;
 	if ((m_currentValue + newValue) < 1000 && (m_currentValue + newValue) > 0)
 	{
 		m_currentValue += newValue;
+
+		// Shifts all the current data down the array 1 place
+		for (byte i = WIDTH - 2; i > 0; i--)
+		{
+			m_companyData[i] = m_companyData[i - 1];
+		}
+
+		// Inserts the newest value at the beginning
+		m_companyData[0] = m_currentValue;
 	}
 }
-
-void Companies::UpdateCompanyData()
-{
-	// Shifts all the current data down the array 1 place
-	for (byte i = WIDTH - 2; i > 0; i--)
-	{
-		m_companyData[i] = m_companyData[i - 1];
-	}
-
-	// Inserts the newest value at the beginning
-	m_companyData[0] = m_currentValue;
-}
-
-//void Companies::UpdateCompanyData()
-//{
-//	// Converts the 0-1000 value into 0-20 for ease of use in graph updating
-//	int tempValue = m_currentValue;
-//	tempValue = 20 - (tempValue / 50); //Fix this
-//
-//	// Every position except the furthest right colomn of the graph
-//	if (m_arrHelper < 78)
-//	{
-//		m_pos.y = (tempValue);
-//		m_pos.x = m_arrHelper;
-//		m_arrHelper++;
-//	}
-//	// If the function is updating the furthest right colomn of the graph
-//	else
-//	{
-//		m_pos.x = 77;
-//		m_pos.y = (tempValue);
-//
-//		for (int x = 0; x < 78; x++)
-//		{
-//			for (int y = 0; y < 20; y++)
-//			{
-//				if (x < 77)
-//				{
-//					// Moves every character on the array left one position
-//					m_companyData[y][x] = m_companyData[y][x + 1];
-//				}
-//				else
-//				{
-//					// Clears the furthest right colomn
-//					m_companyData[y][x] = ' ';
-//				}
-//			}
-//		}
-//	}
-//
-//	// Enters the correct character into the array to show the price change
-//	if (tempValue == m_previousValue)
-//	{
-//		m_companyData[m_pos.y][m_pos.x] = '_';
-//	}
-//	else if (tempValue < m_previousValue)
-//	{
-//		m_companyData[m_pos.y + 1][m_pos.x] = '/';
-//	}
-//	else if (tempValue > m_previousValue)
-//	{
-//		m_companyData[m_pos.y][m_pos.x] = '\\';
-//	}
-//	m_previousValue = tempValue;
-//}

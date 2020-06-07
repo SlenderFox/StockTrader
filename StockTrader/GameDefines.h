@@ -12,8 +12,9 @@ typedef unsigned char byte;
 // A signed variant of byte (from -128-127)
 typedef signed char sbyte;
 
-const byte WIDTH = 50;	//The character width of the console window
-const byte DETAIL = 20;	//How many lines high the graph is
+const byte WIDTH = 90;		//The character width of the console window (How many characters wide)
+const byte DETAIL = 20;		//How many lines high the graph is
+const byte COMPAMOUNT = 5;	//How many companies there are
 
 // Character storage
 // Double lines
@@ -29,7 +30,7 @@ const char* const BACK_SLASH = "\x5C";
 const char* const FLAT_LINE = "\xC4";
 
 // Input controls
-const enum Input
+const enum Input : byte
 {
 	HELP,
 	ENDDAY,
