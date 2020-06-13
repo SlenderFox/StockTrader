@@ -307,28 +307,20 @@ char Game::GetDataFromArray(byte pHorizontal, byte pVertical)
 	// The lines are drawn between the values
 
 	// 0-m_maxValue value is scaled to 0-DETAIL
-	unsigned int currentValue = m_dataRef[pHorizontal] / (m_maxValue / DETAIL);
-	unsigned int previousValue = m_dataRef[pHorizontal + 1] / (m_maxValue / DETAIL);
-
-	// Converts the 0-1000 value into 0-DETAIL
-	if (currentValue != pVertical)
+	unsigned int leftValue = DETAIL - (m_dataRef[pHorizontal] / (m_maxValue / DETAIL));
+	unsigned int rightValue = DETAIL - (m_dataRef[pHorizontal + 1] / (m_maxValue / DETAIL));
+	
+	if (leftValue == 0 && rightValue == 0)
 		return ' ';
-
-	if (currentValue == previousValue)
-	{
+	else if (leftValue == rightValue && leftValue == pVertical)
 		return '_';
-	}
-	else if (currentValue < previousValue)
-	{
+	else if (leftValue < rightValue && leftValue == pVertical)
 		return '\\';
-	}
-	else if (currentValue > previousValue)
-	{
+	else if (leftValue > rightValue && rightValue == pVertical)
 		return '/';
-	}
-
-	// If there was some kind of error
-	return '=';
+	else
+		// If there was some kind of error
+		return ' ';
 }
 
 void Game::UpdateMaxValue()
