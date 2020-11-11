@@ -314,7 +314,7 @@ char Game::GetDataFromArray(byte pHorizontal, byte pVertical)
 		return ' ';
 	else if (leftValue == rightValue && leftValue == pVertical)
 		return '_';
-	else if (leftValue < rightValue && leftValue == pVertical)
+	else if (leftValue < rightValue && leftValue == pVertical - 1)
 		return '\\';
 	else if (leftValue > rightValue && rightValue == pVertical)
 		return '/';
@@ -433,7 +433,7 @@ void Game::DrawInfo()
 
 void Game::ClearBitData()
 {
-	m_bitData = 0;
+	m_bitData &= 1;
 }
 
 void Game::SetGameOver(bool pState)

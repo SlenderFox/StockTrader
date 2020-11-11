@@ -31,8 +31,8 @@ void Companies::InitializeCompany(CompanyType pType, string pName, unsigned shor
 
 void Companies::UpdateCompanyValue(byte pFloor, byte pRange)
 {
-	byte newValue = pFloor + rand() % pRange;
-	if ((m_currentValue + newValue) < 1000 && (m_currentValue + newValue) > 0)
+	byte newValue = (byte)((int)pFloor + rand() % (int)pRange);
+	if (/*(m_currentValue + newValue) < 1000 && */(m_currentValue + newValue) > 0)
 	{
 		m_currentValue += newValue;
 

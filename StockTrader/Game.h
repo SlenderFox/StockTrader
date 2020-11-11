@@ -56,7 +56,7 @@ private:
 
 	// Variables
 private:
-	byte m_bitData = 0;				//One byte encoding 8 bools: Invalid-Help-EndDay-DayZero-GameOver
+	byte m_bitData = 0;				//One byte encoding up to 8 bools: Invalid-Help-EndDay-DayZero-GameOver
 	byte m_currentlySelected = 0;	//The company currently selected for display
 	short m_currentDay = 0;			//Current day
 	short m_targetDay = 0;			//Used when fast forwarding
