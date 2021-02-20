@@ -1,7 +1,7 @@
 /*----------------------------------------------
 	File Name: GameDefines.h
 	Author: Dylan Glenister
-	Modified: 20/12/19 (dd/mm/yy)
+	Modified: 21/2/21 (dd/mm/yy)
 
 	Holds constant, global variables
 ----------------------------------------------*/
@@ -55,3 +55,10 @@ const enum class CompanyType
 	FALSEHOPE,
 	TWINPEAKS
 };
+
+/* Notes:
+* -For bitdata theres usually only one bit flipped at a time, could potentially unify into a single value
+* Todo:
+* -Make graph actually work
+* -Make company value change more reasonably
+*/

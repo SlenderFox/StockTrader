@@ -1,7 +1,7 @@
 /*------------------------------------------------------
 	File Name: Game.cpp
 	Author: Dylan Glenister
-	Modified: 20/12/19 (dd/mm/yy)
+	Modified: 21/2/21 (dd/mm/yy)
 ------------------------------------------------------*/
 
 #include "Game.h"
@@ -327,7 +327,7 @@ void Game::UpdateMaxValue()
 {
 	// Loop through all companies checking if max value has been exceeded
 	// if it has, double it and recheck all companies
-	bool exceeded;
+	bool exceeded = false;
 	do
 	{
 		exceeded = false;
@@ -410,7 +410,16 @@ void Game::DrawInfo()
 	}
 	cout << endl;
 
-	cout << " Bitdata: " << (int)m_bitData << endl;
+	cout << " Bitdata: ";
+	if (m_bitData & 128) cout << "1"; else cout << "0";
+	if (m_bitData & 64) cout << "1"; else cout << "0";
+	if (m_bitData & 32) cout << "1"; else cout << "0";
+	if (m_bitData & 16) cout << "1"; else cout << "0";
+	if (m_bitData & 8) cout << "1"; else cout << "0";
+	if (m_bitData & 4) cout << "1"; else cout << "0";
+	if (m_bitData & 2) cout << "1"; else cout << "0";
+	if (m_bitData & 1) cout << "1"; else cout << "0";
+	cout << " (" << (int)m_bitData << ")\n" << endl;
 
 	if (m_currentDay == 0 && GetZeroMessage())
 		cout << " Type 'help' for commands" << endl;
@@ -421,12 +430,12 @@ void Game::DrawInfo()
 	if (GetHelp())
 	{
 		cout << " Commands are:\n"
-			<< " 'help'                   | Lists these commands\n"
-			<< " 'end day', 'next' or 'n' | Ends current day and moves on to the next\n"
-			<< " 'goto <day>'             | Skips ahead to specified day\n"
-			<< " 'buy'                    | Does nothing currently\n"
-			<< " 'sell'                   | Does nothing currently\n"
-			<< " 'select <company name>'  | Chooses the current company to be displayed\n\n"
+			<< " 'help'               | Lists these commands\n"
+			<< " 'end day'/'next'/'n' | Ends current day and moves on to the next\n"
+			<< " 'goto <day>'         | Skips ahead to specified day\n"
+			<< " 'select <input>'     | Chooses the current company to be displayed\n"
+			<< " 'buy <input>'        | Attempts to buy stocks of the selected company\n"
+			<< " 'sell <input>'       | Attempts to sell stocks of the selected company\n\n"
 			<< " NOTE: All commands are lower case." << endl;
 	}
 }
