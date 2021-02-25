@@ -1,7 +1,7 @@
 /*------------------------------------------------------
-	File Name: Game.cpp
+	Filename: Game.cpp
 	Author: Dylan Glenister
-	Modified: 21/2/21 (dd/mm/yy)
+	Modified: 25/02/21 (dd/mm/yy)
 ------------------------------------------------------*/
 
 #include "Game.h"
@@ -9,6 +9,7 @@
 #include <iostream>
 #include <random>
 #include <time.h>
+#include <sstream>
 
 using std::cout;
 using std::cin;
@@ -18,10 +19,13 @@ bool Game::Startup()
 {
 	srand((unsigned int)time(nullptr));
 	HWND hwnd = GetConsoleWindow();
-	RECT rect = { 0, 0 , (WIDTH * 8 + 33), 900};
+	// Rect is ordered left, top, right, bottom
+	RECT rect = { 50, 50, (WIDTH * 8 + 33), 900};
+	if (!MoveWindow(hwnd, rect.left, rect.top, rect.right, rect.bottom, TRUE))
+		return false;
+	// I have no idea what these numbers mean but I dont want to remove them
 	// 80-673
 	// 100-833
-	MoveWindow(hwnd, rect.top, rect.left, rect.right - rect.left, rect.bottom - rect.top, TRUE);
 
 	// Initialises the companies and player
 	if (!InitialiseCompanies())
@@ -62,110 +66,6 @@ void Game::UserInput()
 {
 	ClearBitData();
 
-	switch (GetCommand())
-	{
-	case HELP:
-		SetHelp(true);
-		break;
-	case ENDDAY:
-		SetEndDay(true);
-		break;
-	case FASTFORWARD:
-		GotoDay(m_targetDay);
-		break;
-	case BUY:
-		break;
-	case SELL:
-		break;
-	case SELECT_ONE:
-		m_currentlySelected = 0;
-		break;
-	case SELECT_TWO:
-		m_currentlySelected = 1;
-		break;
-	case SELECT_THREE:
-		m_currentlySelected = 2;
-		break;
-	case SELECT_FOUR:
-		m_currentlySelected = 3;
-		break;
-	case SELECT_FIVE:
-		m_currentlySelected = 4;
-		break;
-	case INVALID:
-	default:
-		SetInvalid(true);
-		break;
-	}
-}
-
-bool Game::InitialiseCompanies()
-{
-	// Creates 5 new empty companies
-	m_companies = new Companies[COMPAMOUNT];
-
-	// Initialises each company
-	for (int i = 0; i < COMPAMOUNT; i++)
-	{
-		// Temp for testing
-		switch (i)
-		{
-		default:
-		case 0:
-			m_companies[i].InitializeCompany(CompanyType::FLAT, "Flat", 20);
-			break;
-		case 1:
-			m_companies[i].InitializeCompany(CompanyType::GROWTH, "Growth", 20);
-			break;
-		case 2:
-			m_companies[i].InitializeCompany(CompanyType::UPNDOWN, "UpNDown", 20);
-			break;
-		case 3:
-			m_companies[i].InitializeCompany(CompanyType::FALSEHOPE, "FalseHope", 20);
-			break;
-		case 4:
-			m_companies[i].InitializeCompany(CompanyType::TWINPEAKS, "TwinPeaks", 20);
-			break;
-		}
-	}
-
-	// Sets default selected company
-	m_currentlySelected = 0;
-
-	return true;
-}
-
-void Game::StepDay()
-{
-	// Makes sure that the user wants the day to end
-	if (GetEndDay())
-	{
-		for (int i = 0; i < 5; i++)
-		{
-			// Updates the data array for each company
-			m_companies[i].UpdateCompanyValue(-5, 20);
-		}
-
-		m_currentDay++;
-		SetEndDay(false);
-	}
-}
-
-void Game::GotoDay(short pTargetDay)
-{
-	if (pTargetDay <= m_currentDay)
-		return;
-
-	// Continually steps through the days until the target day is reached
-	while (m_currentDay < pTargetDay)
-	{
-		SetEndDay(true);
-		StepDay();
-	}
-}
-
-byte Game::GetCommand()
-{
 	// Ready for player input
 	bool bSelect = false;
 	bool bFastForward = false;
@@ -180,14 +80,18 @@ byte Game::GetCommand()
 	{
 		// Display all commands
 		if (strcmp(input, "help") == 0)
-			return HELP;
+		{
+			SetHelp(true);
+			return;
+		}
 
 		// End current day and move to the next
 		if (strcmp(input, "end") == 0 ||
 			strcmp(input, "next") == 0 ||
 			strcmp(input, "n") == 0)
 		{
-			return ENDDAY;
+			SetEndDay(true);
+			return;
 		}
 
 		// After invoking the fast forward command, process as number
@@ -226,36 +130,28 @@ byte Game::GetCommand()
 			}
 
 			FormInt(targetDay);
-			return FASTFORWARD;
+			GotoDay(m_targetDay);
+			return;
 		}
 
 		// After invoking the select command, searches for a valid request
 		if (bSelect)
 		{
-			if (strcmp(input, "one") == 0 ||
-				strcmp(input, "1") == 0 ||
-				strcmp(input, "flat") == 0)
-				return SELECT_ONE;
-
-			if (strcmp(input, "two") == 0 ||
-				strcmp(input, "2") == 0 ||
-				strcmp(input, "growth") == 0)
-				return SELECT_TWO;
-
-			if (strcmp(input, "three") == 0 ||
-				strcmp(input, "3") == 0 ||
-				strcmp(input, "upndown") == 0)
-				return SELECT_THREE;
-
-			if (strcmp(input, "four") == 0 ||
-				strcmp(input, "4") == 0 ||
-				strcmp(input, "falsehope") == 0)
-				return SELECT_FOUR;
-
-			if (strcmp(input, "five") == 0 ||
-				strcmp(input, "5") == 0 ||
-				strcmp(input, "twinpeak") == 0)
-				return SELECT_FIVE;
+			try
+			{
+				string num = input;
+				unsigned int val = std::stoi(num);
+				if (val < 1)
+					val = 1;
+				else if (val > NUMCOMPANIES)
+					val = NUMCOMPANIES;
+				m_currentlySelected = val - 1;
+			}
+			catch (const std::exception&)
+			{
+				m_currentlySelected = 0;
+			}
+			return;
 		}
 
 		// Primes the fast forward command
@@ -280,7 +176,73 @@ byte Game::GetCommand()
 		cin >> input;
 	}
 
-	return INVALID;
+	SetInvalid(true);
+	return;
+}
+
+bool Game::InitialiseCompanies()
+{
+	// Creates 5 new empty companies
+	m_companies = new Company[NUMCOMPANIES];
+
+	// Feels kind of pointless doing this in a for loop
+	// Initialises each company
+	for (int i = 0; i < NUMCOMPANIES; i++)
+	{
+		// Temp for testing
+		switch (i)
+		{
+		default:
+		case 0:
+			m_companies[i].InitialiseCompany(CompanyType::FLAT, "Flat", 100);
+			break;
+		case 1:
+			m_companies[i].InitialiseCompany(CompanyType::GROWTH, "Growth", 100);
+			break;
+		case 2:
+			m_companies[i].InitialiseCompany(CompanyType::UPNDOWN, "UpNDown", 100);
+			break;
+		case 3:
+			m_companies[i].InitialiseCompany(CompanyType::FALSEHOPE, "FalseHope", 100);
+			break;
+		case 4:
+			m_companies[i].InitialiseCompany(CompanyType::TWINPEAKS, "TwinPeaks", 100);
+			break;
+		}
+	}
+
+	// Sets default selected company
+	m_currentlySelected = 0;
+
+	return true;
+}
+
+void Game::StepDay()
+{
+	// Makes sure that the user wants the day to end
+	if (GetEndDay())
+	{
+		m_currentDay++;
+		for (int i = 0; i < 5; i++)
+		{
+			// Updates the data array for each company
+			m_companies[i].UpdateCompanyValue(-0.05f, 0.1f);
+		}
+		SetEndDay(false);
+	}
+}
+
+void Game::GotoDay(short pTargetDay)
+{
+	if (pTargetDay <= m_currentDay)
+		return;
+
+	// Continually steps through the days until the target day is reached
+	while (m_currentDay < pTargetDay)
+	{
+		SetEndDay(true);
+		StepDay();
+	}
 }
 
 void Game::CommenceEndGame()
@@ -305,21 +267,22 @@ void Game::FormInt(short pTargetDay[3])
 char Game::GetDataFromArray(byte pHorizontal, byte pVertical)
 {
 	// The lines are drawn between the values
-
-	// 0-m_maxValue value is scaled to 0-DETAIL
-	unsigned int leftValue = DETAIL - (m_dataRef[pHorizontal] / (m_maxValue / DETAIL));
-	unsigned int rightValue = DETAIL - (m_dataRef[pHorizontal + 1] / (m_maxValue / DETAIL));
+	// (Should be from 0 to DETAIL-1 but done this way to prevent clipping)
+	// Inverts vertical from DETAIL-1 to 0 to 0 to DETAIL
+	pVertical = DETAIL - pVertical;
+	// 0 to m_maxValue value is scaled to 0 to DETAIL
+	unsigned int leftValue = (int)(m_dataRef[WIDTH - 2 - pHorizontal] / (float)(m_maxValue / DETAIL));
+	unsigned int rightValue = (int)(m_dataRef[WIDTH - 3 - pHorizontal] / (float)(m_maxValue / DETAIL));
 	
-	if (leftValue == 0 && rightValue == 0)
+	if (m_dataRef[WIDTH - 2 - pHorizontal] == NULL)
 		return ' ';
-	else if (leftValue == rightValue && leftValue == pVertical)
+	else if (leftValue == pVertical && leftValue == rightValue)
 		return '_';
-	else if (leftValue < rightValue && leftValue == pVertical - 1)
-		return '\\';
-	else if (leftValue > rightValue && rightValue == pVertical)
+	else if (leftValue == pVertical && leftValue < rightValue)
 		return '/';
+	else if (leftValue == pVertical + 1 && leftValue > rightValue)
+		return '\\';
 	else
-		// If there was some kind of error
 		return ' ';
 }
 
@@ -331,7 +294,7 @@ void Game::UpdateMaxValue()
 	do
 	{
 		exceeded = false;
-		for (int i = 0; i < COMPAMOUNT; i++)
+		for (int i = 0; i < NUMCOMPANIES; i++)
 		{
 			if (m_companies[i].GetCurrentValue() > m_maxValue)
 			{
@@ -354,7 +317,7 @@ void Game::DrawHeader()
 		<< " A simple game of buying and selling shares.\n"
 		<< "  Your goal is to buy and sell shares to\n"
 		<< "   make as much profit as you can in one\n"
-		<< "       year(365 days). Good luck!\n" << endl;
+		<< "       year (365 days). Good luck!\n" << endl;
 }
 
 void Game::DrawGraph()
@@ -395,21 +358,17 @@ void Game::DrawGraph()
 
 void Game::DrawInfo()
 {
-	cout << "\n Day: " << m_currentDay << endl;
+	cout << " Day: " << m_currentDay << endl;
 	cout << " Money: " << m_moneyText << endl;
 
-	for (int i = 0; i < 5; i++)
+	for (int i = 0; i < NUMCOMPANIES; i++)
 	{
 		cout << " Company: " << m_companies[i].GetName() << ": "
 			<< m_companies[i].GetCurrentValue() << endl;
 	}
-	cout << endl;
-	for (int i = 0; i < WIDTH; i++)
-	{
-		cout << FLAT_LINE;
-	}
-	cout << endl;
 
+	cout << " Max value: " << m_maxValue << endl;
+	
 	cout << " Bitdata: ";
 	if (m_bitData & 128) cout << "1"; else cout << "0";
 	if (m_bitData & 64) cout << "1"; else cout << "0";
@@ -419,7 +378,14 @@ void Game::DrawInfo()
 	if (m_bitData & 4) cout << "1"; else cout << "0";
 	if (m_bitData & 2) cout << "1"; else cout << "0";
 	if (m_bitData & 1) cout << "1"; else cout << "0";
-	cout << " (" << (int)m_bitData << ")\n" << endl;
+	cout << " (" << (int)m_bitData << ")" << endl;
+
+	cout << endl;
+	for (int i = 0; i < WIDTH; i++)
+	{
+		cout << FLAT_LINE;
+	}
+	cout << endl;
 
 	if (m_currentDay == 0 && GetZeroMessage())
 		cout << " Type 'help' for commands" << endl;

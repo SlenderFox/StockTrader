@@ -1,7 +1,7 @@
 /*----------------------------------------------
-	File Name: GameDefines.h
+	Filename: GameDefines.h
 	Author: Dylan Glenister
-	Modified: 21/2/21 (dd/mm/yy)
+	Modified: 25/02/21 (dd/mm/yy)
 
 	Holds constant, global variables
 ----------------------------------------------*/
@@ -12,9 +12,9 @@ typedef unsigned char byte;
 // A signed variant of byte (from -128-127)
 typedef signed char sbyte;
 
-const byte WIDTH = 90;		//The character width of the console window (How many characters wide)
-const byte DETAIL = 20;		//How many lines high the graph is
-const byte COMPAMOUNT = 5;	//How many companies there are
+const byte WIDTH = 90;			// The character width of the console window (How many characters wide)
+const byte DETAIL = 30;			// How many lines high the graph is
+const byte NUMCOMPANIES = 5;	// How many companies there are
 
 // Character storage
 // Double lines
@@ -28,22 +28,6 @@ const char* const HORIZONTAL = "\xCD";
 const char* const FORWARD_SLASH = "\x2F";
 const char* const BACK_SLASH = "\x5C";
 const char* const FLAT_LINE = "\xC4";
-
-// Input controls
-const enum Input : byte
-{
-	HELP,
-	ENDDAY,
-	FASTFORWARD,
-	BUY,
-	SELL,
-	SELECT_ONE,
-	SELECT_TWO,
-	SELECT_THREE,
-	SELECT_FOUR,
-	SELECT_FIVE,
-	INVALID
-};
 
 // The different types of companies avaliable
 const enum class CompanyType
@@ -59,6 +43,4 @@ const enum class CompanyType
 /* Notes:
 * -For bitdata theres usually only one bit flipped at a time, could potentially unify into a single value
 * Todo:
-* -Make graph actually work
-* -Make company value change more reasonably
 */

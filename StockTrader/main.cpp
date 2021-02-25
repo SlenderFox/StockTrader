@@ -1,7 +1,7 @@
 /*----------------------------------------------
-	File Name: Main.cpp
+	Filename: Main.cpp
 	Author: Dylan Glenister
-	Modified: 17/12/19 (dd/mm/yy)
+	Modified: 25/02/21 (dd/mm/yy)
 ----------------------------------------------*/
 
 #include "Game.h"
@@ -9,19 +9,19 @@
 
 int main()
 {
-	Game* game = new Game();
+	Game* app = new Game();
 
 	// Calls startup and exits if there is an error
-	if (!game->Startup())
-		return 0;
-
-	// Game loop
-	while (!game->GetGameOver())
+	if (app->Startup())
 	{
-		game->Update();
-		game->Draw();
-		game->UserInput();
-	} // End game loop
+		// Game loop
+		while (!app->GetGameOver())
+		{
+			app->Update();
+			app->Draw();
+			app->UserInput();
+		}
+	}
 
 	std::cout << std::endl << "\tPress 'Enter' to exit the program.";
 	std::cin.clear();
