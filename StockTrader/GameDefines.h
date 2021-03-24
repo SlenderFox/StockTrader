@@ -46,4 +46,5 @@ const enum class CompanyType
 * Todo:
 * -Endgame
 * -Display money with commas
+* -Make buying and selling cost money
 */
