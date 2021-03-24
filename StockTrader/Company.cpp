@@ -7,7 +7,7 @@
 #include "Company.h"
 #include <random>
 
-Company::Company() : m_type(CompanyType::UNDEFINED), m_currentValue(0), m_name("UNDEFINED")
+Company::Company() : m_type(CompanyType::UNDEFINED), m_name("UNDEFINED"), m_currentValue(0), m_ownedStocks(0)
 {
 	// Fills the data array with empty data
 	for (byte i = 0; i < WIDTH - 1; i++)
@@ -21,6 +21,7 @@ void Company::InitialiseCompany(CompanyType pType, string pName, unsigned short 
 	m_type = pType;
 	m_name = pName;
 	m_companyData[0] = m_currentValue = pStartValue;
+	m_ownedStocks = 0;
 }
 
 void Company::UpdateCompanyValue(float pMin, float pMax)

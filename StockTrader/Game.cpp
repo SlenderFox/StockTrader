@@ -41,34 +41,34 @@ void Game::Update()
 	UpdateMaxValue();
 
 	// Ends game when year ends
-	if (m_currentDay == 366)
+	if (m_day == 366)
 	{
-		SetGameOver(true);
+		SetGameOver();
 		return;
 	}
 }
 
 void Game::Draw()
 {
+	// Clears the console
 	system("cls");
-
-	// Print the title and short description of game
-	DrawHeader();
-
-	// Print out info about the currently selected company
+	// Draw the graph of the currently selected company
 	DrawGraph();
-
-	// Print out info about the player
+	// Draw current game info
 	DrawInfo();
+	// Draw the in-game console
+	DrawConsole();
 }
 
 void Game::UserInput()
 {
-	ClearBitData();
+	ResetState();
 
 	// Ready for player input
 	bool bSelect = false;
 	bool bFastForward = false;
+	bool bBuy = false;
+	bool bSell = false;
 	char input[50] = "\0";
 	cout << ">";
 	cin.clear();
@@ -81,7 +81,7 @@ void Game::UserInput()
 		// Display all commands
 		if (strcmp(input, "help") == 0)
 		{
-			SetHelp(true);
+			SetHelp();
 			return;
 		}
 
@@ -90,48 +90,29 @@ void Game::UserInput()
 			strcmp(input, "next") == 0 ||
 			strcmp(input, "n") == 0)
 		{
-			SetEndDay(true);
+			SetEndDay();
 			return;
 		}
 
-		// After invoking the fast forward command, process as number
+		// After invoking the fast forward command, process input as number
 		if (bFastForward)
 		{
-			// Initialises a char array
-			short targetDay[3] = { 0 };
-			if (input[1] != '\0')
+			try
 			{
-				if (input[2] != '\0')
-				{
-					// Means number is triple digit
-					targetDay[0] = input[2];	//Ones
-					targetDay[1] = input[1];	//Tens
-					targetDay[2] = input[0];	//Hundreds
-
-					targetDay[0] -= 48;
-					targetDay[1] -= 48;
-					targetDay[2] -= 48;
-				}
-				else
-				{
-					// Means nunber is double digit
-					targetDay[0] = input[1];	//Ones
-					targetDay[1] = input[0];	//Tens
-
-					targetDay[0] -= 48;
-					targetDay[1] -= 48;
-				}
+				string num = input;
+				unsigned int val = std::stoi(num);
+				if (val < 0)
+					val = 0;
+				else if (val > 365)
+					val = 365;
+				m_targetDay = val;
+				GotoDay(m_targetDay);
+				return;
 			}
-			else
+			catch (const std::exception&)
 			{
-				// Means number is single digit
-				targetDay[0] = input[0];		//Ones
-				targetDay[0] -= 48;
+				break;
 			}
-
-			FormInt(targetDay);
-			GotoDay(m_targetDay);
-			return;
 		}
 
 		// After invoking the select command, searches for a valid request
@@ -145,26 +126,63 @@ void Game::UserInput()
 					val = 1;
 				else if (val > NUMCOMPANIES)
 					val = NUMCOMPANIES;
-				m_currentlySelected = val - 1;
+				m_selected = val - 1;
+				return;
 			}
 			catch (const std::exception&)
 			{
-				m_currentlySelected = 0;
+				break;
 			}
-			return;
+		}
+
+		// After invoking the buy command, process input as number
+		if (bBuy)
+		{
+			try
+			{
+				string num = input;
+				unsigned int val = std::stoi(num);
+				if (val < 0)
+					val = 0;
+				else if (val > MAXTRANSFER)
+					val = MAXTRANSFER;
+				BuySellFromCompany(val);
+				return;
+			}
+			catch (const std::exception&)
+			{
+				break;
+			}
+		}
+
+		// After invoking the sell command, process input as number
+		if (bSell)
+		{
+			try
+			{
+				string num = input;
+				int val = std::stoi(num);
+				if (val < 0)
+					val = 0;
+				else if (val > MAXTRANSFER)
+					val = MAXTRANSFER;
+				BuySellFromCompany(-val);
+				return;
+			}
+			catch (const std::exception&)
+			{
+				break;
+			}
 		}
 
 		// Primes the fast forward command
-		if (strcmp(input, "goto") == 0)
-		{
-			bFastForward = true;
-		}
-
+		if (strcmp(input, "goto") == 0) { bFastForward = true; }
 		// Primes the select command
-		if (strcmp(input, "select") == 0)
-		{
-			bSelect = true;
-		}
+		if (strcmp(input, "select") == 0) { bSelect = true; }
+		// Primes the buy command
+		if (strcmp(input, "buy") == 0) { bBuy = true; }
+		// Primes the sell command
+		if (strcmp(input, "sell") == 0) { bSell = true; }
 
 		char next = cin.peek();
 		if (next == '\n' || next == EOF)
@@ -176,7 +194,12 @@ void Game::UserInput()
 		cin >> input;
 	}
 
-	SetInvalid(true);
+	// Failed input handling
+	if (bFastForward) { SetInvalid("Invalid value entered"); }
+	else if (bSelect) { SetInvalid("Invalid value entered"); }
+	else if (bBuy) { SetInvalid("Invalid value entered"); }
+	else if (bSell) { SetInvalid("Invalid value entered"); }
+	else { SetInvalid("Command not found"); }
 	return;
 }
 
@@ -185,7 +208,6 @@ bool Game::InitialiseCompanies()
 	// Creates 5 new empty companies
 	m_companies = new Company[NUMCOMPANIES];
 
-	// Feels kind of pointless doing this in a for loop
 	// Initialises each company
 	for (int i = 0; i < NUMCOMPANIES; i++)
 	{
@@ -212,7 +234,7 @@ bool Game::InitialiseCompanies()
 	}
 
 	// Sets default selected company
-	m_currentlySelected = 0;
+	m_selected = 0;
 
 	return true;
 }
@@ -222,25 +244,25 @@ void Game::StepDay()
 	// Makes sure that the user wants the day to end
 	if (GetEndDay())
 	{
-		m_currentDay++;
+		m_day++;
 		for (int i = 0; i < 5; i++)
 		{
 			// Updates the data array for each company
 			m_companies[i].UpdateCompanyValue(-0.05f, 0.1f);
 		}
-		SetEndDay(false);
+		ResetState();
 	}
 }
 
 void Game::GotoDay(short pTargetDay)
 {
-	if (pTargetDay <= m_currentDay)
+	if (pTargetDay <= m_day)
 		return;
 
 	// Continually steps through the days until the target day is reached
-	while (m_currentDay < pTargetDay)
+	while (m_day < pTargetDay)
 	{
-		SetEndDay(true);
+		SetEndDay();
 		StepDay();
 	}
 }
@@ -248,20 +270,6 @@ void Game::GotoDay(short pTargetDay)
 void Game::CommenceEndGame()
 {
 
-}
-
-void Game::FormInt(short pTargetDay[3])
-{
-	/*pTargetDay stores the number in an array in reverse to account for
-	variance in the digits of the number. (274 -> 4 7 2)*/
-
-	m_targetDay = pTargetDay[0] + (10 * pTargetDay[1]) + (100 * pTargetDay[2]);
-
-	// Clamps the target day between 0 and 365 inclusive
-	if (m_targetDay > 365)
-		m_targetDay = 365;
-	else if (m_targetDay < 0)
-		m_targetDay = 0;
 }
 
 char Game::GetDataFromArray(byte pHorizontal, byte pVertical)
@@ -311,22 +319,25 @@ void Game::UpdateMoneyText()
 	m_moneyText = "$" + m_money;
 }
 
-void Game::DrawHeader()
+void Game::BuySellFromCompany(int pAmount)
 {
-	cout << "\t      Stock Trader\n"
-		<< " A simple game of buying and selling shares.\n"
-		<< "  Your goal is to buy and sell shares to\n"
-		<< "   make as much profit as you can in one\n"
-		<< "       year (365 days). Good luck!\n" << endl;
+	if ((int)m_companies[m_selected].GetOwnedStocks() + pAmount >= 0)
+	{
+		m_companies[m_selected].ModifyOwnedStocks(pAmount);
+	}
+	else
+	{
+		SetInvalid("You can't sell more stocks than you currently own");
+	}
 }
 
 void Game::DrawGraph()
 {
 	// Obtains a local reference to the selected companies graph data
-	m_dataRef = m_companies[m_currentlySelected].GetCompanyData();
+	m_dataRef = m_companies[m_selected].GetCompanyData();
 
 	// Prints currently selected company name
-	cout << " " << m_companies[m_currentlySelected].GetName() << endl;
+	cout << " " << m_companies[m_selected].GetName() << endl;
 
 	// Top edge of graph box
 	cout << TOP_LEFT;
@@ -358,40 +369,36 @@ void Game::DrawGraph()
 
 void Game::DrawInfo()
 {
-	cout << " Day: " << m_currentDay << endl;
+	cout << " Day: " << m_day << endl;
 	cout << " Money: " << m_moneyText << endl;
 
 	for (int i = 0; i < NUMCOMPANIES; i++)
 	{
-		cout << " Company: " << m_companies[i].GetName() << ": "
-			<< m_companies[i].GetCurrentValue() << endl;
+		cout << " " << m_companies[i].GetName() << ": "
+			<< m_companies[i].GetCurrentValue() << ", "
+			<< m_companies[i].GetOwnedStocks() << endl;
 	}
 
 	cout << " Max value: " << m_maxValue << endl;
 	
-	cout << " Bitdata: ";
-	if (m_bitData & 128) cout << "1"; else cout << "0";
-	if (m_bitData & 64) cout << "1"; else cout << "0";
-	if (m_bitData & 32) cout << "1"; else cout << "0";
-	if (m_bitData & 16) cout << "1"; else cout << "0";
-	if (m_bitData & 8) cout << "1"; else cout << "0";
-	if (m_bitData & 4) cout << "1"; else cout << "0";
-	if (m_bitData & 2) cout << "1"; else cout << "0";
-	if (m_bitData & 1) cout << "1"; else cout << "0";
-	cout << " (" << (int)m_bitData << ")" << endl;
-
 	cout << endl;
 	for (int i = 0; i < WIDTH; i++)
 	{
 		cout << FLAT_LINE;
 	}
 	cout << endl;
+}
 
-	if (m_currentDay == 0 && GetZeroMessage())
-		cout << " Type 'help' for commands" << endl;
+void Game::DrawConsole()
+{
+	if (m_day == 0 && GetZeroMessage())
+		cout << "	Welcome to StockTrader!\n"
+			<< " Your goal in this game is make the most amount of money\n"
+			<< " in one year (365 days) by buying and selling stocks.\n"
+			<< "	Type 'help' for commands" << endl;
 
 	if (GetInvalid())
-		cout << " Invalid input - Type 'help' for accepted commands" << endl;
+		cout << m_invalidMessage << " - Type 'help' for a list of accepted commands" << endl;
 
 	if (GetHelp())
 	{
@@ -406,39 +413,15 @@ void Game::DrawInfo()
 	}
 }
 
-void Game::ClearBitData()
+void Game::SetInvalid(string pMessage)
 {
-	m_bitData &= 1;
-}
-
-void Game::SetGameOver(bool pState)
-{
-	m_bitData = pState ? m_bitData | 1 : m_bitData & 254;
-}
-
-void Game::SetZeroMessage(bool pState)
-{
-	m_bitData = pState ? m_bitData | 2 : m_bitData & 253;
-}
-
-void Game::SetEndDay(bool pState)
-{
-	m_bitData = pState ? m_bitData | 4 : m_bitData & 251;
-}
-
-void Game::SetHelp(bool pState)
-{
-	m_bitData = pState ? m_bitData | 8 : m_bitData & 247;
-}
-
-void Game::SetInvalid(bool pState)
-{
-	m_bitData = pState ? m_bitData | 16 : m_bitData & 239;
+	m_state = State::Invalid;
+	m_invalidMessage = " " + pMessage;
 }
 
 bool Game::GetGameOver() const
 {
-	if ((1 & m_bitData) == 1)
+	if (m_state == State::GameOver)
 		return true;
 	else
 		return false;
@@ -446,7 +429,7 @@ bool Game::GetGameOver() const
 
 bool Game::GetZeroMessage() const
 {
-	if ((2 & m_bitData) == 2)
+	if (m_state == State::DayZero)
 		return true;
 	else
 		return false;
@@ -454,7 +437,7 @@ bool Game::GetZeroMessage() const
 
 bool Game::GetEndDay() const
 {
-	if ((4 & m_bitData) == 4)
+	if (m_state == State::EndDay)
 		return true;
 	else
 		return false;
@@ -462,7 +445,7 @@ bool Game::GetEndDay() const
 
 bool Game::GetHelp() const
 {
-	if ((8 & m_bitData) == 8)
+	if (m_state == State::Help)
 		return true;
 	else
 		return false;
@@ -470,7 +453,7 @@ bool Game::GetHelp() const
 
 bool Game::GetInvalid() const
 {
-	if ((16 & m_bitData) == 16)
+	if (m_state == State::Invalid)
 		return true;
 	else
 		return false;
