@@ -1,13 +1,3 @@
-/*---------------------------------------------------
-	Filename: Company.h
-	Author: Dylan Glenister
-	Modified: 25/02/21 (dd/mm/yy)
-
-	A company has stocks of varying value that the
-		player can buy and sell in an attempt to turn a
-		profit
----------------------------------------------------*/
-
 #pragma once
 #include "GameDefines.h"
 #include <string>

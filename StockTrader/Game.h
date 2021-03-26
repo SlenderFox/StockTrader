@@ -1,11 +1,3 @@
-/*------------------------------------------------------
-	Filename: Game.h
-	Author: Dylan Glenister
-	Modified: 25/02/21 (dd/mm/yy)
-
-	Where all the main game logic is stored and executed
-------------------------------------------------------*/
-
 #pragma once
 #include "Company.h"
 

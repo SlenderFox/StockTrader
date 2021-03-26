@@ -1,9 +1,3 @@
-/*----------------------------------------------
-	Filename: Main.cpp
-	Author: Dylan Glenister
-	Modified: 25/02/21 (dd/mm/yy)
-----------------------------------------------*/
-
 #include "Game.h"
 #include <iostream>
 

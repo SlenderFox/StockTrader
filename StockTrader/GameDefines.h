@@ -1,11 +1,3 @@
-/*----------------------------------------------
-	Filename: GameDefines.h
-	Author: Dylan Glenister
-	Modified: 25/02/21 (dd/mm/yy)
-
-	Holds constant, global variables
-----------------------------------------------*/
-
 #pragma once
 // Exactly 1 byte of information (from 0-255)
 typedef unsigned char byte;
