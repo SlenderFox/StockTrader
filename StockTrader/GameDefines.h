@@ -4,10 +4,11 @@ typedef unsigned char byte;
 // A signed variant of byte (from -128-127)
 typedef signed char sbyte;
 
-const byte WIDTH = (byte)90;			// The character width of the console window (How many characters wide)
-const byte DETAIL = (byte)23;			// How many lines high the graph is
-const byte NUMCOMPANIES = (byte)5;		// How many companies there are
-const int MAXTRANSFER = 99999;			// The maximum amount of stocks you can buy/sell at once
+const byte CHARWIDTH = (byte)8;		// The width of one character in the console
+const byte WIDTH = (byte)90;		// The character width of the console window (How many characters wide)
+const byte DETAIL = (byte)23;		// How many lines high the graph is
+const byte NUMCOMPANIES = (byte)5;	// How many companies there are
+const int MAXTRANSFER = 99999;		// The maximum amount of stocks you can buy/sell at once
 
 // Character storage
 // Double lines

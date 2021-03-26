@@ -14,7 +14,7 @@ bool Game::Startup()
 	srand((unsigned int)time(nullptr));
 	HWND hwnd = GetConsoleWindow();
 	// Rect is ordered left, top, right, bottom
-	RECT rect = { 50, 50, (WIDTH * 8 + 33), 900};
+	RECT rect = { 50, 50, (WIDTH * CHARWIDTH + 33), 900};
 	if (!MoveWindow(hwnd, rect.left, rect.top, rect.right, rect.bottom, TRUE))
 		return false;
 	// I have no idea what these numbers mean but I dont want to remove them
@@ -33,6 +33,7 @@ void Game::Update()
 {
 	StepDay();
 	UpdateMaxValue();
+	UpdateMoneyText();
 
 	// Ends game when year ends
 	if (m_day == 366)
@@ -310,14 +311,27 @@ void Game::UpdateMaxValue()
 
 void Game::UpdateMoneyText()
 {
-	m_moneyText = "$" + m_money;
+	byte sets = m_money / 3;
+	byte remainder = m_money % 3;
+	m_moneyText = std::to_string(m_money);
+	m_moneyText = "$" + m_moneyText;
 }
 
 void Game::BuySellFromCompany(int pAmount)
 {
+	// pAmount will be positive to buy and negative to sell
 	if ((int)m_companies[m_selected].GetOwnedStocks() + pAmount >= 0)
 	{
-		m_companies[m_selected].ModifyOwnedStocks(pAmount);
+		int cost = pAmount * m_companies[m_selected].GetCurrentValue();
+		if (m_money - cost >= 0)
+		{
+			m_money -= cost;
+			m_companies[m_selected].ModifyOwnedStocks(pAmount);
+		}
+		else
+		{
+			SetInvalid("You don't have enough money");
+		}
 	}
 	else
 	{
