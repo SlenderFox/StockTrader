@@ -1,6 +1,5 @@
 #include "Game.h"
 #include <Windows.h>
-#include <iostream>
 #include <random>
 #include <time.h>
 #include <sstream>
@@ -8,6 +7,17 @@
 using std::cout;
 using std::cin;
 using std::endl;
+
+void Game::Run()
+{
+	if (!Startup())
+		return;
+
+	while (true)
+	{
+		Update();
+	}
+}
 
 bool Game::Startup()
 {
@@ -29,7 +39,7 @@ bool Game::Startup()
 	return true;
 }
 
-void Game::Update()
+bool Game::Update()
 {
 	StepDay();
 	UpdateMaxValue();
@@ -39,12 +49,10 @@ void Game::Update()
 	if (m_day == 366)
 	{
 		SetGameOver();
-		return;
+		// Currently the program just ends
+		return false;
 	}
-}
 
-void Game::Draw()
-{
 	// Clears the console
 	system("cls");
 	// Draw the graph of the currently selected company
@@ -53,6 +61,11 @@ void Game::Draw()
 	DrawInfo();
 	// Draw the in-game console
 	DrawConsole();
+
+	// Asks the user for input
+	UserInput();
+
+	return true;
 }
 
 void Game::UserInput()
@@ -243,7 +256,7 @@ void Game::StepDay()
 		for (int i = 0; i < 5; i++)
 		{
 			// Updates the data array for each company
-			m_companies[i].UpdateCompanyValue(-0.05f, 0.1f);
+			m_companies[i].UpdateCompanyValue(-0.05f, 0.08f);
 		}
 		ResetState();
 	}
@@ -389,7 +402,7 @@ void Game::DrawInfo()
 
 	cout << " Max value: " << m_maxValue << endl;
 	
-	cout << endl;
+	//cout << endl;
 	for (int i = 0; i < WIDTH; i++)
 	{
 		cout << FLAT_LINE;
@@ -399,14 +412,14 @@ void Game::DrawInfo()
 
 void Game::DrawConsole()
 {
-	if (m_day == 0 && GetZeroMessage())
+	if (GetInvalid())
+		cout << m_invalidMessage << " - Type 'help' for a list of accepted commands" << endl;
+
+	if (GetInfo())
 		cout << "	Welcome to StockTrader!\n"
 			<< " Your goal in this game is make the most amount of money\n"
 			<< " in one year (365 days) by buying and selling stocks.\n"
 			<< "	Type 'help' for commands" << endl;
-
-	if (GetInvalid())
-		cout << m_invalidMessage << " - Type 'help' for a list of accepted commands" << endl;
 
 	if (GetHelp())
 	{
@@ -425,44 +438,4 @@ void Game::SetInvalid(string pMessage)
 {
 	m_state = State::Invalid;
 	m_invalidMessage = " " + pMessage;
-}
-
-bool Game::GetGameOver() const
-{
-	if (m_state == State::GameOver)
-		return true;
-	else
-		return false;
-}
-
-bool Game::GetZeroMessage() const
-{
-	if (m_state == State::DayZero)
-		return true;
-	else
-		return false;
-}
-
-bool Game::GetEndDay() const
-{
-	if (m_state == State::EndDay)
-		return true;
-	else
-		return false;
-}
-
-bool Game::GetHelp() const
-{
-	if (m_state == State::Help)
-		return true;
-	else
-		return false;
-}
-
-bool Game::GetInvalid() const
-{
-	if (m_state == State::Invalid)
-		return true;
-	else
-		return false;
 }

@@ -1,21 +1,9 @@
 #include "Game.h"
-#include <iostream>
 
 int main()
 {
 	Game* app = new Game();
-
-	// Calls startup and exits if there is an error
-	if (app->Startup())
-	{
-		// Game loop
-		while (!app->GetGameOver())
-		{
-			app->Update();
-			app->Draw();
-			app->UserInput();
-		}
-	}
+	app->Run();
 
 	std::cout << std::endl << "\tPress 'Enter' to exit the program.";
 	std::cin.clear();

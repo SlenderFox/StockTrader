@@ -1,4 +1,5 @@
 #pragma once
+
 // Exactly 1 byte of information (from 0-255)
 typedef unsigned char byte;
 // A signed variant of byte (from -128-127)
@@ -39,5 +40,5 @@ const enum class CompanyType
 * Todo:
 * -Endgame
 * -Display money with commas
-* -Make buying and selling cost money
+* -Make fast forward show the graph update
 */

@@ -1,9 +1,11 @@
 #pragma once
 #include "Company.h"
+#include <iostream>
+
+enum class State : byte { Clear, GameOver, Invalid, EndDay, Info, Help };
 
 class Game
 {
-	// Functions
 public:
 	Game() : m_companies(nullptr), m_dataRef(nullptr) {}
 	~Game()
@@ -12,19 +14,23 @@ public:
 		delete[] m_dataRef;
 	}
 
+	// Intiates the app
+	void Run();
+
+private:
 	// Called once when the application starts
 	bool Startup();
-	// Called each time a user enters an input
-	void Update();
-	// Draws the text to the console window
-	void Draw();
+	// The main loop of the program happens in here
+	bool Update();
+	// Prints the graph of the current company
+	void DrawGraph();
+	// Prints info about companies and player
+	void DrawInfo();
+	// Prints the in-game console
+	void DrawConsole();
 	// Asks user for input then handles it
 	void UserInput();
 
-	// Returns gameover state
-	bool GetGameOver() const;
-
-private:
 	// Creation and initialisation of companies
 	bool InitialiseCompanies();
 	// Moves forward one day
@@ -42,39 +48,32 @@ private:
 	// Attempts to buy or sell stocks from the currently selected company
 	void BuySellFromCompany(int pAmount);
 
-	// Prints the graph of the current company
-	void DrawGraph();
-	// Prints info about companies and player
-	void DrawInfo();
-	// Prints the in-game console
-	void DrawConsole();
-
-	// Returns day zero message state
-	bool GetZeroMessage() const;
-	// Returns endday state
-	bool GetEndDay() const;
-	// Returns help state
-	bool GetHelp() const;
-	// Returns invalid state
-	bool GetInvalid() const;
-
 	// Resets the current state
 	void ResetState() { m_state = State::Clear; }
+
 	// Sets gameover state
 	void SetGameOver() { m_state = State::GameOver; }
-	// Sets day zero message state
-	void SetZeroMessage() { m_state = State::DayZero; }
-	// Sets endday state
-	void SetEndDay() { m_state = State::EndDay; }
-	// Sets help state
-	void SetHelp() { m_state = State::Help; }
-	// Sets invalid state
+	// Sets state to invalid
 	void SetInvalid(string pMessage);
+	// Sets state to EndDay
+	void SetEndDay() { m_state = State::EndDay; }
+	// Sets state to Info
+	void SetInfo() { m_state = State::Info; }
+	// Sets state to Help
+	void SetHelp() { m_state = State::Help; }
 
-	// Variables
-private:
-	enum class State : byte { Clear, GameOver, DayZero, EndDay, Help, Invalid };
-	State m_state = State::DayZero;	// Controls what the game should do
+	// Returns gameover state
+	bool GetGameOver() const { return (m_state == State::GameOver) ? true : false; }
+	// Returns invalid state
+	bool GetInvalid() const { return (m_state == State::Invalid) ? true : false; }
+	// Returns endday state
+	bool GetEndDay() const { return (m_state == State::EndDay) ? true : false; }
+	// Returns day zero message state
+	bool GetInfo() const { return (m_state == State::Info) ? true : false; }
+	// Returns help state
+	bool GetHelp() const { return (m_state == State::Help) ? true : false; }
+
+	State m_state = State::Info;	// Controls what the game should do
 	byte m_selected = 0;			// The company currently selected for display
 	short m_day = 0;				// The current day
 	short m_targetDay = 0;			// Used when fast forwarding
