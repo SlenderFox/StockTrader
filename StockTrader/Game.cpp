@@ -13,23 +13,15 @@ void Game::Run()
 	if (!Startup())
 		return;
 
-	while (true)
-	{
-		Update();
-	}
+	while (Update()) {}
 }
 
 bool Game::Startup()
 {
 	srand((unsigned int)time(nullptr));
 	HWND hwnd = GetConsoleWindow();
-	// Rect is ordered left, top, right, bottom
-	RECT rect = { 50, 50, (WIDTH * CHARWIDTH + 33), 900};
-	if (!MoveWindow(hwnd, rect.left, rect.top, rect.right, rect.bottom, TRUE))
+	if (!MoveWindow(hwnd, 50, 50, (int)(WIDTH * CHARWIDTH + 33), 900, TRUE))
 		return false;
-	// I have no idea what these numbers mean but I dont want to remove them
-	// 80-673
-	// 100-833
 
 	// Initialises the companies and player
 	if (!InitialiseCompanies())
@@ -41,17 +33,8 @@ bool Game::Startup()
 
 bool Game::Update()
 {
-	StepDay();
-	UpdateMaxValue();
-	UpdateMoneyText();
-
-	// Ends game when year ends
-	if (m_day == 366)
-	{
-		SetGameOver();
-		// Currently the program just ends
+	if (!StepDay())
 		return false;
-	}
 
 	// Clears the console
 	system("cls");
@@ -63,7 +46,8 @@ bool Game::Update()
 	DrawConsole();
 
 	// Asks the user for input
-	UserInput();
+	if (!GetGoto())
+		UserInput();
 
 	return true;
 }
@@ -104,13 +88,12 @@ void Game::UserInput()
 			try
 			{
 				string num = input;
-				unsigned int val = std::stoi(num);
-				if (val < 0)
-					val = 0;
+				unsigned short val = (unsigned short)std::stoi(num);
+				if (val < m_day)
+					break;
 				else if (val > 365)
-					val = 365;
+					break;
 				m_targetDay = val;
-				GotoDay(m_targetDay);
 				return;
 			}
 			catch (const std::exception&) { break; }
@@ -122,7 +105,7 @@ void Game::UserInput()
 			try
 			{
 				string num = input;
-				unsigned int val = std::stoi(num);
+				byte val = (byte)std::stoi(num);
 				if (val < 1)
 					val = 1;
 				else if (val > NUMCOMPANIES)
@@ -139,7 +122,7 @@ void Game::UserInput()
 			try
 			{
 				string num = input;
-				unsigned int val = std::stoi(num);
+				int val = std::stoi(num);
 				if (val < 0)
 					val = 0;
 				else if (val > MAXTRANSFER)
@@ -187,7 +170,7 @@ void Game::UserInput()
 	}
 
 	// Failed input handling
-	if (GetGoto()) { SetInvalid("Invalid value entered"); }
+	if (GetGoto()) { SetInvalid("Invalid value entered, please enter a number between today and 365"); }
 	else if (GetSelect()) { SetInvalid("Invalid value entered"); }
 	else if (GetBuy()) { SetInvalid("Invalid value entered"); }
 	else if (GetSell()) { SetInvalid("Invalid value entered"); }
@@ -231,32 +214,34 @@ bool Game::InitialiseCompanies()
 	return true;
 }
 
-void Game::StepDay()
+bool Game::StepDay()
 {
 	// Makes sure that the user wants the day to end
-	if (GetEndDay())
+	if (GetEndDay() || GetGoto())
 	{
 		m_day++;
+		// Ends game when year ends
+		if (m_day == 366)
+		{
+			SetGameOver();
+			// Currently the program just ends
+			return false;
+		}
 		for (int i = 0; i < 5; i++)
 		{
 			// Updates the data array for each company
-			m_companies[i].UpdateCompanyValue(-0.05f, 0.08f);
+			m_companies[i].UpdateCompanyValue(-0.04f, 0.07f);
+			if (m_companies[i].GetCurrentValue() > m_maxValue)
+				m_maxValue <<= 1;
 		}
+		
+		// If goto has been called and target day has not been reached, prevent state from being reset
+		if (GetGoto() && m_day != m_targetDay)
+			return true;
+
 		ResetState();
 	}
-}
-
-void Game::GotoDay(short pTargetDay)
-{
-	if (pTargetDay <= m_day)
-		return;
-
-	// Continually steps through the days until the target day is reached
-	while (m_day < pTargetDay)
-	{
-		SetEndDay();
-		StepDay();
-	}
+	return true;
 }
 
 char Game::GetDataFromArray(byte pHorizontal, byte pVertical)
@@ -281,26 +266,6 @@ char Game::GetDataFromArray(byte pHorizontal, byte pVertical)
 		return ' ';
 }
 
-void Game::UpdateMaxValue()
-{
-	// Loop through all companies checking if max value has been exceeded
-	// if it has, double it and recheck all companies
-	bool exceeded = false;
-	do
-	{
-		exceeded = false;
-		for (int i = 0; i < NUMCOMPANIES; i++)
-		{
-			if (m_companies[i].GetCurrentValue() > m_maxValue)
-			{
-				m_maxValue = m_maxValue << 1;
-				exceeded = true;
-				break;
-			}
-		}
-	} while (exceeded);
-}
-
 void Game::UpdateMoneyText()
 {
 	byte sets = m_money / 3;
@@ -318,10 +283,12 @@ void Game::BuySellFromCompany(int pAmount)
 		if (m_money - cost >= 0)
 		{
 			m_money -= cost;
+			UpdateMoneyText();
 			m_companies[m_selected].ModifyOwnedStocks(pAmount);
 		}
 		else
 		{
+			// Upgrade this message to show the max you can buy
 			SetInvalid("You don't have enough money");
 		}
 	}
@@ -392,7 +359,7 @@ void Game::DrawInfo()
 void Game::DrawConsole()
 {
 	if (GetInvalid())
-		cout << m_invalidMessage << " - Type 'help' for a list of accepted commands" << endl;
+		cout << m_invalidMessage << "\n Type 'help' for a list of accepted commands" << endl;
 
 	if (GetInfo())
 		cout << "	Welcome to StockTrader!\n"
@@ -405,10 +372,10 @@ void Game::DrawConsole()
 		cout << " Commands are:\n"
 			<< " 'help'               | Lists these commands\n"
 			<< " 'end day'/'next'/'n' | Ends current day and moves on to the next\n"
-			<< " 'goto <day>'         | Skips ahead to specified day\n"
-			<< " 'select <input>'     | Chooses the current company to be displayed\n"
-			<< " 'buy <input>'        | Attempts to buy stocks of the selected company\n"
-			<< " 'sell <input>'       | Attempts to sell stocks of the selected company\n\n"
+			<< " 'goto <integer>'     | Skips ahead to specified day (today-365)\n"
+			<< " 'select <integer>'   | Chooses the current company to be displayed\n"
+			<< " 'buy <integer>'      | Attempts to buy stocks of the selected company\n"
+			<< " 'sell <integer>'     | Attempts to sell stocks of the selected company\n\n"
 			<< " NOTE: All commands are lower case." << endl;
 	}
 }

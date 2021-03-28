@@ -32,13 +32,9 @@ private:
 	// Creation and initialisation of companies
 	bool InitialiseCompanies();
 	// Moves forward one day
-	void StepDay();
-	// Repeatedly calls StepDay() until the target day is reached
-	void GotoDay(short pTargetDay);
+	bool StepDay();
 	// Returns the character corresponding to the data array
 	char GetDataFromArray(byte pHorizontal, byte pVertical);
-	// Loops through all companies checking if max value has been exceeded
-	void UpdateMaxValue();
 	// Updates the player money text
 	void UpdateMoneyText();
 	// Attempts to buy or sell stocks from the currently selected company
@@ -88,8 +84,8 @@ private:
 
 	State m_state = State::Info;	// Controls what the game should do
 	byte m_selected = 0;			// The company currently selected for display
-	short m_day = 0;				// The current day
-	short m_targetDay = 0;			// Used when fast forwarding
+	unsigned short m_day = 0;		// The current day
+	unsigned short m_targetDay = 0;	// Used when fast forwarding
 	unsigned int m_maxValue = 512;	// Scales the graph, doubles when exceeded
 	int m_money = 10000;			// The players cash
 	string m_moneyText = "$10,000";	// The string format of money used for printing
