@@ -10,7 +10,7 @@ x86/
 bld/
 [Oo]bj/
 [Ll]og/
-[Tt]temp/
+[Tt]emp/
 
 *_i.c
 *_p.c
