@@ -24,6 +24,21 @@ const char* const FORWARD_SLASH = "\x2F";
 const char* const BACK_SLASH = "\x5C";
 const char* const FLAT_LINE = "\xC4";
 
+// Singular state machine controls the flow of the game
+enum class State : byte
+{
+	Clear,
+	GameOver,
+	Invalid,
+	Info,
+	Help,
+	EndDay,
+	Goto,
+	Select,
+	Buy,
+	Sell
+};
+
 // The different types of companies avaliable
 const enum class CompanyType
 {
@@ -35,10 +50,9 @@ const enum class CompanyType
 	TWINPEAKS
 };
 
-/* Notes:
-* -For bitdata theres usually only one bit flipped at a time, could potentially unify into a single value
-* Todo:
+/* Todo:
 * -Endgame
 * -Display money with commas
 * -Make fast forward show the graph update
+* -Have the graph show a single line on the first day or pre-run the graph for width-2 days
 */

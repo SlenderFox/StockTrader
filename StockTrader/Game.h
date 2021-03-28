@@ -2,8 +2,6 @@
 #include "Company.h"
 #include <iostream>
 
-enum class State : byte { Clear, GameOver, Invalid, EndDay, Info, Help };
-
 class Game
 {
 public:
@@ -37,8 +35,6 @@ private:
 	void StepDay();
 	// Repeatedly calls StepDay() until the target day is reached
 	void GotoDay(short pTargetDay);
-	// Once a year has passed game ends
-	void CommenceEndGame();
 	// Returns the character corresponding to the data array
 	char GetDataFromArray(byte pHorizontal, byte pVertical);
 	// Loops through all companies checking if max value has been exceeded
@@ -48,30 +44,47 @@ private:
 	// Attempts to buy or sell stocks from the currently selected company
 	void BuySellFromCompany(int pAmount);
 
+	// Sets state to invalid and modifies the invalid message
+	void SetInvalid(string pMessage);
+
 	// Resets the current state
 	void ResetState() { m_state = State::Clear; }
 
-	// Sets gameover state
+	// Sets m_stateto GameOver
 	void SetGameOver() { m_state = State::GameOver; }
-	// Sets state to invalid
-	void SetInvalid(string pMessage);
-	// Sets state to EndDay
-	void SetEndDay() { m_state = State::EndDay; }
-	// Sets state to Info
+	// Sets m_state to Info
 	void SetInfo() { m_state = State::Info; }
-	// Sets state to Help
+	// Sets m_state to Help
 	void SetHelp() { m_state = State::Help; }
+	// Sets m_state to EndDay
+	void SetEndDay() { m_state = State::EndDay; }
+	// Sets m_state to Goto
+	void SetGoto() { m_state = State::Goto; }
+	// Sets m_state to Select
+	void SetSelect() { m_state = State::Select; }
+	// Sets m_state to Buy
+	void SetBuy() { m_state = State::Buy; }
+	// Sets m_state to Sell
+	void SetSell() { m_state = State::Sell; }
 
-	// Returns gameover state
+	// Returns true if m_state is set to GameOver, otherwise return false
 	bool GetGameOver() const { return (m_state == State::GameOver) ? true : false; }
-	// Returns invalid state
+	// Returns true if m_state is set to Invalid, otherwise return false
 	bool GetInvalid() const { return (m_state == State::Invalid) ? true : false; }
-	// Returns endday state
-	bool GetEndDay() const { return (m_state == State::EndDay) ? true : false; }
-	// Returns day zero message state
+	// Returns true if m_state is set to Info, otherwise return false
 	bool GetInfo() const { return (m_state == State::Info) ? true : false; }
-	// Returns help state
+	// Returns true if m_state is set to Help, otherwise return false
 	bool GetHelp() const { return (m_state == State::Help) ? true : false; }
+	// Returns true if m_state is set to EndDay, otherwise return false
+	bool GetEndDay() const { return (m_state == State::EndDay) ? true : false; }
+	// Returns true if the state is set to Goto, otherwise return false
+	bool GetGoto() const { return (m_state == State::Goto) ? true : false; }
+	// Returns true if m_state is set to Select, otherwise return false
+	bool GetSelect() const { return (m_state == State::Select) ? true : false; }
+	// Returns true if m_state is set to Buy, otherwise return false
+	bool GetBuy() const { return (m_state == State::Buy) ? true : false; }
+	// Returns true if m_state is set to Sell, otherwise return false
+	bool GetSell() const { return (m_state == State::Sell) ? true : false; }
 
 	State m_state = State::Info;	// Controls what the game should do
 	byte m_selected = 0;			// The company currently selected for display

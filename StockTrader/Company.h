@@ -15,16 +15,17 @@ public:
 	void InitialiseCompany(CompanyType pType, string pName, unsigned short pStartValue);
 	// Updates the value of the company
 	void UpdateCompanyValue(float pMin, float pMax);
+
 	// Adds or removes owned stocks
 	void ModifyOwnedStocks(int pDifference) { m_ownedStocks += pDifference; }
 	// Returns the type of company
 	CompanyType GetType() const { return m_type; }
 	// Returns the name of the company
 	string GetName() const { return m_name; }
-	// Returns the value of the company
-	unsigned int GetCurrentValue() const { return m_currentValue; }
 	// Returns the company data array
 	unsigned int* GetCompanyData() { return m_companyData; }
+	// Returns the value of the company
+	unsigned int GetCurrentValue() const { return m_currentValue; }
 	// Returns the amount of stocks currently owned in the company
 	unsigned int GetOwnedStocks() { return m_ownedStocks; }
 

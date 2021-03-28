@@ -73,10 +73,6 @@ void Game::UserInput()
 	ResetState();
 
 	// Ready for player input
-	bool bSelect = false;
-	bool bFastForward = false;
-	bool bBuy = false;
-	bool bSell = false;
 	char input[50] = "\0";
 	cout << ">";
 	cin.clear();
@@ -103,7 +99,7 @@ void Game::UserInput()
 		}
 
 		// After invoking the fast forward command, process input as number
-		if (bFastForward)
+		if (GetGoto())
 		{
 			try
 			{
@@ -117,14 +113,11 @@ void Game::UserInput()
 				GotoDay(m_targetDay);
 				return;
 			}
-			catch (const std::exception&)
-			{
-				break;
-			}
+			catch (const std::exception&) { break; }
 		}
 
 		// After invoking the select command, searches for a valid request
-		if (bSelect)
+		if (GetSelect())
 		{
 			try
 			{
@@ -137,14 +130,11 @@ void Game::UserInput()
 				m_selected = val - 1;
 				return;
 			}
-			catch (const std::exception&)
-			{
-				break;
-			}
+			catch (const std::exception&) { break; }
 		}
 
 		// After invoking the buy command, process input as number
-		if (bBuy)
+		if (GetBuy())
 		{
 			try
 			{
@@ -157,14 +147,11 @@ void Game::UserInput()
 				BuySellFromCompany(val);
 				return;
 			}
-			catch (const std::exception&)
-			{
-				break;
-			}
+			catch (const std::exception&) { break; }
 		}
 
 		// After invoking the sell command, process input as number
-		if (bSell)
+		if (GetSell())
 		{
 			try
 			{
@@ -177,20 +164,17 @@ void Game::UserInput()
 				BuySellFromCompany(-val);
 				return;
 			}
-			catch (const std::exception&)
-			{
-				break;
-			}
+			catch (const std::exception&) { break; }
 		}
 
 		// Primes the fast forward command
-		if (strcmp(input, "goto") == 0) { bFastForward = true; }
+		if (strcmp(input, "goto") == 0) { SetGoto(); }
 		// Primes the select command
-		if (strcmp(input, "select") == 0) { bSelect = true; }
+		if (strcmp(input, "select") == 0) { SetSelect(); }
 		// Primes the buy command
-		if (strcmp(input, "buy") == 0) { bBuy = true; }
+		if (strcmp(input, "buy") == 0) { SetBuy(); }
 		// Primes the sell command
-		if (strcmp(input, "sell") == 0) { bSell = true; }
+		if (strcmp(input, "sell") == 0) { SetSell(); }
 
 		char next = cin.peek();
 		if (next == '\n' || next == EOF)
@@ -203,10 +187,10 @@ void Game::UserInput()
 	}
 
 	// Failed input handling
-	if (bFastForward) { SetInvalid("Invalid value entered"); }
-	else if (bSelect) { SetInvalid("Invalid value entered"); }
-	else if (bBuy) { SetInvalid("Invalid value entered"); }
-	else if (bSell) { SetInvalid("Invalid value entered"); }
+	if (GetGoto()) { SetInvalid("Invalid value entered"); }
+	else if (GetSelect()) { SetInvalid("Invalid value entered"); }
+	else if (GetBuy()) { SetInvalid("Invalid value entered"); }
+	else if (GetSell()) { SetInvalid("Invalid value entered"); }
 	else { SetInvalid("Command not found"); }
 	return;
 }
@@ -273,11 +257,6 @@ void Game::GotoDay(short pTargetDay)
 		SetEndDay();
 		StepDay();
 	}
-}
-
-void Game::CommenceEndGame()
-{
-
 }
 
 char Game::GetDataFromArray(byte pHorizontal, byte pVertical)
