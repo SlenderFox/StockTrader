@@ -43,16 +43,15 @@ enum class State : byte
 const enum class CompanyType
 {
 	UNDEFINED,
-	FLAT,
-	GROWTH,
-	UPNDOWN,
-	FALSEHOPE,
-	TWINPEAKS
+	Flat,
+	Growth,
+	UpNDown,
+	FalseHope,
+	TwinPeaks
 };
 
 /* Todo:
 * -Endgame
 * -Display money with commas
-* -Make fast forward show the graph update
 * -Have the graph show a single line on the first day or pre-run the graph for width-2 days
 */

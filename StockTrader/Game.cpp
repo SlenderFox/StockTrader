@@ -7,6 +7,7 @@
 using std::cout;
 using std::cin;
 using std::endl;
+using std::to_string;
 
 void Game::Run()
 {
@@ -191,19 +192,19 @@ bool Game::InitialiseCompanies()
 		{
 		default:
 		case 0:
-			m_companies[i].InitialiseCompany(CompanyType::FLAT, "Flat", 100);
+			m_companies[i].InitialiseCompany(CompanyType::Flat, "Flat", 100);
 			break;
 		case 1:
-			m_companies[i].InitialiseCompany(CompanyType::GROWTH, "Growth", 100);
+			m_companies[i].InitialiseCompany(CompanyType::Growth, "Growth", 100);
 			break;
 		case 2:
-			m_companies[i].InitialiseCompany(CompanyType::UPNDOWN, "UpNDown", 100);
+			m_companies[i].InitialiseCompany(CompanyType::UpNDown, "UpNDown", 100);
 			break;
 		case 3:
-			m_companies[i].InitialiseCompany(CompanyType::FALSEHOPE, "FalseHope", 100);
+			m_companies[i].InitialiseCompany(CompanyType::FalseHope, "FalseHope", 100);
 			break;
 		case 4:
-			m_companies[i].InitialiseCompany(CompanyType::TWINPEAKS, "TwinPeaks", 100);
+			m_companies[i].InitialiseCompany(CompanyType::TwinPeaks, "TwinPeaks", 100);
 			break;
 		}
 	}
@@ -270,7 +271,7 @@ void Game::UpdateMoneyText()
 {
 	byte sets = m_money / 3;
 	byte remainder = m_money % 3;
-	m_moneyText = std::to_string(m_money);
+	m_moneyText = to_string(m_money);
 	m_moneyText = "$" + m_moneyText;
 }
 
@@ -289,7 +290,8 @@ void Game::BuySellFromCompany(int pAmount)
 		else
 		{
 			// Upgrade this message to show the max you can buy
-			SetInvalid("You don't have enough money");
+			int max = m_money / m_companies[m_selected].GetCurrentValue();
+			SetInvalid("You can only afford to buy " + to_string(max) + " stocks in " + m_companies[m_selected].GetName());
 		}
 	}
 	else
@@ -359,7 +361,8 @@ void Game::DrawInfo()
 void Game::DrawConsole()
 {
 	if (GetInvalid())
-		cout << m_invalidMessage << "\n Type 'help' for a list of accepted commands" << endl;
+		cout << " Command not accepted - Reason give:\n <" << m_invalidMessage
+			<< ">\n Type 'help' for a list of accepted commands" << endl;
 
 	if (GetInfo())
 		cout << "	Welcome to StockTrader!\n"
@@ -383,5 +386,5 @@ void Game::DrawConsole()
 void Game::SetInvalid(string pMessage)
 {
 	m_state = State::Invalid;
-	m_invalidMessage = " " + pMessage;
+	m_invalidMessage = pMessage;
 }
