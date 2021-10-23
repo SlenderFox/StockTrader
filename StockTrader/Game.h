@@ -84,6 +84,7 @@ private:
 
 	State m_state = State::Info;	// Controls what the game should do
 	byte m_selected = 0;			// The company currently selected for display
+	bool m_bGameOver = false;
 	unsigned short m_day = 0;		// The current day
 	unsigned short m_targetDay = 0;	// Used when fast forwarding
 	unsigned int m_maxValue = 512;	// Scales the graph, doubles when exceeded

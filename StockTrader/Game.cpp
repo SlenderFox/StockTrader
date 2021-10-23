@@ -14,14 +14,18 @@ void Game::Run()
 	if (!Startup())
 		return;
 
-	while (Update()) {}
+	// This loop allows for the game to be played multiple times
+	while (!m_bGameOver)
+	{
+		while (Update()) {}
+	}
 }
 
 bool Game::Startup()
 {
 	srand((unsigned int)time(nullptr));
-	HWND hwnd = GetConsoleWindow();
-	if (!MoveWindow(hwnd, 50, 50, (int)(WIDTH * CHARWIDTH + 33), 900, TRUE))
+	//HWND hwnd = GetConsoleWindow();
+	if (!MoveWindow(GetConsoleWindow(), 50, 50, (int)(WIDTH * CHARWIDTH + 33), 900, TRUE))
 		return false;
 
 	// Initialises the companies and player
@@ -97,7 +101,7 @@ void Game::UserInput()
 				m_targetDay = val;
 				return;
 			}
-			catch (const std::exception&) { break; }
+			catch (const std::exception& e) { throw e; }
 		}
 
 		// After invoking the select command, searches for a valid request
@@ -114,7 +118,7 @@ void Game::UserInput()
 				m_selected = val - 1;
 				return;
 			}
-			catch (const std::exception&) { break; }
+			catch (const std::exception& e) { throw e; }
 		}
 
 		// After invoking the buy command, process input as number
@@ -131,7 +135,7 @@ void Game::UserInput()
 				BuySellFromCompany(val);
 				return;
 			}
-			catch (const std::exception&) { break; }
+			catch (const std::exception& e) { throw e; }
 		}
 
 		// After invoking the sell command, process input as number
@@ -148,7 +152,7 @@ void Game::UserInput()
 				BuySellFromCompany(-val);
 				return;
 			}
-			catch (const std::exception&) { break; }
+			catch (const std::exception& e) { throw e; }
 		}
 
 		// Primes the fast forward command
@@ -361,7 +365,7 @@ void Game::DrawInfo()
 void Game::DrawConsole()
 {
 	if (GetInvalid())
-		cout << " Command not accepted - Reason give:\n <" << m_invalidMessage
+		cout << " Command not accepted - Reason given:\n <" << m_invalidMessage
 			<< ">\n Type 'help' for a list of accepted commands" << endl;
 
 	if (GetInfo())
