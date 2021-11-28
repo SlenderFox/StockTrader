@@ -9,7 +9,8 @@ const byte CHARWIDTH = (byte)8;		// The width of one character in the console
 const byte WIDTH = (byte)90;		// The character width of the console window (How many characters wide)
 const byte DETAIL = (byte)30;		// How many lines high the graph is
 const byte NUMCOMPANIES = (byte)5;	// How many companies there are
-const int MAXTRANSFER = 99999;		// The maximum amount of stocks you can buy/sell at once
+const int MAXTRANSFER = 0xFFFFF;	// The maximum amount of stocks you can buy/sell at once
+const int STARTINGCASH = 10000;		// The amount of cash the players starts with
 
 // Character storage
 // Double lines

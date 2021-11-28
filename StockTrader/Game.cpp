@@ -15,9 +15,14 @@ void Game::Run()
 		return;
 
 	// This loop allows for the game to be played multiple times
-	while (!m_bGameOver)
+	while (!m_bCloseApp)
 	{
 		while (Update()) {}
+
+		if (!EndGame())
+			ResetGame();
+		else
+			m_bCloseApp = true;
 	}
 }
 
@@ -29,8 +34,7 @@ bool Game::Startup()
 		return false;
 
 	// Initialises the companies and player
-	if (!InitialiseCompanies())
-		return false;
+	InitialiseCompanies();
 
 	// Returns true if startup was successful
 	return true;
@@ -183,7 +187,90 @@ void Game::UserInput()
 	return;
 }
 
-bool Game::InitialiseCompanies()
+void Game::DrawGraph()
+{
+	// Obtains a local reference to the selected companies graph data
+	m_dataRef = m_companies[m_selected].GetCompanyData();
+
+	// Prints currently selected company name
+	cout << " " << m_companies[m_selected].GetName() << endl;
+
+	// Top edge of graph box
+	cout << TOP_LEFT;
+	for (int i = 0; i < WIDTH - 2; i++)
+	{
+		cout << HORIZONTAL;
+	}
+	cout << TOP_RIGHT;
+
+	// Two for loops that print out the graph into the edge box
+	for (int y = 0; y < DETAIL; y++)
+	{
+		cout << VERTICAL;
+		for (int x = 0; x < WIDTH - 2; x++)
+		{
+			cout << GetDataFromArray(x, y);
+		}
+		cout << VERTICAL;
+	}
+
+	// Bottom edge of graph box
+	cout << BOTTOM_LEFT;
+	for (int i = 0; i < WIDTH - 2; i++)
+	{
+		cout << HORIZONTAL;
+	}
+	cout << BOTTOM_RIGHT << endl;
+}
+
+void Game::DrawInfo()
+{
+	cout << " Day: " << m_day << endl;
+	cout << " Money: " << ConvertToCash(m_money) << endl;
+
+	for (int i = 0; i < NUMCOMPANIES; i++)
+	{
+		cout << " " << m_companies[i].GetName() << ": "
+			<< m_companies[i].GetOwnedStocks() << " @ "
+			<< m_companies[i].GetCurrentValue() << endl;
+	}
+
+	cout << " Max value: " << m_maxValue << endl;
+	
+	//cout << endl;
+	for (int i = 0; i < WIDTH; i++)
+	{
+		cout << FLAT_LINE;
+	}
+	cout << endl;
+}
+
+void Game::DrawConsole()
+{
+	if (GetInvalid())
+		cout << " Command not accepted - Reason given:\n \"" << m_invalidMessage
+			<< "\"\n Type 'help' for a list of accepted commands" << endl;
+
+	if (GetInfo())
+		cout << "	Welcome to StockTrader!\n"
+			<< " Your goal in this game is make the most amount of money\n"
+			<< " in one year (365 days) by buying and selling stocks.\n"
+			<< "	Type 'help' for commands" << endl;
+
+	if (GetHelp())
+	{
+		cout << " Commands are:\n"
+			<< " 'help'               | Lists these commands\n"
+			<< " 'end day'/'next'/'n' | Ends current day and moves on to the next\n"
+			<< " 'goto <integer>'     | Skips ahead to specified day (today-365)\n"
+			<< " 'select <integer>'   | Chooses the current company to be displayed\n"
+			<< " 'buy <integer>'      | Attempts to buy stocks of the selected company\n"
+			<< " 'sell <integer>'     | Attempts to sell stocks of the selected company\n\n"
+			<< " NOTE: All commands are lower case." << endl;
+	}
+}
+
+void Game::InitialiseCompanies()
 {
 	// Creates 5 new empty companies
 	m_companies = new Company[NUMCOMPANIES];
@@ -215,8 +302,6 @@ bool Game::InitialiseCompanies()
 
 	// Sets default selected company
 	m_selected = 0;
-
-	return true;
 }
 
 bool Game::StepDay()
@@ -271,14 +356,6 @@ char Game::GetDataFromArray(byte pHorizontal, byte pVertical)
 		return ' ';
 }
 
-void Game::UpdateMoneyText()
-{
-	byte sets = m_money / 3;
-	byte remainder = m_money % 3;
-	m_moneyText = to_string(m_money);
-	m_moneyText = "$" + m_moneyText;
-}
-
 void Game::BuySellFromCompany(int pAmount)
 {
 	// pAmount will be positive to buy and negative to sell
@@ -288,7 +365,6 @@ void Game::BuySellFromCompany(int pAmount)
 		if (m_money - cost >= 0)
 		{
 			m_money -= cost;
-			UpdateMoneyText();
 			m_companies[m_selected].ModifyOwnedStocks(pAmount);
 		}
 		else
@@ -304,86 +380,63 @@ void Game::BuySellFromCompany(int pAmount)
 	}
 }
 
-void Game::DrawGraph()
+string Game::ConvertToCash(int pMoney)
 {
-	// Obtains a local reference to the selected companies graph data
-	m_dataRef = m_companies[m_selected].GetCompanyData();
+	//byte sets = m_money / 3;
+	//byte remainder = m_money % 3;
+	//m_moneyText = to_string(m_money);
+	//m_moneyText = "$" + m_moneyText;
 
-	// Prints currently selected company name
-	cout << " " << m_companies[m_selected].GetName() << endl;
-
-	// Top edge of graph box
-	cout << TOP_LEFT;
-	for (int i = 0; i < WIDTH - 2; i++)
-	{
-		cout << HORIZONTAL;
-	}
-	cout << TOP_RIGHT;
-
-	// Two for loops that print out the graph into the edge box
-	for (int y = 0; y < DETAIL; y++)
-	{
-		cout << VERTICAL;
-		for (int x = 0; x < WIDTH - 2; x++)
-		{
-			cout << GetDataFromArray(x, y);
-		}
-		cout << VERTICAL;
-	}
-
-	// Bottom edge of graph box
-	cout << BOTTOM_LEFT;
-	for (int i = 0; i < WIDTH - 2; i++)
-	{
-		cout << HORIZONTAL;
-	}
-	cout << BOTTOM_RIGHT << endl;
+	return to_string(pMoney);
 }
 
-void Game::DrawInfo()
+void Game::ResetGame()
 {
-	cout << " Day: " << m_day << endl;
-	cout << " Money: " << m_moneyText << endl;
+	SetInfo();
+	m_day = 0;
+	m_targetDay = 0;
+	m_maxValue = 512;
+	m_money = STARTINGCASH;
+
+	InitialiseCompanies();	// Sets m_selected to 0
+}
+
+bool Game::EndGame()
+{
+	system("cls");
+
+	cout << " Congratulations! You made it through 365 days, lets see how you did:\n" << endl;
+
+	cout << " On hand money: " << ConvertToCash(m_money)
+		<< "\n Stocks in each company and how much they are worth: " << endl;
+
+	int totalCash = m_money;
 
 	for (int i = 0; i < NUMCOMPANIES; i++)
 	{
 		cout << " " << m_companies[i].GetName() << ": "
-			<< m_companies[i].GetCurrentValue() << ", "
-			<< m_companies[i].GetOwnedStocks() << endl;
+			<< m_companies[i].GetOwnedStocks() << " @ "
+			<< m_companies[i].GetCurrentValue() << endl;
+
+		totalCash += m_companies[i].GetOwnedStocks() * m_companies[i].GetCurrentValue();
 	}
 
-	cout << " Max value: " << m_maxValue << endl;
-	
-	//cout << endl;
-	for (int i = 0; i < WIDTH; i++)
+	cout << " All for a total of: " << ConvertToCash(totalCash) << endl;
+
+	cout << "\n Do you want to play again? [y/n] ";
+
+	// Ready for player input
+	char input[50] = "\0";
+	cin.clear();
+	cin.ignore(cin.rdbuf()->in_avail());
+	cin >> input;
+
+	while (input)
 	{
-		cout << FLAT_LINE;
-	}
-	cout << endl;
-}
-
-void Game::DrawConsole()
-{
-	if (GetInvalid())
-		cout << " Command not accepted - Reason given:\n <" << m_invalidMessage
-			<< ">\n Type 'help' for a list of accepted commands" << endl;
-
-	if (GetInfo())
-		cout << "	Welcome to StockTrader!\n"
-			<< " Your goal in this game is make the most amount of money\n"
-			<< " in one year (365 days) by buying and selling stocks.\n"
-			<< "	Type 'help' for commands" << endl;
-
-	if (GetHelp())
-	{
-		cout << " Commands are:\n"
-			<< " 'help'               | Lists these commands\n"
-			<< " 'end day'/'next'/'n' | Ends current day and moves on to the next\n"
-			<< " 'goto <integer>'     | Skips ahead to specified day (today-365)\n"
-			<< " 'select <integer>'   | Chooses the current company to be displayed\n"
-			<< " 'buy <integer>'      | Attempts to buy stocks of the selected company\n"
-			<< " 'sell <integer>'     | Attempts to sell stocks of the selected company\n\n"
-			<< " NOTE: All commands are lower case." << endl;
+		if (strcmp(input, "y") == 0)
+			return false;	// Do not end the game
+		if (strcmp(input, "n") == 0)
+			return true;	// End the game
 	}
 }
 
