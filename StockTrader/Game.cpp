@@ -7,6 +7,7 @@
 using std::cout;
 using std::cin;
 using std::endl;
+using std::string;
 using std::to_string;
 
 void Game::Run()
@@ -232,11 +233,11 @@ void Game::DrawInfo()
 	{
 		cout << " " << m_companies[i].GetName() << ": "
 			<< m_companies[i].GetOwnedStocks() << " @ "
-			<< m_companies[i].GetCurrentValue() << endl;
+			<< ConvertToCash(m_companies[i].GetCurrentValue()) << endl;
 	}
 
-	cout << " Max value: " << m_maxValue << endl;
-	
+	//cout << " Max value: " << m_maxValue << endl;
+
 	//cout << endl;
 	for (int i = 0; i < WIDTH; i++)
 	{
@@ -249,13 +250,13 @@ void Game::DrawConsole()
 {
 	if (GetInvalid())
 		cout << " Command not accepted - Reason given:\n \"" << m_invalidMessage
-			<< "\"\n Type 'help' for a list of accepted commands" << endl;
+		<< "\"\n Type 'help' for a list of accepted commands" << endl;
 
 	if (GetInfo())
 		cout << "	Welcome to StockTrader!\n"
-			<< " Your goal in this game is make the most amount of money\n"
-			<< " in one year (365 days) by buying and selling stocks.\n"
-			<< "	Type 'help' for commands" << endl;
+		<< " Your goal in this game is make the most amount of money\n"
+		<< " in one year (365 days) by buying and selling stocks.\n"
+		<< "	Type 'help' for commands" << endl;
 
 	if (GetHelp())
 	{
@@ -324,7 +325,7 @@ bool Game::StepDay()
 			if (m_companies[i].GetCurrentValue() > m_maxValue)
 				m_maxValue <<= 1;
 		}
-		
+
 		// If goto has been called and target day has not been reached, prevent state from being reset
 		if (GetGoto() && m_day != m_targetDay)
 			return true;
@@ -343,7 +344,7 @@ char Game::GetDataFromArray(byte pHorizontal, byte pVertical)
 	// 0 to m_maxValue value is scaled to 0 to DETAIL
 	unsigned int leftValue = (int)(m_dataRef[WIDTH - 2 - pHorizontal] / (float)(m_maxValue / DETAIL));
 	unsigned int rightValue = (int)(m_dataRef[WIDTH - 3 - pHorizontal] / (float)(m_maxValue / DETAIL));
-	
+
 	if (m_dataRef[WIDTH - 2 - pHorizontal] == NULL)
 		return ' ';
 	else if (leftValue == pVertical && leftValue == rightValue)
@@ -382,12 +383,27 @@ void Game::BuySellFromCompany(int pAmount)
 
 string Game::ConvertToCash(int pMoney)
 {
-	//byte sets = m_money / 3;
-	//byte remainder = m_money % 3;
-	//m_moneyText = to_string(m_money);
-	//m_moneyText = "$" + m_moneyText;
+	string moneyText = to_string(pMoney);
+	string temp;
 
-	return to_string(pMoney);
+	// Reverse the string, placing a comma after every third number
+	for (int i = moneyText.length() - 1, j = 0; i >= 0; --i, ++j)
+	{
+		if (j != 0 && j % 3 == 0)
+			temp += ",";
+		temp += moneyText[i];
+	}
+
+	temp += "$";
+	moneyText = "";
+
+	// Reverse the string again
+	for (int i = temp.length() - 1; i >= 0; --i)
+	{
+		moneyText += temp[i];
+	}
+
+	return moneyText;
 }
 
 void Game::ResetGame()
@@ -416,7 +432,7 @@ bool Game::EndGame()
 	{
 		cout << " " << m_companies[i].GetName() << ": "
 			<< m_companies[i].GetOwnedStocks() << " @ "
-			<< m_companies[i].GetCurrentValue() << endl;
+			<< ConvertToCash(m_companies[i].GetCurrentValue()) << endl;
 
 		totalCash += m_companies[i].GetOwnedStocks() * m_companies[i].GetCurrentValue();
 	}
@@ -431,13 +447,10 @@ bool Game::EndGame()
 	cin.ignore(cin.rdbuf()->in_avail());
 	cin >> input;
 
-	while (input)
-	{
-		if (strcmp(input, "y") == 0)
-			return false;	// Do not end the game
-		if (strcmp(input, "n") == 0)
-			return true;	// End the game
-	}
+	if (strcmp(input, "y") == 0)
+		return false;	// Do not end the game
+	if (strcmp(input, "n") == 0)
+		return true;	// End the game
 }
 
 void Game::SetInvalid(string pMessage)

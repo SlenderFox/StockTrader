@@ -60,6 +60,6 @@ private:
 	int m_money = STARTINGCASH;		// The players cash
 	string m_invalidMessage = "";	// A message to be printed in case of invalid input
 
-	Company *m_companies;		// For creating companies on the heap
-	unsigned int *m_dataRef;	// A local reference for the currently selected company data
+	Company* m_companies;		// For creating companies on the heap
+	unsigned int* m_dataRef;	// A local reference for the currently selected company data
 };
