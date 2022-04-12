@@ -31,9 +31,9 @@ public:
 
 	// Variables
 private:
-	CompanyType m_type;						// The type of company, determining how the value changes over time
-	string m_name;							// The name of the company
-	unsigned int m_companyData[WIDTH - 1];	// An array of previous values used to generate the graph (the width is correct)
-	unsigned int m_currentValue;			// The current value of the company
-	unsigned int m_ownedStocks;				// The amount of stocks owned in the current company
+	CompanyType m_type = CompanyType::UNDEFINED;	// The type of company, determining how the value changes over time
+	string m_name = "UNDEFINED";					// The name of the company
+	unsigned int m_companyData[WIDTH - 1] = {};		// An array of previous values used to generate the graph (the width is correct)
+	unsigned int m_currentValue = 0;				// The current value of the company
+	unsigned int m_ownedStocks = 0;					// The amount of stocks owned in the current company
 };

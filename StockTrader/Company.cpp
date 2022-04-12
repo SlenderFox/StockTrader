@@ -1,7 +1,7 @@
 #include "Company.h"
 #include <random>
 
-Company::Company() : m_type(CompanyType::UNDEFINED), m_name("UNDEFINED"), m_currentValue(0), m_ownedStocks(0)
+Company::Company()
 {
 	// Fills the data array with empty data
 	for (byte i = 0; i < WIDTH - 1; i++)

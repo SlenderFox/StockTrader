@@ -10,20 +10,26 @@ using std::endl;
 using std::string;
 using std::to_string;
 
+Game::~Game()
+{
+	delete[] m_companies;
+	delete[] m_dataRef;
+}
+
 void Game::Run()
 {
 	if (!Startup())
 		return;
 
 	// This loop allows for the game to be played multiple times
-	while (!m_bCloseApp)
+	while (!m_closeApp)
 	{
 		while (Update()) {}
 
 		if (!EndGame())
 			ResetGame();
 		else
-			m_bCloseApp = true;
+			m_closeApp = true;
 	}
 }
 

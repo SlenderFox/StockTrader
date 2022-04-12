@@ -5,12 +5,8 @@
 class Game
 {
 public:
-	Game() : m_companies(nullptr), m_dataRef(nullptr) {}
-	~Game()
-	{
-		delete[] m_companies;
-		delete[] m_dataRef;
-	}
+	Game() {}
+	~Game();
 
 	void Run();
 
@@ -31,6 +27,7 @@ private:
 	void ResetGame();
 	void SetInvalid(string pMessage);
 
+	#pragma region Setters
 	void ResetState() { m_state = State::Clear; }
 	void SetGameOver() { m_state = State::GameOver; }
 	void SetInfo() { m_state = State::Info; }
@@ -40,7 +37,8 @@ private:
 	void SetSelect() { m_state = State::Select; }
 	void SetBuy() { m_state = State::Buy; }
 	void SetSell() { m_state = State::Sell; }
-
+	#pragma endregion
+	#pragma region Getters
 	bool GetGameOver() const { return (m_state == State::GameOver) ? true : false; }
 	bool GetInvalid() const { return (m_state == State::Invalid) ? true : false; }
 	bool GetInfo() const { return (m_state == State::Info) ? true : false; }
@@ -50,16 +48,17 @@ private:
 	bool GetSelect() const { return (m_state == State::Select) ? true : false; }
 	bool GetBuy() const { return (m_state == State::Buy) ? true : false; }
 	bool GetSell() const { return (m_state == State::Sell) ? true : false; }
+	#pragma endregion
 
-	State m_state = State::Info;	// Controls what the game should do
-	byte m_selected = 0;			// The company currently selected for display
-	bool m_bCloseApp = false;
-	unsigned short m_day = 0;		// The current day
-	unsigned short m_targetDay = 0;	// Used when fast forwarding
-	unsigned int m_maxValue = 512;	// Scales the graph, doubles when exceeded
-	int m_money = STARTINGCASH;		// The players cash
-	string m_invalidMessage = "";	// A message to be printed in case of invalid input
+	State m_state = State::Info;		// Controls what the game should do
+	byte m_selected = 0;				// The company currently selected for display
+	bool m_closeApp = false;
+	unsigned short m_day = 0;			// The current day
+	unsigned short m_targetDay = 0;		// Used when fast forwarding
+	unsigned int m_maxValue = 512;		// Scales the graph, doubles when exceeded
+	int m_money = STARTINGCASH;			// The players cash
+	string m_invalidMessage = "";		// A message to be printed in case of invalid input
 
-	Company* m_companies;		// For creating companies on the heap
-	unsigned int* m_dataRef;	// A local reference for the currently selected company data
+	Company* m_companies = nullptr;		// For creating companies on the heap
+	unsigned int* m_dataRef = nullptr;	// A local reference for the currently selected company data
 };

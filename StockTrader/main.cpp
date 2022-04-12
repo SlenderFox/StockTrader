@@ -4,6 +4,7 @@ int main()
 {
 	Game* app = new Game();
 	app->Run();
+	//delete app; // This causes an error
 
 	std::cout << std::endl << "\tPress 'Enter' to exit the program.";
 	std::cin.clear();
