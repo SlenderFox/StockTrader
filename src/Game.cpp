@@ -227,6 +227,8 @@ void Game::UserInput()
 	// Input loop
 	while (input)
 	{
+		// TODO: Remove strcmp
+
 		// Display all commands
 		if (strcmp(input, "help") == 0)
 		{
@@ -243,9 +245,10 @@ void Game::UserInput()
 			return;
 		}
 
-		// After invoking the fast forward command, process input as number
-		if (GetGoto())
+		switch (m_state)
 		{
+		case State::Goto:
+			// After invoking the fast forward command, process input as number
 			try
 			{
 				string num = input;
@@ -258,11 +261,9 @@ void Game::UserInput()
 				return;
 			}
 			catch (const std::exception& e) { throw e; }
-		}
-
-		// After invoking the select command, searches for a valid request
-		if (GetSelect())
-		{
+			break;
+		case State::Select:
+			// After invoking the select command, searches for a valid request
 			try
 			{
 				string num = input;
@@ -275,11 +276,9 @@ void Game::UserInput()
 				return;
 			}
 			catch (const std::exception& e) { throw e; }
-		}
-
-		// After invoking the buy command, process input as number
-		if (GetBuy())
-		{
+			break;
+		case State::Buy:
+			// After invoking the buy command, process input as number
 			try
 			{
 				string num = input;
@@ -292,11 +291,9 @@ void Game::UserInput()
 				return;
 			}
 			catch (const std::exception& e) { throw e; }
-		}
-
-		// After invoking the sell command, process input as number
-		if (GetSell())
-		{
+			break;
+		case State::Sell:
+			// After invoking the sell command, process input as number
 			try
 			{
 				string num = input;
@@ -309,6 +306,9 @@ void Game::UserInput()
 				return;
 			}
 			catch (const std::exception& e) { throw e; }
+			break;
+		default:
+			break;
 		}
 
 		// Primes the fast forward command
@@ -373,7 +373,7 @@ bool Game::EndGame() noexcept
 		return false;	// Do not end the game
 	if (strcmp(input, "n") == 0)
 		return true;	// End the game
-	
+
 	// Fix C4715
 	return true;
 }
