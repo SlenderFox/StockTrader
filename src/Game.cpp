@@ -13,7 +13,6 @@ using std::to_string;
 Game::~Game()
 {
 	delete[] m_companies;
-	delete[] m_dataRef;
 }
 
 void Game::Run()
