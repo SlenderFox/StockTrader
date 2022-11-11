@@ -1,4 +1,6 @@
+#pragma region
 #include "Game.h"
+#include <iostream>
 #include <Windows.h>
 #include <random>
 #include <time.h>
@@ -9,6 +11,7 @@ using std::cin;
 using std::endl;
 using std::string;
 using std::to_string;
+#pragma endregion
 
 Game::~Game()
 {

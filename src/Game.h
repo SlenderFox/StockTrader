@@ -1,6 +1,5 @@
 #pragma once
 #include "Company.h"
-#include <iostream>
 
 class Game
 {

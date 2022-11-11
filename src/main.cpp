@@ -1,4 +1,9 @@
 #include "Game.h"
+#include <iostream>
+
+using std::cout;
+using std::cin;
+using std::endl;
 
 int main()
 {
@@ -6,10 +11,10 @@ int main()
 	app->Run();
 	delete app;
 
-	std::cout << std::endl << "\tPress 'Enter' to exit the program.";
-	std::cin.clear();
-	std::cin.ignore(std::cin.rdbuf()->in_avail());
-	std::cin.get();
+	cout << endl << "\tPress 'Enter' to exit the program.";
+	cin.clear();
+	cin.ignore(cin.rdbuf()->in_avail());
+	cin.get();
 
 	return 0;
 }
