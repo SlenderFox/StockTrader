@@ -10,7 +10,7 @@ Company::Company()
 	}
 }
 
-void Company::InitialiseCompany(CompanyType pType, string pName, uint8 pStartValue)
+void Company::InitialiseCompany(CompanyType pType, string pName, uint32 pStartValue)
 {
 	m_type = pType;
 	m_name = pName;
