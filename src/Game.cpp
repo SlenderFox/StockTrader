@@ -459,6 +459,9 @@ bool Game::EndGame()
 		return false;	// Do not end the game
 	if (strcmp(input, "n") == 0)
 		return true;	// End the game
+	
+	// Fix C4715
+	return true;
 }
 
 void Game::SetInvalid(string pMessage)
