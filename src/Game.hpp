@@ -1,5 +1,5 @@
 #pragma once
-#include "Company.h"
+#include "Company.hpp"
 
 class Game
 {

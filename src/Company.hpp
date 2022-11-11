@@ -1,5 +1,5 @@
 #pragma once
-#include "GameDefines.h"
+#include "GameDefines.hpp"
 #include <string>
 
 using std::string;

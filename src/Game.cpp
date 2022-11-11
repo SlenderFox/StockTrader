@@ -1,5 +1,5 @@
 #pragma region
-#include "Game.h"
+#include "Game.hpp"
 #include <iostream>
 #include <Windows.h>
 #include <random>
@@ -206,17 +206,17 @@ void Game::DrawGraph()
 
 	// Top edge of graph box
 	cout << TOP_LEFT;
-	for (uint16 i = 0; i < WIDTH - 2; i++)
+	for (uint8 i = 0; i < WIDTH - 2; i++)
 	{
 		cout << HORIZONTAL;
 	}
 	cout << TOP_RIGHT;
 
 	// Two for loops that print out the graph into the edge box
-	for (uint16 y = 0; y < DETAIL; y++)
+	for (uint8 y = 0; y < DETAIL; y++)
 	{
 		cout << VERTICAL;
-		for (uint16 x = 0; x < WIDTH - 2; x++)
+		for (uint8 x = 0; x < WIDTH - 2; x++)
 		{
 			cout << GetDataFromArray(x, y);
 		}
@@ -225,7 +225,7 @@ void Game::DrawGraph()
 
 	// Bottom edge of graph box
 	cout << BOTTOM_LEFT;
-	for (uint16 i = 0; i < WIDTH - 2; i++)
+	for (uint8 i = 0; i < WIDTH - 2; i++)
 	{
 		cout << HORIZONTAL;
 	}
