@@ -19,9 +19,9 @@ private:
 
 	void InitialiseCompanies();
 	bool StepDay();
-	char GetDataFromArray(byte pHorizontal, byte pVertical);
-	void BuySellFromCompany(int pAmount);
-	string ConvertToCash(int pMoney);
+	char GetDataFromArray(uint8 pHorizontal, uint8 pVertical);
+	void BuySellFromCompany(int32 pAmount);
+	string ConvertToCash(int32 pMoney);
 	bool EndGame();
 	void ResetGame();
 	void SetInvalid(string pMessage);
@@ -50,14 +50,14 @@ private:
 	#pragma endregion
 
 	State m_state = State::Info;		// Controls what the game should do
-	byte m_selected = 0;				// The company currently selected for display
+	uint8 m_selected = 0;				// The company currently selected for display
 	bool m_closeApp = false;
-	unsigned short m_day = 0;			// The current day
-	unsigned short m_targetDay = 0;		// Used when fast forwarding
-	unsigned int m_maxValue = 512;		// Scales the graph, doubles when exceeded
-	int m_money = STARTINGCASH;			// The players cash
+	uint8 m_day = 0;						// The current day
+	uint8 m_targetDay = 0;				// Used when fast forwarding
+	uint32 m_maxValue = 512;			// Scales the graph, doubles when exceeded
+	int32 m_money = STARTINGCASH;		// The players cash
 	string m_invalidMessage = "";		// A message to be printed in case of invalid input
 
-	Company* m_companies = nullptr;		// For creating companies on the heap
-	unsigned int* m_dataRef = nullptr;	// A local reference for the currently selected company data
+	Company* m_companies = nullptr;	// For creating companies on the heap
+	uint32* m_dataRef = nullptr;		// A local reference for the currently selected company data
 };

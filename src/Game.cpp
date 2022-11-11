@@ -106,7 +106,7 @@ void Game::UserInput()
 			try
 			{
 				string num = input;
-				unsigned short val = (unsigned short)std::stoi(num);
+				uint8 val = (uint8)std::stoi(num);
 				if (val < m_day)
 					break;
 				else if (val > 365)
@@ -123,7 +123,7 @@ void Game::UserInput()
 			try
 			{
 				string num = input;
-				byte val = (byte)std::stoi(num);
+				uint8 val = (uint8)std::stoi(num);
 				if (val < 1)
 					val = 1;
 				else if (val > NUMCOMPANIES)
@@ -140,7 +140,7 @@ void Game::UserInput()
 			try
 			{
 				string num = input;
-				int val = std::stoi(num);
+				int32 val = std::stoi(num);
 				if (val < 0)
 					val = 0;
 				else if (val > MAXTRANSFER)
@@ -157,7 +157,7 @@ void Game::UserInput()
 			try
 			{
 				string num = input;
-				int val = std::stoi(num);
+				int32 val = std::stoi(num);
 				if (val < 0)
 					val = 0;
 				else if (val > MAXTRANSFER)
@@ -180,7 +180,7 @@ void Game::UserInput()
 		char next = cin.peek();
 		if (next == '\n' || next == EOF)
 			break;
-		for (int i = 0; i < 50; i++)
+		for (uint16 i = 0; i < 50; i++)
 		{
 			input[i] = '\0';
 		}
@@ -206,17 +206,17 @@ void Game::DrawGraph()
 
 	// Top edge of graph box
 	cout << TOP_LEFT;
-	for (int i = 0; i < WIDTH - 2; i++)
+	for (uint16 i = 0; i < WIDTH - 2; i++)
 	{
 		cout << HORIZONTAL;
 	}
 	cout << TOP_RIGHT;
 
 	// Two for loops that print out the graph into the edge box
-	for (int y = 0; y < DETAIL; y++)
+	for (uint16 y = 0; y < DETAIL; y++)
 	{
 		cout << VERTICAL;
-		for (int x = 0; x < WIDTH - 2; x++)
+		for (uint16 x = 0; x < WIDTH - 2; x++)
 		{
 			cout << GetDataFromArray(x, y);
 		}
@@ -225,7 +225,7 @@ void Game::DrawGraph()
 
 	// Bottom edge of graph box
 	cout << BOTTOM_LEFT;
-	for (int i = 0; i < WIDTH - 2; i++)
+	for (uint16 i = 0; i < WIDTH - 2; i++)
 	{
 		cout << HORIZONTAL;
 	}
@@ -237,7 +237,7 @@ void Game::DrawInfo()
 	cout << " Day: " << m_day << endl;
 	cout << " Money: " << ConvertToCash(m_money) << endl;
 
-	for (int i = 0; i < NUMCOMPANIES; i++)
+	for (uint8 i = 0; i < NUMCOMPANIES; i++)
 	{
 		cout << " " << m_companies[i].GetName() << ": "
 			<< m_companies[i].GetOwnedStocks() << " @ "
@@ -247,7 +247,7 @@ void Game::DrawInfo()
 	//cout << " Max value: " << m_maxValue << endl;
 
 	//cout << endl;
-	for (int i = 0; i < WIDTH; i++)
+	for (uint16 i = 0; i < WIDTH; i++)
 	{
 		cout << FLAT_LINE;
 	}
@@ -285,7 +285,7 @@ void Game::InitialiseCompanies()
 	m_companies = new Company[NUMCOMPANIES];
 
 	// Initialises each company
-	for (int i = 0; i < NUMCOMPANIES; i++)
+	for (uint8 i = 0; i < NUMCOMPANIES; i++)
 	{
 		// Temp for testing
 		switch (i)
@@ -326,7 +326,7 @@ bool Game::StepDay()
 			// Currently the program just ends
 			return false;
 		}
-		for (int i = 0; i < 5; i++)
+		for (uint8 i = 0; i < NUMCOMPANIES; i++)
 		{
 			// Updates the data array for each company
 			m_companies[i].UpdateCompanyValue(-0.04f, 0.07f);
@@ -343,15 +343,15 @@ bool Game::StepDay()
 	return true;
 }
 
-char Game::GetDataFromArray(byte pHorizontal, byte pVertical)
+char Game::GetDataFromArray(uint8 pHorizontal, uint8 pVertical)
 {
 	// The lines are drawn between the values
 	// (Should be from 0 to DETAIL-1 but done this way to prevent clipping)
 	// Inverts vertical from DETAIL-1 to 0 to 0 to DETAIL
 	pVertical = DETAIL - pVertical;
 	// 0 to m_maxValue value is scaled to 0 to DETAIL
-	unsigned int leftValue = (int)(m_dataRef[WIDTH - 2 - pHorizontal] / (float)(m_maxValue / DETAIL));
-	unsigned int rightValue = (int)(m_dataRef[WIDTH - 3 - pHorizontal] / (float)(m_maxValue / DETAIL));
+	uint32 leftValue = (uint32)(m_dataRef[WIDTH - 2 - pHorizontal] / (float)(m_maxValue / DETAIL));
+	uint32 rightValue = (uint32)(m_dataRef[WIDTH - 3 - pHorizontal] / (float)(m_maxValue / DETAIL));
 
 	if (m_dataRef[WIDTH - 2 - pHorizontal] == NULL)
 		return ' ';
@@ -365,12 +365,12 @@ char Game::GetDataFromArray(byte pHorizontal, byte pVertical)
 		return ' ';
 }
 
-void Game::BuySellFromCompany(int pAmount)
+void Game::BuySellFromCompany(int32 pAmount)
 {
 	// pAmount will be positive to buy and negative to sell
-	if ((int)m_companies[m_selected].GetOwnedStocks() + pAmount >= 0)
+	if (m_companies[m_selected].GetOwnedStocks() + pAmount >= 0)
 	{
-		int cost = pAmount * m_companies[m_selected].GetCurrentValue();
+		uint32 cost = pAmount * m_companies[m_selected].GetCurrentValue();
 		if (m_money - cost >= 0)
 		{
 			m_money -= cost;
@@ -379,7 +379,7 @@ void Game::BuySellFromCompany(int pAmount)
 		else
 		{
 			// Upgrade this message to show the max you can buy
-			int max = m_money / m_companies[m_selected].GetCurrentValue();
+			uint32 max = m_money / m_companies[m_selected].GetCurrentValue();
 			SetInvalid("You can only afford to buy " + to_string(max) + " stocks in " + m_companies[m_selected].GetName());
 		}
 	}
@@ -389,13 +389,13 @@ void Game::BuySellFromCompany(int pAmount)
 	}
 }
 
-string Game::ConvertToCash(int pMoney)
+string Game::ConvertToCash(int32 pMoney)
 {
 	string moneyText = to_string(pMoney);
 	string temp;
 
 	// Reverse the string, placing a comma after every third number
-	for (int i = moneyText.length() - 1, j = 0; i >= 0; --i, ++j)
+	for (size_t i = moneyText.length() - 1, j = 0; i >= 0; --i, ++j)
 	{
 		if (j != 0 && j % 3 == 0)
 			temp += ",";
@@ -406,7 +406,7 @@ string Game::ConvertToCash(int pMoney)
 	moneyText = "";
 
 	// Reverse the string again
-	for (int i = temp.length() - 1; i >= 0; --i)
+	for (size_t i = temp.length() - 1; i >= 0; --i)
 	{
 		moneyText += temp[i];
 	}
@@ -434,9 +434,9 @@ bool Game::EndGame()
 	cout << " On hand money: " << ConvertToCash(m_money)
 		<< "\n Stocks in each company and how much they are worth: " << endl;
 
-	int totalCash = m_money;
+	uint32 totalCash = m_money;
 
-	for (int i = 0; i < NUMCOMPANIES; i++)
+	for (uint8 i = 0; i < NUMCOMPANIES; i++)
 	{
 		cout << " " << m_companies[i].GetName() << ": "
 			<< m_companies[i].GetOwnedStocks() << " @ "

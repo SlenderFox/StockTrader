@@ -1,16 +1,43 @@
 #pragma once
+/**
+ * @brief
+ * Todo:
+ * -Endgame
+ * -Display money with commas
+ * -Have the graph show a single line on the first day or pre-run the graph for width-2 days
+ * https://stackoverflow.com/questions/34842526/update-console-without-flickering-c
+ */
 
-// Exactly 1 byte of information (from 0-255)
-typedef unsigned char byte;
-// A signed variant of byte (from -128-127)
-typedef signed char sbyte;
+#pragma region Typedefines
+typedef signed char			int8;
+typedef signed short			int16;
+typedef signed int			int32;
+typedef signed long long	int64;
+typedef unsigned char		uint8;
+typedef unsigned short		uint16;
+typedef unsigned int			uint32;
+typedef unsigned long long	uint64;
 
-const byte CHARWIDTH = (byte)8;		// The width of one character in the console
-const byte WIDTH = (byte)90;		// The character width of the console window (How many characters wide)
-const byte DETAIL = (byte)30;		// How many lines high the graph is
-const byte NUMCOMPANIES = (byte)5;	// How many companies there are
-const int MAXTRANSFER = 0xFFFFF;	// The maximum amount of stocks you can buy/sell at once
-const int STARTINGCASH = 10000;		// The amount of cash the players starts with
+constexpr int8		int8_min		= -127i8-1;
+constexpr int16	int16_min	= -32767i16-1;
+constexpr int32	int32_min	= -2147483647i32-1;
+constexpr int64	int64_min	= -9223372036854775807i64-1;
+constexpr int8		INT8_MAX		= 127i8;
+constexpr int16	INT16_MAX	= 32767i16;
+constexpr int32	INT32_MAX	= 2147483647i32;
+constexpr int64	INT64_MAX	= 9223372036854775807i64;
+constexpr uint8	UINT8_MAX	= 0xffui8;
+constexpr uint16	UINT16_MAX	= 0xffffui16;
+constexpr uint32	UINT32_MAX	= 0xffffffffui32;
+constexpr uint64	UINT64_MAX	= 0xffffffffffffffffui64;
+#pragma endregion
+
+constexpr uint8 CHARWIDTH = (uint8)8;			// The width of one character in the console
+constexpr uint8 WIDTH = (uint8)90;				// The character width of the console window (How many characters wide)
+constexpr uint8 DETAIL = (uint8)30;				// How many lines high the graph is
+constexpr uint8 NUMCOMPANIES = (uint8)5;		// How many companies there are
+constexpr uint32 MAXTRANSFER = UINT32_MAX;	// The maximum amount of stocks you can buy/sell at once
+constexpr int32 STARTINGCASH = 10000;			// The amount of cash the players starts with
 
 // Character storage
 // Double lines
@@ -26,7 +53,7 @@ const char* const BACK_SLASH = "\x5C";
 const char* const FLAT_LINE = "\xC4";
 
 // Singular state machine controls the flow of the game
-enum class State : byte
+enum class State: uint8
 {
 	Clear,
 	GameOver,
@@ -41,7 +68,7 @@ enum class State : byte
 };
 
 // The different types of companies avaliable
-const enum class CompanyType
+const enum class CompanyType: uint8
 {
 	UNDEFINED,
 	Flat,
@@ -50,10 +77,3 @@ const enum class CompanyType
 	FalseHope,
 	TwinPeaks
 };
-
-/* Todo:
-* -Endgame
-* -Display money with commas
-* -Have the graph show a single line on the first day or pre-run the graph for width-2 days
-* https://stackoverflow.com/questions/34842526/update-console-without-flickering-c
-*/
