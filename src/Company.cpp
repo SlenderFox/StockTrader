@@ -18,6 +18,7 @@ void Company::InitialiseCompany(CompanyType pType, string pName, uint32 pStartVa
 
 void Company::UpdateCompanyValue(float pMin, float pMax)
 {
+	// TODO: Fuck the line below me
 	uint32 newValue = (uint32)(m_currentValue * ((pMax - pMin) * ((float)(rand() % 1000) / 1000) + pMin));
 	if (m_currentValue + newValue > 0/* && m_currentValue + newValue < 1000*/)
 	{
