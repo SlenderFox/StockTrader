@@ -14,7 +14,6 @@ class Game
 
 	Company* m_companies = nullptr;	// For creating companies on the heap
 
-private:
 	bool Startup() noexcept;
 	bool Update();
 	void DrawGraph() noexcept;
@@ -27,35 +26,36 @@ private:
 	char GetDataFromArray(
 		Company* pComp,
 		const uint8 pHorizontal,
-		uint8 pVertical) noexcept;
+		uint8 pVertical
+	) noexcept;
 	void BuySellFromCompany(int32 pAmount) noexcept;
 	string ConvertToCash(int32 pMoney) noexcept;
 	bool EndGame() noexcept;
 	void ResetGame() noexcept;
 	void SetInvalid(string pMessage) noexcept;
 
-	void ResetState() noexcept	 { m_state = State::Clear;		}
-	void SetGameOver() noexcept { m_state = State::GameOver;	}
-	void SetInfo() noexcept		 { m_state = State::Info;		}
-	void SetHelp() noexcept		 { m_state = State::Help;		}
-	void SetEndDay() noexcept	 { m_state = State::EndDay;	}
-	void SetGoto() noexcept		 { m_state = State::Goto;		}
-	void SetSelect() noexcept	 { m_state = State::Select;	}
-	void SetBuy() noexcept		 { m_state = State::Buy;		}
-	void SetSell() noexcept		 { m_state = State::Sell;		}
+	void ResetState() noexcept;
+	void SetGameOver() noexcept;
+	void SetInfo() noexcept;
+	void SetHelp() noexcept;
+	void SetEndDay() noexcept;
+	void SetGoto() noexcept;
+	void SetSelect() noexcept;
+	void SetBuy() noexcept;
+	void SetSell() noexcept;
 
-	bool GetGameOver() const noexcept { return (m_state == State::GameOver)	? true : false; }
-	bool GetInvalid() const noexcept	 { return (m_state == State::Invalid)	? true : false; }
-	bool GetInfo() const noexcept		 { return (m_state == State::Info)		? true : false; }
-	bool GetHelp() const noexcept 	 { return (m_state == State::Help)		? true : false; }
-	bool GetEndDay() const noexcept	 { return (m_state == State::EndDay)	? true : false; }
-	bool GetGoto() const noexcept		 { return (m_state == State::Goto)		? true : false; }
-	bool GetSelect() const noexcept	 { return (m_state == State::Select)	? true : false; }
-	bool GetBuy() const noexcept		 { return (m_state == State::Buy)		? true : false; }
-	bool GetSell() const noexcept		 { return (m_state == State::Sell)		? true : false; }
+	bool GetGameOver() const noexcept;
+	bool GetInvalid() const noexcept;
+	bool GetInfo() const noexcept;
+	bool GetHelp() const noexcept;
+	bool GetEndDay() const noexcept;
+	bool GetGoto() const noexcept;
+	bool GetSelect() const noexcept;
+	bool GetBuy() const noexcept;
+	bool GetSell() const noexcept;
 
 public:
-	Game() {}
+	Game() = default;
 	~Game();
 
 	void Run();

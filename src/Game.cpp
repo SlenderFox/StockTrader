@@ -468,3 +468,57 @@ void Game::SetInvalid(string pMessage) noexcept
 	m_state = State::Invalid;
 	m_invalidMessage = pMessage;
 }
+
+void Game::ResetState() noexcept
+{ m_state = State::Clear; }
+
+void Game::SetGameOver() noexcept
+{ m_state = State::GameOver; }
+
+void Game::SetInfo() noexcept
+{ m_state = State::Info; }
+
+void Game::SetHelp() noexcept
+{ m_state = State::Help; }
+
+void Game::SetEndDay() noexcept
+{ m_state = State::EndDay; }
+
+void Game::SetGoto() noexcept
+{ m_state = State::Goto; }
+
+void Game::SetSelect() noexcept
+{ m_state = State::Select; }
+
+void Game::SetBuy() noexcept
+{ m_state = State::Buy; }
+
+void Game::SetSell() noexcept
+{ m_state = State::Sell; }
+
+bool Game::GetGameOver() const noexcept
+{ return (m_state == State::GameOver); }
+
+bool Game::GetInvalid() const noexcept
+{ return (m_state == State::Invalid); }
+
+bool Game::GetInfo() const noexcept
+{ return (m_state == State::Info); }
+
+bool Game::GetHelp() const noexcept
+{ return (m_state == State::Help); }
+
+bool Game::GetEndDay() const noexcept
+{ return (m_state == State::EndDay); }
+
+bool Game::GetGoto() const noexcept
+{ return (m_state == State::Goto); }
+
+bool Game::GetSelect() const noexcept
+{ return (m_state == State::Select); }
+
+bool Game::GetBuy() const noexcept
+{ return (m_state == State::Buy); }
+
+bool Game::GetSell() const noexcept
+{ return (m_state == State::Sell); }

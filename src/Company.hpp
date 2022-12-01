@@ -22,20 +22,24 @@ public:
 	~Company() {}
 
 	// Starts up the company with default values
-	void InitialiseCompany(CompanyType pType, string pName, uint32 pStartValue);
+	void InitialiseCompany(
+		CompanyType pType,
+		string pName,
+		uint32 pStartValue
+	);
 	// Updates the value of the company
 	void UpdateCompanyValue(float pMin, float pMax);
 
 	// Adds or removes owned stocks
-	void ModifyOwnedStocks(uint32 pDifference) { m_ownedStocks += pDifference; }
+	void ModifyOwnedStocks(uint32 pDifference);
 	// Returns the type of company
-	CompanyType GetType() const { return m_type; }
+	CompanyType GetType() const;
 	// Returns the name of the company
-	string GetName() const { return m_name; }
+	string GetName() const;
 	// Returns the company data array
-	uint32* GetCompanyData() { return m_companyData; }
+	uint32* GetCompanyData();
 	// Returns the value of the company
-	uint32 GetCurrentValue() const { return m_currentValue; }
+	uint32 GetCurrentValue() const;
 	// Returns the amount of stocks currently owned in the company
-	uint32 GetOwnedStocks() const { return m_ownedStocks; }
+	uint32 GetOwnedStocks() const;
 };

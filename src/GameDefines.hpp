@@ -32,7 +32,7 @@ constexpr uint8 CHARWIDTH = (uint8)8;			// The width of one character in the con
 constexpr uint8 WIDTH = (uint8)90;				// The character width of the console window (How many characters wide)
 constexpr uint8 DETAIL = (uint8)30;				// How many lines high the graph is
 constexpr uint8 NUMCOMPANIES = (uint8)5;		// How many companies there are
-constexpr int32 MAXTRANSFER = INT32_MAX;	// The maximum amount of stocks you can buy/sell at once
+constexpr int32 MAXTRANSFER = INT32_MAX;		// The maximum amount of stocks you can buy/sell at once
 constexpr int32 STARTINGCASH = 10000;			// The amount of cash the players starts with
 
 // Character storage

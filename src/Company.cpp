@@ -32,3 +32,21 @@ void Company::UpdateCompanyValue(float pMin, float pMax)
 		m_companyData[0] = m_currentValue;
 	}
 }
+
+void Company::ModifyOwnedStocks(uint32 pDifference)
+{ m_ownedStocks += pDifference; }
+
+CompanyType Company::GetType() const
+{ return m_type; }
+
+string Company::GetName() const
+{ return m_name; }
+
+uint32* Company::GetCompanyData()
+{ return m_companyData; }
+
+uint32 Company::GetCurrentValue() const
+{ return m_currentValue; }
+
+uint32 Company::GetOwnedStocks() const
+{ return m_ownedStocks; }
