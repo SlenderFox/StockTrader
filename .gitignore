@@ -1,8 +1,2 @@
-# ide folders
-.vs/
 .vscode/
-
-# build folders
-[Tt]emp/
 [Bb]uild/
-Win32/

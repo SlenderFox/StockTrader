@@ -1,22 +1,20 @@
-#pragma region
 #include "Game.hpp"
-#include <iostream>
-#include <Windows.h>
+#if defined(WIN32) || defined(_WIN32)
+ #include <Windows.h>
+#endif
 #include <random>
 #include <time.h>
 #include <sstream>
+#include <iostream>
 
 using std::cout;
 using std::cin;
 using std::endl;
 using std::string;
 using std::to_string;
-#pragma endregion
 
 Game::~Game()
-{
-	delete[] m_companies;
-}
+{ delete[] m_companies; }
 
 void Game::Run()
 {
@@ -37,6 +35,7 @@ void Game::Run()
 
 bool Game::Startup() noexcept
 {
+	// TODO: Don't use
 	srand((unsigned int)time(nullptr));
 	if (!MoveWindow(GetConsoleWindow(), 50, 50, (int)(WIDTH * CHARWIDTH + 33), 900, TRUE))
 		return false;
@@ -87,6 +86,7 @@ bool Game::Update()
 	if (!StepDay())
 		return false;
 
+	// TODO: Look into
 	// Clears the console
 	system("cls");
 	// Draw the graph of the currently selected company
@@ -225,7 +225,7 @@ void Game::UserInput()
 	cin >> input;
 
 	// Input loop
-	while (input)
+	while (true)
 	{
 		// TODO: Remove strcmp
 
@@ -270,8 +270,8 @@ void Game::UserInput()
 				int32 val = std::stoi(num);
 				if (val < 1)
 					val = 1;
-				else if (val > NUMCOMPANIES)
-					val = NUMCOMPANIES;
+				else if (val > (int32)NUMCOMPANIES)
+					val = (int32)NUMCOMPANIES;
 				m_selected = val - 1;
 				return;
 			}
@@ -369,12 +369,10 @@ bool Game::EndGame() noexcept
 	cin.ignore(cin.rdbuf()->in_avail());
 	cin >> input;
 
+	// Treat any response other than "y" as no
 	if (strcmp(input, "y") == 0)
-		return false;	// Do not end the game
-	if (strcmp(input, "n") == 0)
-		return true;	// End the game
+		return false;
 
-	// Fix C4715
 	return true;
 }
 
@@ -402,13 +400,13 @@ char Game::GetDataFromArray(
 	uint32 leftValue = (uint32)(pComp->GetCompanyData()[WIDTH - 2 - pHorizontal] / (float)(m_maxValue / DETAIL));
 	uint32 rightValue = (uint32)(pComp->GetCompanyData()[WIDTH - 3 - pHorizontal] / (float)(m_maxValue / DETAIL));
 
-	if (pComp->GetCompanyData()[WIDTH - 2 - pHorizontal] == NULL)
+	if (pComp->GetCompanyData()[WIDTH - 2 - pHorizontal] == 0)
 		return ' ';
 	else if (leftValue == pVertical && leftValue == rightValue)
 		return '_';
 	else if (leftValue == pVertical && leftValue < rightValue)
 		return '/';
-	else if (leftValue == pVertical + 1 && leftValue > rightValue)
+	else if (leftValue == pVertical + 1U && leftValue > rightValue)
 		return '\\';
 	else
 		return ' ';

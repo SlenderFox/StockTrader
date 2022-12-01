@@ -34,7 +34,6 @@ private:
 	void ResetGame() noexcept;
 	void SetInvalid(string pMessage) noexcept;
 
-	#pragma region Setters
 	void ResetState() noexcept	 { m_state = State::Clear;		}
 	void SetGameOver() noexcept { m_state = State::GameOver;	}
 	void SetInfo() noexcept		 { m_state = State::Info;		}
@@ -44,8 +43,7 @@ private:
 	void SetSelect() noexcept	 { m_state = State::Select;	}
 	void SetBuy() noexcept		 { m_state = State::Buy;		}
 	void SetSell() noexcept		 { m_state = State::Sell;		}
-	#pragma endregion
-	#pragma region Getters
+
 	bool GetGameOver() const noexcept { return (m_state == State::GameOver)	? true : false; }
 	bool GetInvalid() const noexcept	 { return (m_state == State::Invalid)	? true : false; }
 	bool GetInfo() const noexcept		 { return (m_state == State::Info)		? true : false; }
@@ -55,8 +53,7 @@ private:
 	bool GetSelect() const noexcept	 { return (m_state == State::Select)	? true : false; }
 	bool GetBuy() const noexcept		 { return (m_state == State::Buy)		? true : false; }
 	bool GetSell() const noexcept		 { return (m_state == State::Sell)		? true : false; }
-	#pragma endregion
-	
+
 public:
 	Game() {}
 	~Game();
