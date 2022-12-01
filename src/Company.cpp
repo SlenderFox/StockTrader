@@ -1,13 +1,11 @@
 #include "Company.hpp"
 #include <random>
-//#include <memory.h>
+#include <memory.h>
 
 Company::Company()
 {
 	// Fills the data array with empty data
-	for (uint8 i = 0; i < WIDTH - 1; i++)
-	{ m_companyData[i] = 0; }
-	//memset(&m_companyData, 0, sizeof(uint32) * (WIDTH - 1));
+	memset(&m_companyData, 0, sizeof(m_companyData));
 }
 
 void Company::InitialiseCompany(CompanyType pType, string pName, uint32 pStartValue)
