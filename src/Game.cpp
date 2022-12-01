@@ -119,7 +119,7 @@ bool Game::StepDay() noexcept
 		for (uint8 i = 0; i < NUMCOMPANIES; i++)
 		{
 			// Updates the data array for each company
-			m_companies[i].UpdateCompanyValue(-0.04f, 0.07f);
+			m_companies[i].UpdateCompanyValue(-0.05f, 0.06f);
 			if (m_companies[i].GetCurrentValue() > m_maxValue)
 				m_maxValue <<= 1;
 		}
