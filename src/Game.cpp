@@ -146,7 +146,7 @@ void Game::DrawGraph() noexcept
 	{
 		cout << HORIZONTAL;
 	}
-	cout << TOP_RIGHT;
+	cout << TOP_RIGHT << "\n";
 
 	// Two for loops that print out the graph into the edge box
 	for (uint8 y = 0; y < DETAIL; y++)
@@ -156,7 +156,7 @@ void Game::DrawGraph() noexcept
 		{
 			cout << GetDataFromArray(&m_companies[m_selected], x, y);
 		}
-		cout << VERTICAL;
+		cout << VERTICAL << "\n";
 	}
 
 	// Bottom edge of graph box
