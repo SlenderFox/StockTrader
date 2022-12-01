@@ -3,7 +3,6 @@
 
 using std::cout;
 using std::cin;
-using std::endl;
 
 int main()
 {
@@ -11,7 +10,8 @@ int main()
 	app->Run();
 	delete app;
 
-	cout << endl << "\tPress 'Enter' to exit the program.";
+	cout << "\n\tPress 'Enter' to exit the program.";
+	cout.flush();
 	cin.clear();
 	cin.ignore(cin.rdbuf()->in_avail());
 	cin.get();
