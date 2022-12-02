@@ -37,16 +37,16 @@ constexpr int32 STARTINGCASH = 10000;			// The amount of cash the players starts
 
 // Character storage
 // Double lines
-const char* const VERTICAL = "\xBA";
-const char* const TOP_RIGHT = "\xBB";
-const char* const BOTTOM_RIGHT = "\xBC";
-const char* const BOTTOM_LEFT = "\xC8";
-const char* const TOP_LEFT = "\xC9";
-const char* const HORIZONTAL = "\xCD";
+const char *const VERTICAL = "\xBA";
+const char *const TOP_RIGHT = "\xBB";
+const char *const BOTTOM_RIGHT = "\xBC";
+const char *const BOTTOM_LEFT = "\xC8";
+const char *const TOP_LEFT = "\xC9";
+const char *const HORIZONTAL = "\xCD";
 // Characters
-const char* const FORWARD_SLASH = "\x2F";
-const char* const BACK_SLASH = "\x5C";
-const char* const FLAT_LINE = "\xC4";
+const char *const FORWARD_SLASH = "\x2F";
+const char *const BACK_SLASH = "\x5C";
+const char *const FLAT_LINE = "\xC4";
 
 // Singular state machine controls the flow of the game
 enum class State: uint8

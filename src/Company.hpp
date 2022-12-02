@@ -37,7 +37,7 @@ public:
 	// Returns the name of the company
 	string GetName() const;
 	// Returns the company data array
-	uint32* GetCompanyData();
+	uint32 *GetCompanyData();
 	// Returns the value of the company
 	uint32 GetCurrentValue() const;
 	// Returns the amount of stocks currently owned in the company

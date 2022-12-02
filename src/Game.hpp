@@ -12,7 +12,7 @@ class Game
 	int32 m_money = STARTINGCASH;		// The players cash
 	string m_invalidMessage = "";		// A message to be printed in case of invalid input
 
-	Company* m_companies = nullptr;	// For creating companies on the heap
+	Company *m_companies = nullptr;	// For creating companies on the heap
 
 	bool Startup() noexcept;
 	bool Update();
@@ -24,7 +24,7 @@ class Game
 	void InitialiseCompanies() noexcept;
 	bool StepDay() noexcept;
 	char GetDataFromArray(
-		Company* pComp,
+		Company *pComp,
 		const uint8 pHorizontal,
 		uint8 pVertical
 	) noexcept;

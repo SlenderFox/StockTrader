@@ -259,7 +259,7 @@ void Game::UserInput()
 				m_targetDay = val;
 				return;
 			}
-			catch (const std::exception& e) { throw e; }
+			catch (const std::exception &e) { throw e; }
 			break;
 		case State::Select:
 			// After invoking the select command, searches for a valid request
@@ -274,7 +274,7 @@ void Game::UserInput()
 				m_selected = val - 1;
 				return;
 			}
-			catch (const std::exception& e) { throw e; }
+			catch (const std::exception &e) { throw e; }
 			break;
 		case State::Buy:
 			// After invoking the buy command, process input as number
@@ -289,7 +289,7 @@ void Game::UserInput()
 				BuySellFromCompany(val);
 				return;
 			}
-			catch (const std::exception& e) { throw e; }
+			catch (const std::exception &e) { throw e; }
 			break;
 		case State::Sell:
 			// After invoking the sell command, process input as number
@@ -304,7 +304,7 @@ void Game::UserInput()
 				BuySellFromCompany(-val);
 				return;
 			}
-			catch (const std::exception& e) { throw e; }
+			catch (const std::exception &e) { throw e; }
 			break;
 		default:
 			break;
@@ -387,7 +387,7 @@ void Game::ResetGame() noexcept
 }
 
 char Game::GetDataFromArray(
-	Company* pComp,
+	Company *pComp,
 	const uint8 pHorizontal,
 	uint8 pVertical) noexcept
 {

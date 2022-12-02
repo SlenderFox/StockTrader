@@ -43,7 +43,7 @@ CompanyType Company::GetType() const
 string Company::GetName() const
 { return m_name; }
 
-uint32* Company::GetCompanyData()
+uint32 *Company::GetCompanyData()
 { return m_companyData; }
 
 uint32 Company::GetCurrentValue() const

@@ -6,7 +6,7 @@ using std::cin;
 
 int main()
 {
-	Game* app = new Game();
+	Game *app = new Game();
 	app->Run();
 	delete app;
 
