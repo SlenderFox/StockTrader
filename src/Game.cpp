@@ -389,7 +389,8 @@ void Game::ResetGame() noexcept
 char Game::GetDataFromArray(
 	Company *pComp,
 	const uint8 pHorizontal,
-	uint8 pVertical) noexcept
+	uint8 pVertical
+) noexcept
 {
 	// The lines are drawn between the values
 	// (Should be from 0 to DETAIL-1 but done this way to prevent clipping)
