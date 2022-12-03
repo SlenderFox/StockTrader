@@ -22,22 +22,22 @@ constexpr uint16	UINT16_MAX	= 0xffff;
 constexpr uint32	UINT32_MAX	= 0xffffffff;
 constexpr uint64	UINT64_MAX	= 0xffffffffffffffff;
 
-constexpr uint8 CHARWIDTH = (uint8)8;			// The width of one character in the console
-constexpr uint8 WIDTH = (uint8)90;				// The character width of the console window (How many characters wide)
-constexpr uint8 DETAIL = (uint8)30;				// How many lines high the graph is
-constexpr uint8 NUMCOMPANIES = (uint8)5;		// How many companies there are
-constexpr int32 MAXTRANSFER = INT32_MAX;		// The maximum amount of stocks you can buy/sell at once
-constexpr int32 STARTINGCASH = 10000;			// The amount of cash the players starts with
+constexpr uint8 CHARWIDTH = 8;           // The width of one character in the console
+constexpr uint8 WIDTH = 90;              // The character width of the console window (How many characters wide)
+constexpr uint8 DETAIL = 30;             // How many lines high the graph is
+constexpr uint8 NUMCOMPANIES = 5;        // How many companies there are
+constexpr int32 MAXTRANSFER = INT32_MAX; // The maximum amount of stocks you can buy/sell at once
+constexpr int32 STARTINGCASH = 10000;    // The amount of cash the players starts with
 
 // Character storage
 // Double lines
-const char *const VERTICAL = "\xBA";
-const char *const TOP_RIGHT = "\xBB";
-const char *const BOTTOM_RIGHT = "\xBC";
-const char *const BOTTOM_LEFT = "\xC8";
-const char *const TOP_LEFT = "\xC9";
-const char *const HORIZONTAL = "\xCD";
+constexpr const char *const VERTICAL = "\xBA";
+constexpr const char *const TOP_RIGHT = "\xBB";
+constexpr const char *const BOTTOM_RIGHT = "\xBC";
+constexpr const char *const BOTTOM_LEFT = "\xC8";
+constexpr const char *const TOP_LEFT = "\xC9";
+constexpr const char *const HORIZONTAL = "\xCD";
 // Characters
-const char *const FORWARD_SLASH = "\x2F";
-const char *const BACK_SLASH = "\x5C";
-const char *const FLAT_LINE = "\xC4";
+constexpr const char *const FORWARD_SLASH = "\x2F";
+constexpr const char *const BACK_SLASH = "\x5C";
+constexpr const char *const FLAT_LINE = "\xC4";
