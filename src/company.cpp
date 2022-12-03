@@ -1,25 +1,29 @@
-#include "Company.hpp"
+#include "company.hpp"
 #include <random>
 #include <memory.h>
 
-Company::Company()
+company::company()
 {
 	// Fills the data array with empty data
 	memset(&m_companyData, 0, sizeof(m_companyData));
 }
 
-void Company::InitialiseCompany(CompanyType pType, string pName, uint32 pStartValue)
+void company::initialiseCompany(
+	companyType inType,
+	std::string inName,
+	uint32 inStartValue
+)
 {
-	m_type = pType;
-	m_name = pName;
-	m_companyData[0] = m_currentValue = pStartValue;
+	m_type = inType;
+	m_name = inName;
+	m_companyData[0] = m_currentValue = inStartValue;
 	m_ownedStocks = 0;
 }
 
-void Company::UpdateCompanyValue(float pMin, float pMax)
+void company::updateCompanyValue(float inMin, float inMax)
 {
 	// TODO: Fuck the line below me
-	uint32 newValue = (uint32)(m_currentValue * ((pMax - pMin) * ((float)(rand() % 1000) / 1000) + pMin));
+	uint32 newValue = (uint32)(m_currentValue * ((inMax - inMin) * ((float)(rand() % 1000) / 1000) + inMin));
 	if (m_currentValue + newValue > 0/* && m_currentValue + newValue < 1000*/)
 	{
 		m_currentValue += newValue;
@@ -34,7 +38,7 @@ void Company::UpdateCompanyValue(float pMin, float pMax)
 	}
 }
 
-char Company::GetDataFromArray(
+char company::getDataFromArray(
 	const uint32 inMaxValue,
 	const uint8 inHorizontal,
 	uint8 inVertical
@@ -45,10 +49,10 @@ char Company::GetDataFromArray(
 	// Inverts vertical from DETAIL-1 to 0 to 0 to DETAIL
 	inVertical = DETAIL - inVertical;
 	// 0 to m_maxValue value is scaled to 0 to DETAIL
-	uint32 leftValue = (uint32)(GetCompanyData()[WIDTH - 2 - inHorizontal] / (float)(inMaxValue / DETAIL));
-	uint32 rightValue = (uint32)(GetCompanyData()[WIDTH - 3 - inHorizontal] / (float)(inMaxValue / DETAIL));
+	uint32 leftValue = (uint32)(getCompanyData()[WIDTH - 2 - inHorizontal] / (float)(inMaxValue / DETAIL));
+	uint32 rightValue = (uint32)(getCompanyData()[WIDTH - 3 - inHorizontal] / (float)(inMaxValue / DETAIL));
 
-	if (GetCompanyData()[WIDTH - 2 - inHorizontal] == 0)
+	if (getCompanyData()[WIDTH - 2 - inHorizontal] == 0)
 		return ' ';
 	else if (leftValue == inVertical && leftValue == rightValue)
 		return '_';
@@ -60,20 +64,20 @@ char Company::GetDataFromArray(
 		return ' ';
 }
 
-void Company::ModifyOwnedStocks(uint32 pDifference)
-{ m_ownedStocks += pDifference; }
+void company::modifyOwnedStocks(uint32 inDifference)
+{ m_ownedStocks += inDifference; }
 
-CompanyType Company::GetType() const
+companyType company::getType() const
 { return m_type; }
 
-string Company::GetName() const
+std::string company::getName() const
 { return m_name; }
 
-uint32 *Company::GetCompanyData()
+uint32 *company::getCompanyData()
 { return m_companyData; }
 
-uint32 Company::GetCurrentValue() const
+uint32 company::getCurrentValue() const
 { return m_currentValue; }
 
-uint32 Company::GetOwnedStocks() const
+uint32 company::getOwnedStocks() const
 { return m_ownedStocks; }

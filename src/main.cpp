@@ -5,7 +5,7 @@
  * https://stackoverflow.com/questions/34842526/update-console-without-flickering-c
  */
 
-#include "Game.hpp"
+#include "game.hpp"
 #include <iostream>
 
 using std::cout;
@@ -13,8 +13,8 @@ using std::cin;
 
 int main(int argc, char **args)
 {
-	Game *app = new Game();
-	app->Run();
+	game *app = new game();
+	app->run();
 	delete app;
 
 	cout << "\n\tPress 'Enter' to exit the program.";

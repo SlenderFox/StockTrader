@@ -1,34 +1,32 @@
 #pragma once
-#include "Enums.hpp"
-#include <string>
-#include "Company.hpp"
+#include "company.hpp"
 
 namespace io
 {
-	void Flush() noexcept;
+	void flush() noexcept;
 
-	void DrawGraph(
-		Company* inCompanies,
+	void drawGraph(
+		company* inCompanies,
 		const uint8 inSelected,
 		const uint32 inMaxValue
 	) noexcept;
 
-	void DrawInfo(
-		const Company* inCompanies,
+	void drawInfo(
+		const company* inCompanies,
 		const uint16 inDay,
 		const int32 inMoney
 	) noexcept;
 
-	void DrawConsole(
-		const GameState inState,
+	void drawConsole(
+		const gameState inState,
 		const std::string inInvalidMsg
 	) noexcept;
 
 	_NODISCARD
-	bool EndGame(
-		const Company* inCompanies,
+	bool endGame(
+		const company* inCompanies,
 		const int32 inMoney
 	) noexcept;
 
-	std::string ConvertToCash(int32 pMoney) noexcept;
+	std::string convertToCash(int32 inMoney) noexcept;
 }

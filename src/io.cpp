@@ -5,17 +5,17 @@ using std::cout;
 
 namespace io
 {
-	void Flush() noexcept
+	void flush() noexcept
 	{ cout.flush(); }
 
-	void DrawGraph(
-		Company* inCompanies,
+	void drawGraph(
+		company* inCompanies,
 		const uint8 inSelected,
 		const uint32 inMaxValue
 	) noexcept
 	{
 		// Prints currently selected company name
-		cout << " " << inCompanies[inSelected].GetName() << "\n";
+		cout << " " << inCompanies[inSelected].getName() << "\n";
 
 		// Top edge of graph box
 		cout << TOP_LEFT;
@@ -31,7 +31,7 @@ namespace io
 			cout << VERTICAL;
 			for (uint8 x = 0; x < WIDTH - 2; x++)
 			{
-				cout << inCompanies[inSelected].GetDataFromArray(inMaxValue, x, y);
+				cout << inCompanies[inSelected].getDataFromArray(inMaxValue, x, y);
 			}
 			cout << VERTICAL << "\n";
 		}
@@ -45,20 +45,20 @@ namespace io
 		cout << BOTTOM_RIGHT << "\n";
 	}
 
-	void DrawInfo(
-		const Company* inCompanies,
+	void drawInfo(
+		const company* inCompanies,
 		const uint16 inDay,
 		const int32 inMoney
 	) noexcept
 	{
 		cout << " Day: " << inDay << "\n"
-			<< " Money: " << ConvertToCash(inMoney) << "\n";
+			<< " Money: " << convertToCash(inMoney) << "\n";
 
 		for (uint8 i = 0; i < NUMCOMPANIES; i++)
 		{
-			cout << " " << inCompanies[i].GetName() << ": "
-				<< inCompanies[i].GetOwnedStocks() << " @ "
-				<< ConvertToCash(inCompanies[i].GetCurrentValue()) << "\n";
+			cout << " " << inCompanies[i].getName() << ": "
+				<< inCompanies[i].getOwnedStocks() << " @ "
+				<< convertToCash(inCompanies[i].getCurrentValue()) << "\n";
 		}
 
 		//cout << " Max value: " << m_maxValue << "\n";
@@ -71,24 +71,24 @@ namespace io
 		cout << "\n";
 	}
 
-	void DrawConsole(
-		const GameState inState,
+	void drawConsole(
+		const gameState inState,
 		const std::string inInvalidMsg
 	) noexcept
 	{
 		switch (inState)
 		{
-		case GameState::Invalid:
+		case gameState::invalid:
 			cout << " Command not accepted - Reason given:\n \"" << inInvalidMsg
 				<< "\"\n Type 'help' for a list of accepted commands\n";
 			break;
-		case GameState::Info:
+		case gameState::info:
 			cout << "	Welcome to StockTrader!\n"
 				<< " Your goal in this game is make the most amount of money\n"
 				<< " in one year (365 days) by buying and selling stocks.\n"
 				<< "	Type 'help' for commands\n";
 			break;
-		case GameState::Help:
+		case gameState::help:
 			cout << " Commands are:\n"
 				<< " 'help'               | Lists these commands\n"
 				<< " 'end day'/'next'/'n' | Ends current day and moves on to the next\n"
@@ -102,29 +102,29 @@ namespace io
 		}
 	}
 
-	bool EndGame(
-		const Company* inCompanies,
+	bool endGame(
+		const company* inCompanies,
 		const int32 inMoney
 	) noexcept
 	{
 		system("cls");
 
 		cout << " Congratulations! You made it through 365 days, lets see how you did:\n\n";
-		cout << " On hand money: " << ConvertToCash(inMoney)
+		cout << " On hand money: " << convertToCash(inMoney)
 			<< "\n Stocks in each company and how much they are worth: \n";
 
 		uint32 totalCash = inMoney;
 
 		for (uint8 i = 0; i < NUMCOMPANIES; i++)
 		{
-			cout << " " << inCompanies[i].GetName() << ": "
-				<< inCompanies[i].GetOwnedStocks() << " @ "
-				<< ConvertToCash(inCompanies[i].GetCurrentValue()) << "\n";
+			cout << " " << inCompanies[i].getName() << ": "
+				<< inCompanies[i].getOwnedStocks() << " @ "
+				<< convertToCash(inCompanies[i].getCurrentValue()) << "\n";
 
-			totalCash += inCompanies[i].GetOwnedStocks() * inCompanies[i].GetCurrentValue();
+			totalCash += inCompanies[i].getOwnedStocks() * inCompanies[i].getCurrentValue();
 		}
 
-		cout << " All for a total of: " << ConvertToCash(totalCash) << "\n";
+		cout << " All for a total of: " << convertToCash(totalCash) << "\n";
 		cout << "\n Do you want to play again? [y/n] ";
 		cout.flush();
 
@@ -141,9 +141,9 @@ namespace io
 		return true;
 	}
 
-	std::string ConvertToCash(int32 pMoney) noexcept
+	std::string convertToCash(int32 inMoney) noexcept
 	{
-		std::string moneyText = std::to_string(pMoney);
+		std::string moneyText = std::to_string(inMoney);
 		std::string temp;
 
 		// Reverse the string, placing a comma after every third number

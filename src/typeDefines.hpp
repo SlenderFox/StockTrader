@@ -11,10 +11,10 @@ typedef unsigned short     uint16;
 typedef unsigned int       uint32;
 typedef unsigned long long uint64;
 
-constexpr int8    int8_min    = -127-1;
-constexpr int16   int16_min   = -32767-1;
-constexpr int32   int32_min   = -2147483647-1;
-constexpr int64   int64_min   = -9223372036854775807-1;
+constexpr int8    INT8_MIN    = -127-1;
+constexpr int16   INT16_MIN   = -32767-1;
+constexpr int32   INT32_MIN   = -2147483647-1;
+constexpr int64   INT64_MIN   = -9223372036854775807-1;
 constexpr int8    INT8_MAX    = 127;
 constexpr int16   INT16_MAX   = 32767;
 constexpr int32   INT32_MAX   = 2147483647;
