@@ -1,3 +1,10 @@
+/* Todo:
+ * -Endgame
+ * -Display money with commas
+ * -Have the graph show a single line on the first day or pre-run the graph for width-2 days
+ * https://stackoverflow.com/questions/34842526/update-console-without-flickering-c
+ */
+
 #include "Game.hpp"
 #include <iostream>
 

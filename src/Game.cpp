@@ -58,19 +58,19 @@ void Game::InitialiseCompanies() noexcept
 		{
 		default:
 		case 0:
-			m_companies[i].InitialiseCompany(CompanyType::Flat, "Flat", 100);
+			m_companies[i].InitialiseCompany(Company::Type::Flat, "Flat", 100);
 			break;
 		case 1:
-			m_companies[i].InitialiseCompany(CompanyType::Growth, "Growth", 100);
+			m_companies[i].InitialiseCompany(Company::Type::Growth, "Growth", 100);
 			break;
 		case 2:
-			m_companies[i].InitialiseCompany(CompanyType::UpNDown, "UpNDown", 100);
+			m_companies[i].InitialiseCompany(Company::Type::UpNDown, "UpNDown", 100);
 			break;
 		case 3:
-			m_companies[i].InitialiseCompany(CompanyType::FalseHope, "FalseHope", 100);
+			m_companies[i].InitialiseCompany(Company::Type::FalseHope, "FalseHope", 100);
 			break;
 		case 4:
-			m_companies[i].InitialiseCompany(CompanyType::TwinPeaks, "TwinPeaks", 100);
+			m_companies[i].InitialiseCompany(Company::Type::TwinPeaks, "TwinPeaks", 100);
 			break;
 		}
 	}
@@ -96,7 +96,7 @@ bool Game::Update()
 	cout.flush();
 
 	// Asks the user for input
-	if (!GetGoto())
+	if (m_state != State::Goto)
 		UserInput();
 
 	return true;
@@ -105,13 +105,13 @@ bool Game::Update()
 bool Game::StepDay() noexcept
 {
 	// Makes sure that the user wants the day to end
-	if (GetEndDay() || GetGoto())
+	if (m_state == State::EndDay || m_state == State::Goto)
 	{
 		m_day++;
 		// Ends game when year ends
 		if (m_day == 366)
 		{
-			SetGameOver();
+			m_state = State::GameOver;
 			// Currently the program just ends
 			return false;
 		}
@@ -124,10 +124,10 @@ bool Game::StepDay() noexcept
 		}
 
 		// If goto has been called and target day has not been reached, prevent state from being reset
-		if (GetGoto() && m_day != m_targetDay)
+		if (m_state == State::Goto && m_day != m_targetDay)
 			return true;
 
-		ResetState();
+		m_state = State::Clear;
 	}
 	return true;
 }
@@ -189,17 +189,17 @@ void Game::DrawInfo() noexcept
 
 void Game::DrawConsole() noexcept
 {
-	if (GetInvalid())
+	if (m_state == State::Invalid)
 		cout << " Command not accepted - Reason given:\n \"" << m_invalidMessage
 		<< "\"\n Type 'help' for a list of accepted commands\n";
 
-	if (GetInfo())
+	if (m_state == State::Info)
 		cout << "	Welcome to StockTrader!\n"
 		<< " Your goal in this game is make the most amount of money\n"
 		<< " in one year (365 days) by buying and selling stocks.\n"
 		<< "	Type 'help' for commands\n";
 
-	if (GetHelp())
+	if (m_state == State::Help)
 	{
 		cout << " Commands are:\n"
 			<< " 'help'               | Lists these commands\n"
@@ -214,7 +214,7 @@ void Game::DrawConsole() noexcept
 
 void Game::UserInput()
 {
-	ResetState();
+	m_state = State::Clear;
 
 	// Ready for player input
 	char input[50] = "\0";
@@ -231,7 +231,7 @@ void Game::UserInput()
 		// Display all commands
 		if (strcmp(input, "help") == 0)
 		{
-			SetHelp();
+			m_state = State::Help;
 			return;
 		}
 
@@ -240,7 +240,7 @@ void Game::UserInput()
 			strcmp(input, "next") == 0 ||
 			strcmp(input, "n") == 0)
 		{
-			SetEndDay();
+			m_state = State::EndDay;
 			return;
 		}
 
@@ -311,13 +311,13 @@ void Game::UserInput()
 		}
 
 		// Primes the fast forward command
-		if (strcmp(input, "goto") == 0) { SetGoto(); }
+		if (strcmp(input, "goto") == 0) { m_state = State::Goto; }
 		// Primes the select command
-		if (strcmp(input, "select") == 0) { SetSelect(); }
+		if (strcmp(input, "select") == 0) { m_state = State::Select; }
 		// Primes the buy command
-		if (strcmp(input, "buy") == 0) { SetBuy(); }
+		if (strcmp(input, "buy") == 0) { m_state = State::Buy; }
 		// Primes the sell command
-		if (strcmp(input, "sell") == 0) { SetSell(); }
+		if (strcmp(input, "sell") == 0) { m_state = State::Sell; }
 
 		char next = cin.peek();
 		if (next == '\n' || next == EOF)
@@ -330,10 +330,10 @@ void Game::UserInput()
 	}
 
 	// Failed input handling
-	if (GetGoto()) { SetInvalid("Invalid value entered, please enter a number between today and 365"); }
-	else if (GetSelect()) { SetInvalid("Invalid value entered"); }
-	else if (GetBuy()) { SetInvalid("Invalid value entered"); }
-	else if (GetSell()) { SetInvalid("Invalid value entered"); }
+	if (m_state == State::Goto) { SetInvalid("Invalid value entered, please enter a number between today and 365"); }
+	else if (m_state == State::Select) { SetInvalid("Invalid value entered"); }
+	else if (m_state == State::Buy) { SetInvalid("Invalid value entered"); }
+	else if (m_state == State::Sell) { SetInvalid("Invalid value entered"); }
 	else { SetInvalid("Command not found"); }
 	cout.flush();
 	return;
@@ -377,7 +377,7 @@ bool Game::EndGame() noexcept
 
 void Game::ResetGame() noexcept
 {
-	SetInfo();
+	m_state = State::Info;
 	m_day = 0;
 	m_targetDay = 0;
 	m_maxValue = 512;
@@ -466,57 +466,3 @@ void Game::SetInvalid(string pMessage) noexcept
 	m_state = State::Invalid;
 	m_invalidMessage = pMessage;
 }
-
-void Game::ResetState() noexcept
-{ m_state = State::Clear; }
-
-void Game::SetGameOver() noexcept
-{ m_state = State::GameOver; }
-
-void Game::SetInfo() noexcept
-{ m_state = State::Info; }
-
-void Game::SetHelp() noexcept
-{ m_state = State::Help; }
-
-void Game::SetEndDay() noexcept
-{ m_state = State::EndDay; }
-
-void Game::SetGoto() noexcept
-{ m_state = State::Goto; }
-
-void Game::SetSelect() noexcept
-{ m_state = State::Select; }
-
-void Game::SetBuy() noexcept
-{ m_state = State::Buy; }
-
-void Game::SetSell() noexcept
-{ m_state = State::Sell; }
-
-bool Game::GetGameOver() const noexcept
-{ return (m_state == State::GameOver); }
-
-bool Game::GetInvalid() const noexcept
-{ return (m_state == State::Invalid); }
-
-bool Game::GetInfo() const noexcept
-{ return (m_state == State::Info); }
-
-bool Game::GetHelp() const noexcept
-{ return (m_state == State::Help); }
-
-bool Game::GetEndDay() const noexcept
-{ return (m_state == State::EndDay); }
-
-bool Game::GetGoto() const noexcept
-{ return (m_state == State::Goto); }
-
-bool Game::GetSelect() const noexcept
-{ return (m_state == State::Select); }
-
-bool Game::GetBuy() const noexcept
-{ return (m_state == State::Buy); }
-
-bool Game::GetSell() const noexcept
-{ return (m_state == State::Sell); }

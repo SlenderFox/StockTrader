@@ -3,6 +3,21 @@
 
 class Game
 {
+	// Singular state machine controls the flow of the game
+	enum class State: uint8
+	{
+		Clear,
+		GameOver,
+		Invalid,
+		Info,
+		Help,
+		EndDay,
+		Goto,
+		Select,
+		Buy,
+		Sell
+	};
+
 	State m_state = State::Info;		// Controls what the game should do
 	uint8 m_selected = 0;				// The company currently selected for display
 	bool m_closeApp = false;
@@ -33,26 +48,6 @@ class Game
 	bool EndGame() noexcept;
 	void ResetGame() noexcept;
 	void SetInvalid(string pMessage) noexcept;
-
-	void ResetState() noexcept;
-	void SetGameOver() noexcept;
-	void SetInfo() noexcept;
-	void SetHelp() noexcept;
-	void SetEndDay() noexcept;
-	void SetGoto() noexcept;
-	void SetSelect() noexcept;
-	void SetBuy() noexcept;
-	void SetSell() noexcept;
-
-	bool GetGameOver() const noexcept;
-	bool GetInvalid() const noexcept;
-	bool GetInfo() const noexcept;
-	bool GetHelp() const noexcept;
-	bool GetEndDay() const noexcept;
-	bool GetGoto() const noexcept;
-	bool GetSelect() const noexcept;
-	bool GetBuy() const noexcept;
-	bool GetSell() const noexcept;
 
 public:
 	Game() = default;

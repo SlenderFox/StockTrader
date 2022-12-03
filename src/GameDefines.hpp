@@ -1,10 +1,4 @@
 #pragma once
-/* Todo:
- * -Endgame
- * -Display money with commas
- * -Have the graph show a single line on the first day or pre-run the graph for width-2 days
- * https://stackoverflow.com/questions/34842526/update-console-without-flickering-c
- */
 
 typedef signed char			int8;
 typedef signed short			int16;
@@ -47,29 +41,3 @@ const char *const HORIZONTAL = "\xCD";
 const char *const FORWARD_SLASH = "\x2F";
 const char *const BACK_SLASH = "\x5C";
 const char *const FLAT_LINE = "\xC4";
-
-// Singular state machine controls the flow of the game
-enum class State: uint8
-{
-	Clear,
-	GameOver,
-	Invalid,
-	Info,
-	Help,
-	EndDay,
-	Goto,
-	Select,
-	Buy,
-	Sell
-};
-
-// The different types of companies avaliable
-enum class CompanyType: uint8
-{
-	UNDEFINED,
-	Flat,
-	Growth,
-	UpNDown,
-	FalseHope,
-	TwinPeaks
-};
