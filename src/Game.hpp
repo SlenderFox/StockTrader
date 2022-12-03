@@ -1,26 +1,10 @@
 #pragma once
 #include "Company.hpp"
+#include "Enums.hpp"
 
 class Game
 {
-public:
-	// Singular state machine controls the flow of the game
-	enum class State: uint8
-	{
-		Clear,
-		GameOver,
-		Invalid,
-		Info,
-		Help,
-		EndDay,
-		Goto,
-		Select,
-		Buy,
-		Sell
-	};
-
-private:
-	State m_state = State::Info;		// Controls what the game should do
+	GameState m_state = GameState::Info;		// Controls what the game should do
 	uint8 m_selected = 0;				// The company currently selected for display
 	bool m_closeApp = false;
 	uint16 m_day = 0;						// The current day

@@ -1,5 +1,5 @@
 #pragma once
-#include "Game.hpp"
+#include "Enums.hpp"
 #include <string>
 #include "Company.hpp"
 
@@ -18,7 +18,7 @@ namespace Renderer
 	) noexcept;
 
 	void DrawConsole(
-		const Game::State inState,
+		const GameState inState,
 		const std::string inInvalidMsg
 	) noexcept;
 

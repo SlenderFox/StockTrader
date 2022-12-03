@@ -67,23 +67,23 @@ namespace Renderer
 	}
 
 	void DrawConsole(
-		const Game::State inState,
+		const GameState inState,
 		const std::string inInvalidMsg
 	) noexcept
 	{
 		switch (inState)
 		{
-		case Game::State::Invalid:
+		case GameState::Invalid:
 			std::cout << " Command not accepted - Reason given:\n \"" << inInvalidMsg
 				<< "\"\n Type 'help' for a list of accepted commands\n";
 			break;
-		case Game::State::Info:
+		case GameState::Info:
 			std::cout << "	Welcome to StockTrader!\n"
 				<< " Your goal in this game is make the most amount of money\n"
 				<< " in one year (365 days) by buying and selling stocks.\n"
 				<< "	Type 'help' for commands\n";
 			break;
-		case Game::State::Help:
+		case GameState::Help:
 			std::cout << " Commands are:\n"
 				<< " 'help'               | Lists these commands\n"
 				<< " 'end day'/'next'/'n' | Ends current day and moves on to the next\n"

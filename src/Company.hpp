@@ -1,26 +1,13 @@
 #pragma once
-#include "GameDefines.hpp"
+#include "Enums.hpp"
 #include <string>
 
 using std::string;
 
 class Company
 {
-public:
-	// The different types of companies avaliable
-	enum class Type: uint8
-	{
-		UNDEFINED,
-		Flat,
-		Growth,
-		UpNDown,
-		FalseHope,
-		TwinPeaks
-	};
-
-private:
 	// The type of company, determining how the value changes over time
-	Type m_type = Type::UNDEFINED;
+	CompanyType m_type = CompanyType::UNDEFINED;
 	// The name of the company
 	string m_name = "UNDEFINED";
 	// An array of previous values used to generate the graph (the width is correct)
@@ -36,7 +23,7 @@ public:
 
 	// Starts up the company with default values
 	void InitialiseCompany(
-		Type pType,
+		CompanyType pType,
 		string pName,
 		uint32 pStartValue
 	);
@@ -56,7 +43,7 @@ public:
 	// Adds or removes owned stocks
 	void ModifyOwnedStocks(uint32 pDifference);
 	// Returns the type of company
-	Type GetType() const;
+	CompanyType GetType() const;
 	// Returns the name of the company
 	string GetName() const;
 	// Returns the company data array

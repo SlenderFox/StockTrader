@@ -8,7 +8,7 @@ Company::Company()
 	memset(&m_companyData, 0, sizeof(m_companyData));
 }
 
-void Company::InitialiseCompany(Type pType, string pName, uint32 pStartValue)
+void Company::InitialiseCompany(CompanyType pType, string pName, uint32 pStartValue)
 {
 	m_type = pType;
 	m_name = pName;
@@ -63,7 +63,7 @@ char Company::GetDataFromArray(
 void Company::ModifyOwnedStocks(uint32 pDifference)
 { m_ownedStocks += pDifference; }
 
-Company::Type Company::GetType() const
+CompanyType Company::GetType() const
 { return m_type; }
 
 string Company::GetName() const

@@ -59,19 +59,19 @@ void Game::InitialiseCompanies() noexcept
 		{
 		default:
 		case 0:
-			m_companies[i].InitialiseCompany(Company::Type::Flat, "Flat", 100);
+			m_companies[i].InitialiseCompany(CompanyType::Flat, "Flat", 100);
 			break;
 		case 1:
-			m_companies[i].InitialiseCompany(Company::Type::Growth, "Growth", 100);
+			m_companies[i].InitialiseCompany(CompanyType::Growth, "Growth", 100);
 			break;
 		case 2:
-			m_companies[i].InitialiseCompany(Company::Type::UpNDown, "UpNDown", 100);
+			m_companies[i].InitialiseCompany(CompanyType::UpNDown, "UpNDown", 100);
 			break;
 		case 3:
-			m_companies[i].InitialiseCompany(Company::Type::FalseHope, "FalseHope", 100);
+			m_companies[i].InitialiseCompany(CompanyType::FalseHope, "FalseHope", 100);
 			break;
 		case 4:
-			m_companies[i].InitialiseCompany(Company::Type::TwinPeaks, "TwinPeaks", 100);
+			m_companies[i].InitialiseCompany(CompanyType::TwinPeaks, "TwinPeaks", 100);
 			break;
 		}
 	}
@@ -97,7 +97,7 @@ bool Game::Update()
 	cout.flush();
 
 	// Asks the user for input
-	if (m_state != State::Goto)
+	if (m_state != GameState::Goto)
 		UserInput();
 
 	return true;
@@ -106,13 +106,13 @@ bool Game::Update()
 bool Game::StepDay() noexcept
 {
 	// Makes sure that the user wants the day to end
-	if (m_state == State::EndDay || m_state == State::Goto)
+	if (m_state == GameState::EndDay || m_state == GameState::Goto)
 	{
 		m_day++;
 		// Ends game when year ends
 		if (m_day == 366)
 		{
-			m_state = State::GameOver;
+			m_state = GameState::GameOver;
 			// Currently the program just ends
 			return false;
 		}
@@ -125,17 +125,17 @@ bool Game::StepDay() noexcept
 		}
 
 		// If goto has been called and target day has not been reached, prevent state from being reset
-		if (m_state == State::Goto && m_day != m_targetDay)
+		if (m_state == GameState::Goto && m_day != m_targetDay)
 			return true;
 
-		m_state = State::Clear;
+		m_state = GameState::Clear;
 	}
 	return true;
 }
 
 void Game::UserInput()
 {
-	m_state = State::Clear;
+	m_state = GameState::Clear;
 
 	// Ready for player input
 	char input[50] = "\0";
@@ -152,7 +152,7 @@ void Game::UserInput()
 		// Display all commands
 		if (strcmp(input, "help") == 0)
 		{
-			m_state = State::Help;
+			m_state = GameState::Help;
 			return;
 		}
 
@@ -161,13 +161,13 @@ void Game::UserInput()
 			strcmp(input, "next") == 0 ||
 			strcmp(input, "n") == 0)
 		{
-			m_state = State::EndDay;
+			m_state = GameState::EndDay;
 			return;
 		}
 
 		switch (m_state)
 		{
-		case State::Goto:
+		case GameState::Goto:
 			// After invoking the fast forward command, process input as number
 			try
 			{
@@ -182,7 +182,7 @@ void Game::UserInput()
 			}
 			catch (const std::exception &e) { throw e; }
 			break;
-		case State::Select:
+		case GameState::Select:
 			// After invoking the select command, searches for a valid request
 			try
 			{
@@ -197,7 +197,7 @@ void Game::UserInput()
 			}
 			catch (const std::exception &e) { throw e; }
 			break;
-		case State::Buy:
+		case GameState::Buy:
 			// After invoking the buy command, process input as number
 			try
 			{
@@ -212,7 +212,7 @@ void Game::UserInput()
 			}
 			catch (const std::exception &e) { throw e; }
 			break;
-		case State::Sell:
+		case GameState::Sell:
 			// After invoking the sell command, process input as number
 			try
 			{
@@ -232,13 +232,13 @@ void Game::UserInput()
 		}
 
 		// Primes the fast forward command
-		if (strcmp(input, "goto") == 0) { m_state = State::Goto; }
+		if (strcmp(input, "goto") == 0) { m_state = GameState::Goto; }
 		// Primes the select command
-		if (strcmp(input, "select") == 0) { m_state = State::Select; }
+		if (strcmp(input, "select") == 0) { m_state = GameState::Select; }
 		// Primes the buy command
-		if (strcmp(input, "buy") == 0) { m_state = State::Buy; }
+		if (strcmp(input, "buy") == 0) { m_state = GameState::Buy; }
 		// Primes the sell command
-		if (strcmp(input, "sell") == 0) { m_state = State::Sell; }
+		if (strcmp(input, "sell") == 0) { m_state = GameState::Sell; }
 
 		char next = cin.peek();
 		if (next == '\n' || next == EOF)
@@ -251,10 +251,10 @@ void Game::UserInput()
 	}
 
 	// Failed input handling
-	if (m_state == State::Goto) { SetInvalid("Invalid value entered, please enter a number between today and 365"); }
-	else if (m_state == State::Select) { SetInvalid("Invalid value entered"); }
-	else if (m_state == State::Buy) { SetInvalid("Invalid value entered"); }
-	else if (m_state == State::Sell) { SetInvalid("Invalid value entered"); }
+	if (m_state == GameState::Goto) { SetInvalid("Invalid value entered, please enter a number between today and 365"); }
+	else if (m_state == GameState::Select) { SetInvalid("Invalid value entered"); }
+	else if (m_state == GameState::Buy) { SetInvalid("Invalid value entered"); }
+	else if (m_state == GameState::Sell) { SetInvalid("Invalid value entered"); }
 	else { SetInvalid("Command not found"); }
 	cout.flush();
 	return;
@@ -262,7 +262,7 @@ void Game::UserInput()
 
 void Game::ResetGame() noexcept
 {
-	m_state = State::Info;
+	m_state = GameState::Info;
 	m_day = 0;
 	m_targetDay = 0;
 	m_maxValue = 512;
@@ -297,6 +297,6 @@ void Game::BuySellFromCompany(int32 pAmount) noexcept
 
 void Game::SetInvalid(string pMessage) noexcept
 {
-	m_state = State::Invalid;
+	m_state = GameState::Invalid;
 	m_invalidMessage = pMessage;
 }

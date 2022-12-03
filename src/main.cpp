@@ -11,7 +11,7 @@
 using std::cout;
 using std::cin;
 
-int main()
+int main(int argc, char **args)
 {
 	Game *app = new Game();
 	app->Run();
