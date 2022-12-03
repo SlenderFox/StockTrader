@@ -1,8 +1,13 @@
-#include "Renderer.hpp"
+#include "io.hpp"
 #include <iostream>
 
-namespace Renderer
+using std::cout;
+
+namespace io
 {
+	void Flush() noexcept
+	{ cout.flush(); }
+
 	void DrawGraph(
 		Company* inCompanies,
 		const uint8 inSelected,
@@ -10,34 +15,34 @@ namespace Renderer
 	) noexcept
 	{
 		// Prints currently selected company name
-		std::cout << " " << inCompanies[inSelected].GetName() << "\n";
+		cout << " " << inCompanies[inSelected].GetName() << "\n";
 
 		// Top edge of graph box
-		std::cout << TOP_LEFT;
+		cout << TOP_LEFT;
 		for (uint8 i = 0; i < WIDTH - 2; i++)
 		{
-			std::cout << HORIZONTAL;
+			cout << HORIZONTAL;
 		}
-		std::cout << TOP_RIGHT << "\n";
+		cout << TOP_RIGHT << "\n";
 
 		// Two for loops that print out the graph into the edge box
 		for (uint8 y = 0; y < DETAIL; y++)
 		{
-			std::cout << VERTICAL;
+			cout << VERTICAL;
 			for (uint8 x = 0; x < WIDTH - 2; x++)
 			{
-				std::cout << inCompanies[inSelected].GetDataFromArray(inMaxValue, x, y);
+				cout << inCompanies[inSelected].GetDataFromArray(inMaxValue, x, y);
 			}
-			std::cout << VERTICAL << "\n";
+			cout << VERTICAL << "\n";
 		}
 
 		// Bottom edge of graph box
-		std::cout << BOTTOM_LEFT;
+		cout << BOTTOM_LEFT;
 		for (uint8 i = 0; i < WIDTH - 2; i++)
 		{
-			std::cout << HORIZONTAL;
+			cout << HORIZONTAL;
 		}
-		std::cout << BOTTOM_RIGHT << "\n";
+		cout << BOTTOM_RIGHT << "\n";
 	}
 
 	void DrawInfo(
@@ -46,12 +51,12 @@ namespace Renderer
 		const int32 inMoney
 	) noexcept
 	{
-		std::cout << " Day: " << inDay << "\n"
+		cout << " Day: " << inDay << "\n"
 			<< " Money: " << ConvertToCash(inMoney) << "\n";
 
 		for (uint8 i = 0; i < NUMCOMPANIES; i++)
 		{
-			std::cout << " " << inCompanies[i].GetName() << ": "
+			cout << " " << inCompanies[i].GetName() << ": "
 				<< inCompanies[i].GetOwnedStocks() << " @ "
 				<< ConvertToCash(inCompanies[i].GetCurrentValue()) << "\n";
 		}
@@ -61,9 +66,9 @@ namespace Renderer
 		//cout << "\n";
 		for (uint16 i = 0; i < WIDTH; i++)
 		{
-			std::cout << FLAT_LINE;
+			cout << FLAT_LINE;
 		}
-		std::cout << "\n";
+		cout << "\n";
 	}
 
 	void DrawConsole(
@@ -74,17 +79,17 @@ namespace Renderer
 		switch (inState)
 		{
 		case GameState::Invalid:
-			std::cout << " Command not accepted - Reason given:\n \"" << inInvalidMsg
+			cout << " Command not accepted - Reason given:\n \"" << inInvalidMsg
 				<< "\"\n Type 'help' for a list of accepted commands\n";
 			break;
 		case GameState::Info:
-			std::cout << "	Welcome to StockTrader!\n"
+			cout << "	Welcome to StockTrader!\n"
 				<< " Your goal in this game is make the most amount of money\n"
 				<< " in one year (365 days) by buying and selling stocks.\n"
 				<< "	Type 'help' for commands\n";
 			break;
 		case GameState::Help:
-			std::cout << " Commands are:\n"
+			cout << " Commands are:\n"
 				<< " 'help'               | Lists these commands\n"
 				<< " 'end day'/'next'/'n' | Ends current day and moves on to the next\n"
 				<< " 'goto <integer>'     | Skips ahead to specified day (today-365)\n"
@@ -104,24 +109,24 @@ namespace Renderer
 	{
 		system("cls");
 
-		std::cout << " Congratulations! You made it through 365 days, lets see how you did:\n\n";
-		std::cout << " On hand money: " << ConvertToCash(inMoney)
+		cout << " Congratulations! You made it through 365 days, lets see how you did:\n\n";
+		cout << " On hand money: " << ConvertToCash(inMoney)
 			<< "\n Stocks in each company and how much they are worth: \n";
 
 		uint32 totalCash = inMoney;
 
 		for (uint8 i = 0; i < NUMCOMPANIES; i++)
 		{
-			std::cout << " " << inCompanies[i].GetName() << ": "
+			cout << " " << inCompanies[i].GetName() << ": "
 				<< inCompanies[i].GetOwnedStocks() << " @ "
 				<< ConvertToCash(inCompanies[i].GetCurrentValue()) << "\n";
 
 			totalCash += inCompanies[i].GetOwnedStocks() * inCompanies[i].GetCurrentValue();
 		}
 
-		std::cout << " All for a total of: " << ConvertToCash(totalCash) << "\n";
-		std::cout << "\n Do you want to play again? [y/n] ";
-		std::cout.flush();
+		cout << " All for a total of: " << ConvertToCash(totalCash) << "\n";
+		cout << "\n Do you want to play again? [y/n] ";
+		cout.flush();
 
 		// Ready for player input
 		char input[50] = "\0";

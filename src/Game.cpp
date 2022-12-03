@@ -2,12 +2,10 @@
 #include <random>
 #include <time.h>
 #include <sstream>
-#include <iostream>
 #include "windumb.hpp"
-#include "Renderer.hpp"
+#include "io.hpp"
+#include <iostream>
 
-using std::cout;
-using std::cin;
 using std::string;
 using std::to_string;
 
@@ -24,7 +22,7 @@ void Game::Run()
 	{
 		while (Update()) {}
 
-		if (!Renderer::EndGame(m_companies, m_money))
+		if (!io::EndGame(m_companies, m_money))
 			ResetGame();
 		else
 			m_closeApp = true;
@@ -89,12 +87,12 @@ bool Game::Update()
 	// Clears the console
 	system("cls");
 	// Draw the graph of the currently selected company
-	Renderer::DrawGraph(m_companies, m_selected, m_maxValue);
+	io::DrawGraph(m_companies, m_selected, m_maxValue);
 	// Draw current game info
-	Renderer::DrawInfo(m_companies, m_day, m_money);
+	io::DrawInfo(m_companies, m_day, m_money);
 	// Draw the in-game console
-	Renderer::DrawConsole(m_state, m_invalidMessage);
-	cout.flush();
+	io::DrawConsole(m_state, m_invalidMessage);
+	io::Flush();
 
 	// Asks the user for input
 	if (m_state != GameState::Goto)
@@ -139,10 +137,10 @@ void Game::UserInput()
 
 	// Ready for player input
 	char input[50] = "\0";
-	cout << ">";
-	cin.clear();
-	cin.ignore(cin.rdbuf()->in_avail());
-	cin >> input;
+	std::cout << ">";
+	std::cin.clear();
+	std::cin.ignore(std::cin.rdbuf()->in_avail());
+	std::cin >> input;
 
 	// Input loop
 	while (true)
@@ -240,14 +238,14 @@ void Game::UserInput()
 		// Primes the sell command
 		if (strcmp(input, "sell") == 0) { m_state = GameState::Sell; }
 
-		char next = cin.peek();
+		char next = std::cin.peek();
 		if (next == '\n' || next == EOF)
 			break;
 		for (uint16 i = 0; i < 50; i++)
 		{
 			input[i] = '\0';
 		}
-		cin >> input;
+		std::cin >> input;
 	}
 
 	// Failed input handling
@@ -256,7 +254,7 @@ void Game::UserInput()
 	else if (m_state == GameState::Buy) { SetInvalid("Invalid value entered"); }
 	else if (m_state == GameState::Sell) { SetInvalid("Invalid value entered"); }
 	else { SetInvalid("Command not found"); }
-	cout.flush();
+	std::cout.flush();
 	return;
 }
 

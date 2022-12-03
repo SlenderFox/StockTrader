@@ -3,8 +3,10 @@
 #include <string>
 #include "Company.hpp"
 
-namespace Renderer
+namespace io
 {
+	void Flush() noexcept;
+
 	void DrawGraph(
 		Company* inCompanies,
 		const uint8 inSelected,
