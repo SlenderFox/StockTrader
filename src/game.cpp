@@ -263,7 +263,7 @@ void game::resetGame() noexcept
 	m_maxValue = 512;
 	m_money = STARTINGCASH;
 
-	initialiseCompanies();	// Sets m_selected to 0
+	initialiseCompanies(); // Sets m_selected to 0
 }
 
 void game::buySellFromCompany(int32 inAmount) noexcept
