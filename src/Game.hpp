@@ -3,6 +3,7 @@
 
 class Game
 {
+public:
 	// Singular state machine controls the flow of the game
 	enum class State: uint8
 	{
@@ -18,6 +19,7 @@ class Game
 		Sell
 	};
 
+private:
 	State m_state = State::Info;		// Controls what the game should do
 	uint8 m_selected = 0;				// The company currently selected for display
 	bool m_closeApp = false;
@@ -31,21 +33,11 @@ class Game
 
 	bool Startup() noexcept;
 	bool Update();
-	void DrawGraph() noexcept;
-	void DrawInfo() noexcept;
-	void DrawConsole() noexcept;
 	void UserInput();
 
 	void InitialiseCompanies() noexcept;
 	bool StepDay() noexcept;
-	char GetDataFromArray(
-		Company *pComp,
-		const uint8 pHorizontal,
-		uint8 pVertical
-	) noexcept;
 	void BuySellFromCompany(int32 pAmount) noexcept;
-	string ConvertToCash(int32 pMoney) noexcept;
-	bool EndGame() noexcept;
 	void ResetGame() noexcept;
 	void SetInvalid(string pMessage) noexcept;
 

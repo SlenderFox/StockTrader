@@ -40,8 +40,18 @@ public:
 		string pName,
 		uint32 pStartValue
 	);
+
 	// Updates the value of the company
-	void UpdateCompanyValue(float pMin, float pMax);
+	void UpdateCompanyValue(
+		float pMin,
+		float pMax
+	);
+
+	char GetDataFromArray(
+		const uint32 inMaxValue,
+		const uint8 inHorizontal,
+		uint8 inVertical
+	) noexcept;
 
 	// Adds or removes owned stocks
 	void ModifyOwnedStocks(uint32 pDifference);

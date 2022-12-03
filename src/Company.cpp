@@ -34,6 +34,32 @@ void Company::UpdateCompanyValue(float pMin, float pMax)
 	}
 }
 
+char Company::GetDataFromArray(
+	const uint32 inMaxValue,
+	const uint8 inHorizontal,
+	uint8 inVertical
+) noexcept
+{
+	// The lines are drawn between the values
+	// (Should be from 0 to DETAIL-1 but done this way to prevent clipping)
+	// Inverts vertical from DETAIL-1 to 0 to 0 to DETAIL
+	inVertical = DETAIL - inVertical;
+	// 0 to m_maxValue value is scaled to 0 to DETAIL
+	uint32 leftValue = (uint32)(GetCompanyData()[WIDTH - 2 - inHorizontal] / (float)(inMaxValue / DETAIL));
+	uint32 rightValue = (uint32)(GetCompanyData()[WIDTH - 3 - inHorizontal] / (float)(inMaxValue / DETAIL));
+
+	if (GetCompanyData()[WIDTH - 2 - inHorizontal] == 0)
+		return ' ';
+	else if (leftValue == inVertical && leftValue == rightValue)
+		return '_';
+	else if (leftValue == inVertical && leftValue < rightValue)
+		return '/';
+	else if (leftValue == inVertical + 1U && leftValue > rightValue)
+		return '\\';
+	else
+		return ' ';
+}
+
 void Company::ModifyOwnedStocks(uint32 pDifference)
 { m_ownedStocks += pDifference; }
 

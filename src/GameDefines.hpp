@@ -1,5 +1,7 @@
 #pragma once
 
+#define _NODISCARD [[nodiscard]]
+
 typedef signed char        int8;
 typedef signed short       int16;
 typedef signed int         int32;
