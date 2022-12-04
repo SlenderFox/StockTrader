@@ -3,8 +3,12 @@
 #if defined(WIN32) || defined(_WIN32)
 
 	#define WIN32_LEAN_AND_MEAN
-	#define UNICODE
-	#define STRICT
+	#ifndef UNICODE
+		#define UNICODE
+	#endif
+	#ifndef STRICT
+		#define STRICT
+	#endif
 
 	#ifdef NOMINMAX
 		#include <Windows.h>
@@ -12,8 +16,4 @@
 		#define NOMINMAX
 		#include <Windows.h>
 	#endif
-
-	#undef WIN32_LEAN_AND_MEAN
-	#undef UNICODE
-	#undef STRICT
 #endif
