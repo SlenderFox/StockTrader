@@ -20,9 +20,7 @@ namespace io
 		// Top edge of graph box
 		cout << TOP_LEFT;
 		for (uint8 i = 0; i < WIDTH - 2; i++)
-		{
-			cout << HORIZONTAL;
-		}
+		{ cout << HORIZONTAL; }
 		cout << TOP_RIGHT << "\n";
 
 		// Two for loops that print out the graph into the edge box
@@ -30,18 +28,14 @@ namespace io
 		{
 			cout << VERTICAL;
 			for (uint8 x = 0; x < WIDTH - 2; x++)
-			{
-				cout << inCompanies[inSelected].getDataFromArray(inMaxValue, x, y);
-			}
+			{ cout << inCompanies[inSelected].getDataFromArray(inMaxValue, x, y); }
 			cout << VERTICAL << "\n";
 		}
 
 		// Bottom edge of graph box
 		cout << BOTTOM_LEFT;
 		for (uint8 i = 0; i < WIDTH - 2; i++)
-		{
-			cout << HORIZONTAL;
-		}
+		{ cout << HORIZONTAL; }
 		cout << BOTTOM_RIGHT << "\n";
 	}
 
@@ -65,9 +59,7 @@ namespace io
 
 		//cout << "\n";
 		for (uint16 i = 0; i < WIDTH; i++)
-		{
-			cout << FLAT_LINE;
-		}
+		{ cout << FLAT_LINE; }
 		cout << "\n";
 	}
 
@@ -150,7 +142,7 @@ namespace io
 		for (int32 i = (int32)moneyText.length() - 1, j = 0; i >= 0; --i, ++j)
 		{
 			if (j != 0 && j % 3 == 0)
-				temp += ",";
+			{ temp += ","; }
 			temp += moneyText[i];
 		}
 
@@ -159,9 +151,7 @@ namespace io
 
 		// Reverse the string again
 		for (int32 i = (int32)temp.length() - 1; i >= 0; --i)
-		{
-			moneyText += temp[i];
-		}
+		{ moneyText += temp[i]; }
 
 		return moneyText;
 	}
