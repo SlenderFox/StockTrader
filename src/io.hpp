@@ -6,8 +6,8 @@ namespace stockTrader
 {
 	class io
 	{
-		static constexpr uint64 buffVertical = 40;
-		static constexpr uint64 buffHorizontal = 62;
+		static constexpr uint64 buffVertical = 5;
+		static constexpr uint64 buffHorizontal = 5;
 
 		/**One buffer represents the current state of the screen.
 		 * The other buffer is the one current being written to.
@@ -20,8 +20,8 @@ namespace stockTrader
 		buffer *bufferB = nullptr;
 
 		// Reference pointer
-		buffer *activeBuffer = nullptr;
-		buffer *inactiveBuffer = nullptr;
+		buffer **activeBuffer = &bufferA;
+		buffer **inactiveBuffer = &bufferB;
 
 		io() noexcept;
 
@@ -32,6 +32,6 @@ namespace stockTrader
 
 		void swapBuffers() noexcept;
 		void draw() noexcept;
-		void update() noexcept;
+		void update(uint64 _val) noexcept;
 	};
 }

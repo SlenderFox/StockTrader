@@ -20,9 +20,9 @@ int main(int argc, char **args)
 
 	stockTrader::io *console = stockTrader::io::get();
 
-	for (int i = 0; i < 1; ++i)
+	for (int i = 0; i < 10; ++i)
 	{
-		//console->update();
+		console->update(i);
 		console->draw();
 		console->swapBuffers();
 	}

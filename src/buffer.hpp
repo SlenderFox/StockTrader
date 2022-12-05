@@ -28,6 +28,12 @@ namespace stockTrader
 
 		~buffer() noexcept;
 
+		void set(
+			uint64 _row,
+			uint64 _col,
+			char _val
+		) noexcept;
+
 		_NODISCARD
 		char at(
 			uint64 _row,

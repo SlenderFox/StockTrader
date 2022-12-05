@@ -24,13 +24,24 @@ namespace stockTrader
 	buffer::~buffer() noexcept
 	{ delete[] m_data; }
 
+	void buffer::set(
+		uint64 _row,
+		uint64 _col,
+		char _val
+	) noexcept
+	{
+		if (_row >= m_rows) _row = m_rows-1;
+		if (_col >= m_cols) _col = m_cols-1;
+		m_data[(_row * m_cols) + _col] = _val;
+	}
+
 	char buffer::at(
 		uint64 _row,
 		uint64 _col
 	) noexcept
 	{
-		if (_row > m_rows) _row = m_rows;
-		if (_col > m_cols) _col = m_cols;
+		if (_row >= m_rows) _row = m_rows-1;
+		if (_col >= m_cols) _col = m_cols-1;
 		return m_data[(_row * m_cols) + _col];
 	}
 
@@ -41,7 +52,5 @@ namespace stockTrader
 	{ return m_rows; }
 
 	buffer_proxy buffer::operator[](uint64 _row) noexcept
-	{
-		return buffer_proxy(m_data + (_row * m_cols));
-	}
+	{ return buffer_proxy(m_data + (_row * m_cols)); }
 }
