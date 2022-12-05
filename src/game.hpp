@@ -4,15 +4,20 @@
 class game
 {
 	bool m_closeApp = false;
-	gameState m_state = gameState::info; // Controls what the game should do
-	uint8 m_selected = 0;                // The company currently selected for display
-	uint16 m_day = 0;                    // The current day
-	uint16 m_targetDay = 0;              // Used when fast forwarding
-	uint32 m_maxValue = 512;             // Scales the graph, doubles when exceeded
-	int32 m_money = STARTINGCASH;        // The players cash
-	std::string m_invalidMessage = "";   // A message to be printed in case of invalid input
-
-	company *m_companies = nullptr;      // For creating companies on the heap
+	// Controls what the game should do
+	gameState m_state = gameState::info;
+	// The company currently selected for display
+	uint8 m_selected = 0;
+	uint16 m_day = 0;
+	// Used when fast forwarding
+	uint16 m_targetDay = 0;
+	// Scales the graph, doubles when exceeded
+	uint32 m_maxValue = 512;
+	int32 m_money = STARTINGCASH;
+	// A message to be printed in case of invalid input
+	std::string m_invalidMessage = "";
+	// For creating companies on the heap
+	company *m_companies = nullptr;
 
 	bool startup() noexcept;
 	bool update();

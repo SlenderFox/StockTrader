@@ -44,9 +44,9 @@ char company::getDataFromArray(
 	uint8 inVertical
 ) noexcept
 {
-	// The lines are drawn between the values
-	// (Should be from 0 to DETAIL-1 but done this way to prevent clipping)
-	// Inverts vertical from DETAIL-1 to 0 to 0 to DETAIL
+	/* The lines are drawn between the values
+	 * (Should be from 0 to DETAIL-1 but done this way to prevent clipping)
+	 * Inverts vertical from DETAIL-1 to 0 to 0 to DETAIL */
 	inVertical = DETAIL - inVertical;
 	// 0 to m_maxValue value is scaled to 0 to DETAIL
 	uint32 leftValue = (uint32)(getCompanyData()[WIDTH - 2 - inHorizontal] / (float)(inMaxValue / DETAIL));
@@ -73,11 +73,11 @@ companyType company::getType() const
 std::string company::getName() const
 { return m_name; }
 
-uint32 *company::getCompanyData()
-{ return m_companyData; }
+uint32 company::getOwnedStocks() const
+{ return m_ownedStocks; }
 
 uint32 company::getCurrentValue() const
 { return m_currentValue; }
 
-uint32 company::getOwnedStocks() const
-{ return m_ownedStocks; }
+uint32 *company::getCompanyData()
+{ return m_companyData; }

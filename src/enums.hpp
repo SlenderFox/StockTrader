@@ -1,7 +1,7 @@
 #pragma once
 #include "typeDefines.hpp"
 
-// Singular state machine controls the flow of the game
+/** Singular state machine controls the flow of the game */
 enum class gameState: uint8
 {
 	clear,
@@ -16,7 +16,7 @@ enum class gameState: uint8
 	sell
 };
 
-// The different types of companies avaliable
+/** The different types of companies avaliable */
 enum class companyType: uint8
 {
 	undefined,
