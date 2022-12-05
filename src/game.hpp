@@ -23,6 +23,12 @@ class game
 	bool update();
 	void userInput();
 
+	void drawGraph() noexcept;
+	void drawInfo() noexcept;
+	void drawConsole() noexcept;
+	_NODISCARD bool endGame() noexcept;
+
+	_NODISCARD std::string convertToCash(const int32 inMoney) noexcept;
 	void initialiseCompanies() noexcept;
 	bool stepDay() noexcept;
 	void buySellFromCompany(int32 inAmount) noexcept;
