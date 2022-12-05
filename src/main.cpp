@@ -5,7 +5,8 @@
  * https://stackoverflow.com/questions/34842526/update-console-without-flickering-c
  */
 
-#include "game.hpp"
+//#include "game.hpp"
+#include "io.hpp"
 #include <iostream>
 
 using std::cout;
@@ -13,15 +14,26 @@ using std::cin;
 
 int main(int argc, char **args)
 {
-	stockTrader::game *app = new stockTrader::game();
-	app->run();
-	delete app;
+	//stockTrader::game *app = new stockTrader::game();
+	//app->run();
+	//delete app;
 
-	cout << "\n\tPress 'Enter' to exit the program.";
-	cout.flush();
-	cin.clear();
-	cin.ignore(cin.rdbuf()->in_avail());
-	cin.get();
+	stockTrader::io *console = stockTrader::io::get();
+
+	for (int i = 0; i < 1; ++i)
+	{
+		//console->update();
+		console->draw();
+		console->swapBuffers();
+	}
+
+	delete console;
+
+	//cout << "\n\tPress 'Enter' to exit the program.";
+	//cout.flush();
+	//cin.clear();
+	//cin.ignore(cin.rdbuf()->in_avail());
+	//cin.get();
 
 	return 0;
 }
