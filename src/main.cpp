@@ -13,7 +13,7 @@ using std::cin;
 
 int main(int argc, char **args)
 {
-	game *app = new game();
+	stockTrader::game *app = new stockTrader::game();
 	app->run();
 	delete app;
 

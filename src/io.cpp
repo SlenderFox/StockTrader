@@ -1,14 +1,32 @@
 #include "io.hpp"
-#include <iostream>
+#include <memory.h>
 
-using std::cout;
-
-char *io::bufferA = nullptr;
-char *io::bufferB = nullptr;
-char *io::activeBuffer = nullptr;
-
-void io::SwapBuffers() noexcept
+namespace stockTrader
 {
-	if (activeBuffer == bufferA) activeBuffer = bufferB;
-	if (activeBuffer == bufferB) activeBuffer = bufferA;
+	io::buffer::buffer()
+	{
+		memset(&raw, ' ', sizeof(raw));
+	}
+
+	io::io() noexcept
+	{
+		// Start by loading bufferA
+		swapBuffers();
+	}
+
+	io::~io() noexcept
+	{
+	}
+
+	io *io::get() noexcept
+	{
+		static io* inst = new io();
+		return inst;
+	}
+
+	void io::swapBuffers() noexcept
+	{
+		if (activeBuffer == bufferA.raw || !activeBuffer) { activeBuffer = bufferA.raw; }
+		if (activeBuffer == bufferA.raw)  { activeBuffer = bufferB.raw; }
+	}
 }
