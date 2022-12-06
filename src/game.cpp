@@ -1,9 +1,10 @@
 #include "game.hpp"
-#include "winclude.hpp"
+//#include "winclude.hpp"
 #include <random>
 #include <time.h>
 #include <sstream>
 #include <iostream>
+#include <string.h>
 
 using std::cout;
 using std::cin;
@@ -35,7 +36,7 @@ namespace stockTrader
 		// TODO: Don't use
 		srand((unsigned int)time(nullptr));
 
-		if (!MoveWindow(GetConsoleWindow(), 50, 50, (int)(WIDTH * CHARWIDTH + 33), 900, TRUE))
+		//if (!MoveWindow(GetConsoleWindow(), 50, 50, (int)(WIDTH * CHARWIDTH + 33), 900, TRUE))
 			return false;
 
 		// Initialises the companies and player

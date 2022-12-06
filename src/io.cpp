@@ -40,7 +40,7 @@ namespace stockTrader
 		static bool whichPrint = false;
 		whichPrint = !whichPrint;
 		if (whichPrint) std::cout << "Printing buffer_a\n";
-		else std::cout << "Printing bufferB\n";
+		else std::cout << "Printing buffer_b\n";
 		for (uint64 y = 0; y < s_buffer_vertical; ++y)
 		{
 			for (uint64 x = 0; x < s_buffer_horizontal; ++x)
