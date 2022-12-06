@@ -24,7 +24,7 @@ int main(int argc, char **args)
 	{
 		console->update(i);
 		console->draw();
-		console->swapBuffers();
+		console->swap_buffers();
 	}
 
 	delete console;
