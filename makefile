@@ -11,4 +11,4 @@ temp/buffer.o: src/buffer.h src/typeDefines.h
 	gcc -c src/buffer.c -o temp/buffer.o
 
 clean:
-	rm -rf temp/
+	rm -rf temp/**
