@@ -1,14 +1,14 @@
 build: temp/main.o temp/io.o temp/buffer.o
-	g++ -o build/stocktrader temp/main.o temp/io.o temp/buffer.o
+	gcc -o build/stocktrader temp/main.o temp/io.o temp/buffer.o
 
-temp/main.o: src/main.cpp src/io.hpp src/buffer.hpp src/typeDefines.hpp
-	g++ -c src/main.cpp -o temp/main.o
+temp/main.o: src/main.c src/io.h src/buffer.h src/typeDefines.h
+	gcc -c src/main.c -o temp/main.o
 
-temp/io.o: src/io.hpp src/buffer.hpp src/typeDefines.hpp
-	g++ -c src/io.cpp -o temp/io.o
+temp/io.o: src/io.h src/buffer.h src/typeDefines.h
+	gcc -c src/io.c -o temp/io.o
 
-temp/buffer.o: src/buffer.hpp src/typeDefines.hpp
-	g++ -c src/buffer.cpp -o temp/buffer.o
+temp/buffer.o: src/buffer.h src/typeDefines.h
+	gcc -c src/buffer.c -o temp/buffer.o
 
 clean:
 	rm -rf temp/
