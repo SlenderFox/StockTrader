@@ -1,11 +1,11 @@
 #pragma once
 #include "buffer.h"
 
-uint64 st_io_buffer_vertical = 5;
-uint64 st_io_buffer_horizontal = 5;
+void
+st_io_init ();
 
-st_buffer *st_io_buffer_a;
-st_buffer *st_io_buffer_b;
+void
+st_io_terminate ();
 
-st_buffer **st_io_buffer_active;
-st_buffer **st_io_buffer_inactive;
+void
+st_io_draw ();
