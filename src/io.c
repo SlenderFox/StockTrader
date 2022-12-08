@@ -39,7 +39,7 @@ st_io_draw ()
 		for (uint64 x = 0; x < st_io_buffer_horizontal; ++x)
 		{
 			char out = st_buffer_data_at (st_io_buffer_a, y, x);
-			printf ("%i%i%c", y, x, out);
+			printf ("%lli%lli%c", y, x, out);
 		}
 		st_io_newline ();
 	}
