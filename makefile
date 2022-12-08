@@ -1,16 +1,35 @@
+# Makefile :)
 
-CC = gcc
-CFLAGS = -Wall -O2
-OBJECTS = temp/main.o temp/io.o temp/buffer.o
+# Useless ↓
+#vpath %.c src
+#vpath %.h src
+#vpath %.o temp
 
-all: stocktrader
+NAME := stocktrader
+CC := gcc
+CFLAGS := -Wall -O2
+HEADERS := $(wildcard src/*.h)
+SOURCES := $(wildcard src/*.c)
+# Convert each source file into a potential object file
+OBJECTS := $(patsubst src/%.c, temp/%.o, $(SOURCES))
 
-stocktrader: $(OBJECTS)
-	$(CC) $(CFLAGS) -o build/$@ $?
+# These are functions not targets
+.PHONY: all clean build_sensitive
+.INTERMEDIATE: temp/%.o
 
-temp/%.o: src/%.c
-	$(CC) $(CFLAGS) -c $? -o $@
+# Defaul entry point
+all: build_sensitive
 
-.PHONY: clean
+# Will build if any file is changed
+build_sensitive: $(OBJECTS) $(SOURCES) $(HEADERS)
+	$(CC) $(CFLAGS) -o build/$(NAME) $(OBJECTS)
+
+#build: src/*.c src/*.h
+#	$(CC) $(CFLAGS) -o build/$@
+
+# Called when an object file needs to be built
+temp/%.o: src/%.c $(HEADERS)
+	$(CC) $(CFLAGS) -c $< -o $@
+
 clean:
-	rm -rf temp/*.o
+	rm -f temp/*.o
