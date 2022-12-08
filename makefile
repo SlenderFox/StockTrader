@@ -1,14 +1,16 @@
-build: temp/main.o temp/io.o temp/buffer.o
-	gcc -o build/stocktrader temp/main.o temp/io.o temp/buffer.o
 
-temp/main.o: src/main.c src/io.h src/buffer.h src/typedefines.h
-	gcc -c src/main.c -o temp/main.o
+CC = gcc
+CFLAGS = -Wall -O2
+OBJECTS = temp/main.o temp/io.o temp/buffer.o
 
-temp/io.o: src/io.c src/io.h src/buffer.h src/typedefines.h
-	gcc -c src/io.c -o temp/io.o
+all: stocktrader
 
-temp/buffer.o: src/buffer.c src/buffer.h src/typedefines.h
-	gcc -c src/buffer.c -o temp/buffer.o
+stocktrader: $(OBJECTS)
+	$(CC) $(CFLAGS) -o build/$@ $?
 
+temp/%.o: src/%.c
+	$(CC) $(CFLAGS) -c $? -o $@
+
+.PHONY: clean
 clean:
-	rm -rf temp/**
+	rm -rf temp/*.o
