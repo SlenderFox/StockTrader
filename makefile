@@ -8,6 +8,7 @@
 NAME := stocktrader
 CC := gcc
 CFLAGS := -std=gnu17 -O2 -Wall
+LIBS := -lncurses
 HEADERS := $(wildcard src/*.h)
 SOURCES := $(wildcard src/*.c)
 # Convert each source file into a potential object file
@@ -22,7 +23,7 @@ all: build_sensitive
 
 # Will build if any file is changed
 build_sensitive: $(OBJECTS) $(SOURCES) $(HEADERS)
-	$(CC) $(CFLAGS) -o build/$(NAME) $(OBJECTS)
+	$(CC) $(CFLAGS) $(LIBS) -o build/$(NAME) $(OBJECTS)
 
 #build: src/*.c src/*.h
 #	$(CC) $(CFLAGS) -o build/$@
