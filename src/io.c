@@ -2,9 +2,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-const uint64 st_io_buffer_vertical = 5;
-const uint64 st_io_buffer_horizontal = 5;
-const uint64 st_io_buffer_square = st_io_buffer_vertical * st_io_buffer_horizontal;
+const uint32 st_io_buffer_vertical = 5;
+const uint32 st_io_buffer_horizontal = 5;
+const uint32 st_io_buffer_square = st_io_buffer_vertical * st_io_buffer_horizontal;
 
 st_buffer *st_io_buffer_a;
 st_buffer *st_io_buffer_b;
@@ -32,14 +32,26 @@ st_io_terminate ()
 }
 
 void
+st_io_update ()
+{
+	for (uint32 y = 0; y < st_io_buffer_vertical; ++y)
+	{
+		for (uint32 x = 0; x < st_io_buffer_horizontal; ++x)
+		{
+			st_buffer_data_set (st_io_buffer_a, y, x, 'x');
+		}
+	}
+}
+
+void
 st_io_draw ()
 {
-	for (uint64 y = 0; y < st_io_buffer_vertical; ++y)
+	for (uint32 y = 0; y < st_io_buffer_vertical; ++y)
 	{
-		for (uint64 x = 0; x < st_io_buffer_horizontal; ++x)
+		for (uint32 x = 0; x < st_io_buffer_horizontal; ++x)
 		{
 			char out = st_buffer_data_at (st_io_buffer_a, y, x);
-			printf ("%lli%lli%c", y, x, out);
+			printf ("%i%i%c", y, x, out);
 		}
 		st_io_newline ();
 	}

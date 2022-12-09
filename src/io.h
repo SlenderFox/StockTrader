@@ -8,6 +8,9 @@ void
 st_io_terminate ();
 
 void
+st_io_update ();
+
+void
 st_io_draw ();
 
 void

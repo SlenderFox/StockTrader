@@ -2,6 +2,12 @@
 #include <stdlib.h>
 #include <memory.h>
 
+uint32
+min (uint32 _a, uint32 _b)
+{
+	return (_a < _b) ? _a : _b;
+}
+
 void
 st_buffer_construct (st_buffer **_buf)
 {
@@ -35,35 +41,35 @@ st_buffer_data_clear (st_buffer *_buf)
 void
 st_buffer_data_set (
 	st_buffer *_buf,
-	uint64 _row,
-	uint64 _column,
+	uint32 _row,
+	uint32 _column,
 	char _val
 )
 {
-	if (_row >= _buf->m_rows) _row = _buf->m_rows-1;
-	if (_column >= _buf->m_columns) _column = _buf->m_columns-1;
+	_row = min (_row, _buf->m_rows-1);
+	_column = min (_column, _buf->m_columns-1);
 	_buf->m_data [(_row * _buf->m_columns) + _column] = _val;
 }
 
 char
 st_buffer_data_at (
 	st_buffer *_buf,
-	uint64 _row,
-	uint64 _column
+	uint32 _row,
+	uint32 _column
 )
 {
-	if (_row >= _buf->m_rows) _row = _buf->m_rows-1;
-	if (_column >= _buf->m_columns) _column = _buf->m_columns-1;
+	_row = min (_row, _buf->m_rows-1);
+	_column = min (_column, _buf->m_columns-1);
 	return _buf->m_data [(_row * _buf->m_columns) + _column];
 }
 
-uint64
+uint32
 st_buffer_get_rows (st_buffer *_buf)
 {
 	return _buf->m_rows;
 }
 
-uint64
+uint32
 st_buffer_get_columns (st_buffer *_buf)
 {
 	return _buf->m_columns;

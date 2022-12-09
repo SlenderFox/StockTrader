@@ -7,7 +7,11 @@ typedef signed long long   int64;
 typedef unsigned char      uint8;
 typedef unsigned short     uint16;
 typedef unsigned int       uint32;
+#ifdef _WIN32
 typedef unsigned long long uint64;
+#else
+typedef unsigned long      uint64;
+#endif
 
 #define INT8_MIN   -127-1;
 #define INT16_MIN  -32767-1;
