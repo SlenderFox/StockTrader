@@ -1,2 +1,2 @@
 # StockTrader
-Simple console stock trading game - with a graph!
+Simple terminal stock trading game - with a graph!
