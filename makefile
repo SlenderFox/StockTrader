@@ -7,7 +7,7 @@
 
 NAME := stocktrader
 CC := gcc
-CFLAGS := -Wall -O2
+CFLAGS := -std=gnu17 -O2 -Wall
 HEADERS := $(wildcard src/*.h)
 SOURCES := $(wildcard src/*.c)
 # Convert each source file into a potential object file
