@@ -12,17 +12,13 @@ min (uint32 _a, uint32 _b)
 void
 assert_buffer_size (st_buffer *_buf)
 {
-	assert(
-		_buf->m_rows > 0
-		&& _buf->m_columns > 0
-		&& "Error: Buffer size is zero"
-	);
+	assert(_buf->m_rows > 0 && _buf->m_columns > 0 && "Error: Buffer size is zero");
 }
 
 void
 st_buffer_construct (st_buffer **_buf)
 {
-	*_buf = (st_buffer*) malloc (sizeof (st_buffer));
+	*_buf = malloc (sizeof (st_buffer));
 	(*_buf)->m_rows = 0;
 	(*_buf)->m_columns = 0;
 	(*_buf)->m_data = NULL;
@@ -42,9 +38,7 @@ void
 st_buffer_data_init (st_buffer *_buf)
 {
 	assert_buffer_size (_buf);
-	_buf->m_data = (char*)malloc (
-		sizeof (char) * _buf->m_rows * _buf->m_columns
-	);
+	_buf->m_data = malloc (sizeof (char) * _buf->m_rows * _buf->m_columns);
 }
 
 void
@@ -70,8 +64,8 @@ st_buffer_data_set (
 )
 {
 	assert_buffer_size (_buf);
-	_row = min (_row, _buf->m_rows-1);
-	_column = min (_column, _buf->m_columns-1);
+	_row = min (_row, _buf->m_rows - 1);
+	_column = min (_column, _buf->m_columns - 1);
 	uint32 pos = (_row * _buf->m_columns) + _column;
 	_buf->m_data [pos] = _val;
 }
@@ -84,8 +78,8 @@ st_buffer_data_at (
 )
 {
 	assert_buffer_size (_buf);
-	_row = min (_row, _buf->m_rows-1);
-	_column = min (_column, _buf->m_columns-1);
+	_row = min (_row, _buf->m_rows - 1);
+	_column = min (_column, _buf->m_columns - 1);
 	uint32 pos = (_row * _buf->m_columns) + _column;
 	return _buf->m_data [pos];
 }
