@@ -15,6 +15,8 @@ main (int argc, char **args)
 	{
 		printf ("ComSpec: %s\n", comspec);
 	}
+	int res = system ("$host.Name");
+	printf ("Hostname: %i", res);
 
 	// Try using system () and checking the result
 
