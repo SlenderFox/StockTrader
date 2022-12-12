@@ -5,15 +5,17 @@
 int
 main (int argc, char **args)
 {
-	char *shell = getenv ("SHELL");
-	if (shell == NULL) shell = "N/A\0";
-	printf ("SHELL: %s\n", shell);
+	char *envvar = getenv ("SHELL");
+	if (envvar == NULL) envvar = "NULL\0";
+	printf ("SHELL: %s\n", envvar);
 
-	char *comspec = getenv ("ComSpec");
-	if (comspec == NULL) comspec = "N/A\0";
-	printf ("ComSpec: %s\n", comspec);
+	envvar = getenv ("HOME");
+	if (envvar == NULL) envvar = "NULL\0";
+	printf ("HOME: %s\n", envvar);
 
-	// Try using system () and checking the result
+	envvar = getenv ("ROOT");
+	if (envvar == NULL) envvar = "NULL\0";
+	printf ("ROOT: %s\n", envvar);
 
 	//st_io_init ();
 	//st_io_draw ();
