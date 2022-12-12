@@ -4,7 +4,6 @@
 #include <time.h>
 #include <sstream>
 #include <iostream>
-#include <string.h>
 
 using std::cout;
 using std::cin;
@@ -89,7 +88,11 @@ namespace stockTrader
 
 		// TODO: Look into
 		// Clears the console
-		system("cls");
+		#if defined(WIN32) || defined(_WIN32)
+		 system("cls");
+		#else
+		 system("clear");
+		#endif
 		// Draw the graph of the currently selected company
 		drawGraph();
 		// Draw current game info
