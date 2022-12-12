@@ -16,12 +16,5 @@ int main(int argc, char **args)
 	stockTrader::game *app = new stockTrader::game();
 	app->run();
 	delete app;
-
-	cout << "\n\tPress 'Enter' to exit the program.";
-	cout.flush();
-	cin.clear();
-	cin.ignore(cin.rdbuf()->in_avail());
-	cin.get();
-
 	return 0;
 }

@@ -4,6 +4,7 @@
 #include <time.h>
 #include <sstream>
 #include <iostream>
+#include <string.h> // Needed for strcmp
 
 using std::cout;
 using std::cin;
@@ -86,13 +87,7 @@ namespace stockTrader
 		if (!stepDay())
 			return false;
 
-		// TODO: Look into
-		// Clears the console
-		#if defined(WIN32) || defined(_WIN32)
-		 system("cls");
-		#else
-		 system("clear");
-		#endif
+		clear();
 		// Draw the graph of the currently selected company
 		drawGraph();
 		// Draw current game info
@@ -342,7 +337,7 @@ namespace stockTrader
 
 	bool game::endGame() noexcept
 	{
-		system("cls");
+		clear();
 
 		cout << " Congratulations! You made it through 365 days, lets see how you did:\n\n";
 		cout << " On hand money: " << convertToCash(m_money)
@@ -438,5 +433,15 @@ namespace stockTrader
 	{
 		m_state = gameState::invalid;
 		m_invalidMessage = inMessage;
+	}
+
+	void game::clear() noexcept
+	{
+		// Clears the console
+		#if defined(WIN32) || defined(_WIN32)
+		 system("cls");
+		#else
+		 system("clear");
+		#endif
 	}
 }

@@ -6,7 +6,7 @@
 #vpath %.o temp
 
 NAME:=stocktrader
-W=W
+W=
 
 CC:=g++
 CFLAGS:=-std=c++20 -O2 -Wall

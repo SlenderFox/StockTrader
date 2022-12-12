@@ -36,6 +36,7 @@ namespace stockTrader
 		void buySellFromCompany(int32 inAmount) noexcept;
 		void resetGame() noexcept;
 		void setInvalid(std::string inMessage) noexcept;
+		void clear() noexcept;
 
 	public:
 		game() = default;
