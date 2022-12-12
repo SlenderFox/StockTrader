@@ -35,14 +35,14 @@ namespace stockTrader
 
 	// Character storage
 	// Double lines
-	constexpr const char *const VERTICAL      = "\xBA";
-	constexpr const char *const TOP_RIGHT     = "\xBB";
-	constexpr const char *const BOTTOM_RIGHT  = "\xBC";
-	constexpr const char *const BOTTOM_LEFT   = "\xC8";
-	constexpr const char *const TOP_LEFT      = "\xC9";
-	constexpr const char *const HORIZONTAL    = "\xCD";
+	constexpr const char *const VERTICAL      = "|";
+	constexpr const char *const TOP_RIGHT     = "+";
+	constexpr const char *const BOTTOM_RIGHT  = "+";
+	constexpr const char *const BOTTOM_LEFT   = "+";
+	constexpr const char *const TOP_LEFT      = "+";
+	constexpr const char *const HORIZONTAL    = "-";
 	// Characters
 	constexpr const char *const FORWARD_SLASH = "\x2F";
 	constexpr const char *const BACK_SLASH    = "\x5C";
-	constexpr const char *const FLAT_LINE     = "\xC4";
+	constexpr const char *const FLAT_LINE     = "-";
 }
