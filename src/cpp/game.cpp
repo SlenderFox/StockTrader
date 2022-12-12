@@ -1,5 +1,5 @@
 #include "game.hpp"
-//#include "winclude.hpp"
+#include "winclude.hpp"
 #include <random>
 #include <time.h>
 #include <sstream>
@@ -36,8 +36,10 @@ namespace stockTrader
 		// TODO: Don't use
 		srand((unsigned int)time(nullptr));
 
-		//if (!MoveWindow(GetConsoleWindow(), 50, 50, (int)(WIDTH * CHARWIDTH + 33), 900, TRUE))
-			return false;
+		#if defined(WIN32) || defined(_WIN32)
+		 if (!MoveWindow(GetConsoleWindow(), 50, 50, (int)(WIDTH * CHARWIDTH + 33), 900, TRUE))
+		 	return false;
+		#endif
 
 		// Initialises the companies and player
 		initialiseCompanies();
