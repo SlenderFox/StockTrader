@@ -45,4 +45,5 @@ namespace stockTrader
 	constexpr const char *const FORWARD_SLASH = "\x2F";
 	constexpr const char *const BACK_SLASH    = "\x5C";
 	constexpr const char *const FLAT_LINE     = "-";
+	//
 }
