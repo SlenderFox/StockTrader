@@ -5,20 +5,13 @@
 int
 main (int argc, char **args)
 {
-	int res = system ("clear");
-	printf ("Result: %i\n", res);
-
 	char *shell = getenv ("SHELL");
-	if (shell != NULL)
-	{
-		printf ("SHELL: %s\n", shell);
-	}
+	if (shell == NULL) shell = "N/A\0";
+	printf ("SHELL: %s\n", shell);
 
 	char *comspec = getenv ("ComSpec");
-	if (comspec != NULL)
-	{
-		printf ("ComSpec: %s\n", comspec);
-	}
+	if (comspec == NULL) comspec = "N/A\0";
+	printf ("ComSpec: %s\n", comspec);
 
 	// Try using system () and checking the result
 
