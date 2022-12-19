@@ -1,16 +1,18 @@
 #include "io.h"
-#include <stdio.h> // For printf
-//#include <unistd.h>
+#include <stdio.h> // printf
+#include <stdbool.h> // bool, true, false
 
-const uint32 st_io_buff_vert = 10;
-const uint32 st_io_buff_hori = 50;
-const uint32 st_io_buff_square = st_io_buff_vert * st_io_buff_hori;
+bool loaded = false;
 
-st_buffer *st_io_buff_a;
-st_buffer *st_io_buff_b;
+const uint32 buffer_vertical = 10;
+const uint32 buffer_horizontal = 50;
+const uint32 buffer_square = buffer_vertical * buffer_horizontal;
 
-st_buffer **st_io_buff_active;
-st_buffer **st_io_buff_inactive;
+st_buffer *buffer_a;
+st_buffer *buffer_b;
+
+st_buffer **buffer_active;
+st_buffer **buffer_inactive;
 
 int *st_io_test;
 
@@ -18,68 +20,71 @@ void
 st_io_init ()
 {
 	// Buffer a
-	st_buffer_construct (&st_io_buff_a);
-	st_io_buff_a->m_rows = st_io_buff_vert;
-	st_io_buff_a->m_columns = st_io_buff_hori;
-	st_buffer_data_init (st_io_buff_a);
-	st_buffer_data_clear (st_io_buff_a);
-	st_io_buff_active = &st_io_buff_a;
+	st_buffer_construct (&buffer_a, buffer_vertical, buffer_horizontal);
+	st_buffer_data_init (buffer_a);
+	st_buffer_data_clear (buffer_a);
+	buffer_active = &buffer_a;
 
 	// Buffer b
-	st_buffer_construct (&st_io_buff_b);
-	st_io_buff_b->m_rows = st_io_buff_vert;
-	st_io_buff_b->m_columns = st_io_buff_hori;
-	st_buffer_data_init (st_io_buff_b);
-	st_buffer_data_clear (st_io_buff_b);
-	st_io_buff_inactive = &st_io_buff_b;
+	st_buffer_construct (&buffer_b, buffer_vertical, buffer_horizontal);
+	st_buffer_data_init (buffer_b);
+	st_buffer_data_clear (buffer_b);
+	buffer_inactive = &buffer_b;
+
+	loaded = true;
 }
 
 void
 st_io_terminate ()
 {
-	// Buffer a
-	st_buffer_data_terminate (st_io_buff_a);
-	st_buffer_destruct (&st_io_buff_a);
-
-	// Buffer b
-	st_buffer_data_terminate (st_io_buff_b);
-	st_buffer_destruct (&st_io_buff_b);
-}
-
-void
-st_io_update ()
-{
-	for (uint32 y = 0; y < st_io_buff_vert; ++y)
+	if (!loaded)
 	{
-		for (uint32 x = 0; x < st_io_buff_hori; ++x)
-		{
-			st_buffer_data_set (*st_io_buff_active, y, x, 'X');
-		}
+		return;
 	}
 
-	//int percent_complete = 0;
-	//while (percent_complete < 100)
-	//{
-	//	printf("\rProgress: %d%%", percent_complete);
-	//	fflush(stdout);
-	//	++percent_complete;
-	//	usleep (50000);
-	//}
-	//// Finally print 100% and a newline
-	//printf("\rProgress: %d%%\n", percent_complete);
+	// Buffer a
+	st_buffer_data_terminate (buffer_a);
+	st_buffer_destruct (&buffer_a);
+
+	// Buffer b
+	st_buffer_data_terminate (buffer_b);
+	st_buffer_destruct (&buffer_b);
 }
 
 void
 st_io_draw ()
 {
-	for (uint32 y = 0; y < st_io_buff_vert; ++y)
+	if (!loaded)
 	{
-		char out[st_io_buff_hori+1];
-		out[st_io_buff_hori] = '\0';
-		for (uint32 x = 0; x < st_io_buff_hori; ++x)
+		return;
+	}
+
+	for (uint32 y = 0; y < buffer_vertical; ++y)
+	{
+		char out[buffer_horizontal+1];
+		out[buffer_horizontal] = '\0';
+		for (uint32 x = 0; x < buffer_horizontal; ++x)
 		{
-			out[x] = st_buffer_data_at (*st_io_buff_active, y, x);
+			out[x] = st_buffer_data_at (*buffer_active, y, x);
 		}
 		printf ("%s\n", out);
 	}
+}
+
+uint32
+st_io_buff_vert ()
+{
+	return buffer_vertical;
+}
+
+uint32
+st_io_buff_hori ()
+{
+	return buffer_horizontal;
+}
+
+uint32
+st_io_buff_square ()
+{
+	return buffer_square;
 }

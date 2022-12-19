@@ -11,7 +11,7 @@ typedef struct st_buffer
  * @param _buf The buffer
  */
 void
-st_buffer_construct (st_buffer **_buf);
+st_buffer_construct (st_buffer **_buf, uint32 _rows, uint32 _columns);
 
 /** Free the memory for the buffer struct
  * @param _buf The buffer

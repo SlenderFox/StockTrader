@@ -1,8 +1,9 @@
 #include "buffer.h"
-#include <stdlib.h> // For malloc and free
-#include <memory.h> // For memset
-#include <assert.h> // For assert
+#include <stdlib.h> // malloc, free
+#include <memory.h> // memset
+#include <assert.h> // assert
 
+/* Local function */
 uint32
 min (uint32 _a, uint32 _b)
 {
@@ -16,11 +17,11 @@ assert_buffer_size (st_buffer *_buf)
 }
 
 void
-st_buffer_construct (st_buffer **_buf)
+st_buffer_construct (st_buffer **_buf, uint32 _rows, uint32 _columns)
 {
 	*_buf = malloc (sizeof (st_buffer));
-	(*_buf)->m_rows = 0;
-	(*_buf)->m_columns = 0;
+	(*_buf)->m_rows = _rows;
+	(*_buf)->m_columns = _columns;
 	(*_buf)->m_data = NULL;
 }
 
