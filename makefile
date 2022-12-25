@@ -23,18 +23,18 @@ SOURCES:=$(wildcard $(SRC)/*.c)
 OBJECTS:=$(patsubst $(SRC)/%.c, $(OBJ)/%.o, $(SOURCES))
 
 # These are targets that do not point to files
-.PHONY: all debug release debugw releasew objects clean cleanw
+.PHONY: all debug release debugw releasew objects clean
 
 # Default entry point
 all: debug
 
 # Make a native debug build
-debug: CFLAGS:=$(CFLAGS) -O1
-debug: clean
+debug: CFLAGS:=$(CFLAGS) -O1 -DDEBUG
+debug: NAME:=stocktrader-debug
 debug: build
 
 # Make a native release build
-release: CFLAGS:=$(CFLAGS) -O3
+release: CFLAGS:=$(CFLAGS) -O3 -DNDEBUG
 release: clean
 release: build
 
@@ -76,7 +76,3 @@ objects: $(OBJECTS)
 # Removing temporary files on linux
 clean:
 	rm -f $(OBJ)/*
-
-# Removing temporary files on windows
-cleanw:
-	del $(OBJ)/
