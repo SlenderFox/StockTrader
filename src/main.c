@@ -27,6 +27,7 @@ main (int argc, char *args[])
 		.tv_nsec = 10 * 1000000 // 10 milliseconds in nanoseconds
 	};
 	struct timespec ts_remaining;
+	// \033[5F
 	while (percent_complete < 100)
 	{
 		printf ("\rProgress: %d%%", percent_complete);
