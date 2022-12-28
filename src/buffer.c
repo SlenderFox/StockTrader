@@ -4,8 +4,8 @@
 #include <assert.h> // assert
 
 /* Local function */
-uint32
-min (uint32 _a, uint32 _b)
+uint32_t
+min (uint32_t _a, uint32_t _b)
 {
 	return (_a < _b) ? _a : _b;
 }
@@ -17,7 +17,7 @@ assert_buffer_size (st_buffer *_buf)
 }
 
 void
-st_buffer_construct (st_buffer **_buf, uint32 _rows, uint32 _columns)
+st_buffer_construct (st_buffer **_buf, uint32_t _rows, uint32_t _columns)
 {
 	*_buf = malloc (sizeof (st_buffer));
 	(*_buf)->m_rows = _rows;
@@ -59,39 +59,39 @@ st_buffer_data_clear (st_buffer *_buf)
 void
 st_buffer_data_set (
 	st_buffer *_buf,
-	uint32 _row,
-	uint32 _column,
+	uint32_t _row,
+	uint32_t _column,
 	char _val
 )
 {
 	assert_buffer_size (_buf);
 	_row = min (_row, _buf->m_rows - 1);
 	_column = min (_column, _buf->m_columns - 1);
-	uint32 pos = (_row * _buf->m_columns) + _column;
+	uint32_t pos = (_row * _buf->m_columns) + _column;
 	_buf->m_data [pos] = _val;
 }
 
 char
 st_buffer_data_at (
 	st_buffer *_buf,
-	uint32 _row,
-	uint32 _column
+	uint32_t _row,
+	uint32_t _column
 )
 {
 	assert_buffer_size (_buf);
 	_row = min (_row, _buf->m_rows - 1);
 	_column = min (_column, _buf->m_columns - 1);
-	uint32 pos = (_row * _buf->m_columns) + _column;
+	uint32_t pos = (_row * _buf->m_columns) + _column;
 	return _buf->m_data [pos];
 }
 
-uint32
+uint32_t
 st_buffer_get_rows (st_buffer *_buf)
 {
 	return _buf->m_rows;
 }
 
-uint32
+uint32_t
 st_buffer_get_columns (st_buffer *_buf)
 {
 	return _buf->m_columns;

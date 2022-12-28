@@ -1,17 +1,17 @@
 #pragma once
-#include "typedefines.h"
+#include <stdint.h>
 
 typedef struct st_buffer
 {
 	char *m_data;
-	uint32 m_rows, m_columns;
+	uint32_t m_rows, m_columns;
 } st_buffer;
 
 /** Allocate memory for the buffer struct and init values
  * @param _buf The buffer
  */
 void
-st_buffer_construct (st_buffer **_buf, uint32 _rows, uint32 _columns);
+st_buffer_construct (st_buffer **_buf, uint32_t _rows, uint32_t _columns);
 
 /** Free the memory for the buffer struct
  * @param _buf The buffer
@@ -46,8 +46,8 @@ st_buffer_data_clear (st_buffer *_buf);
 void
 st_buffer_data_set (
 	st_buffer *_buf,
-	uint32 _row,
-	uint32 _column,
+	uint32_t _row,
+	uint32_t _column,
 	char _val
 );
 
@@ -60,20 +60,20 @@ st_buffer_data_set (
 char
 st_buffer_data_at (
 	st_buffer *_buf,
-	uint32 _row,
-	uint32 _column
+	uint32_t _row,
+	uint32_t _column
 );
 
 /** Return the amount of rows in a buffer
  * @param _buf The buffer
- * @return [uint32] The amount of rows
+ * @return [uint32_t] The amount of rows
  */
-uint32
+uint32_t
 st_buffer_get_rows (st_buffer *_buf);
 
 /** Return the amount of columns in a buffer
  * @param _buf The buffer
- * @return [uint32] The amount of columns
+ * @return [uint32_t] The amount of columns
  */
-uint32
+uint32_t
 st_buffer_get_columns (st_buffer *_buf);

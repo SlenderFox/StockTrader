@@ -4,9 +4,9 @@
 
 bool loaded = false;
 
-const uint32 buffer_vertical = 10;
-const uint32 buffer_horizontal = 50;
-const uint32 buffer_square = buffer_vertical * buffer_horizontal;
+const uint32_t buffer_vertical = 10;
+const uint32_t buffer_horizontal = 50;
+const uint32_t buffer_square = buffer_vertical * buffer_horizontal;
 
 st_buffer *buffer_a;
 st_buffer *buffer_b;
@@ -59,11 +59,11 @@ st_io_draw ()
 		return;
 	}
 
-	for (uint32 y = 0; y < buffer_vertical; ++y)
+	for (uint32_t y = 0; y < buffer_vertical; ++y)
 	{
 		char out[buffer_horizontal+1];
 		out[buffer_horizontal] = '\0';
-		for (uint32 x = 0; x < buffer_horizontal; ++x)
+		for (uint32_t x = 0; x < buffer_horizontal; ++x)
 		{
 			out[x] = st_buffer_data_at (*buffer_active, y, x);
 		}
@@ -71,19 +71,19 @@ st_io_draw ()
 	}
 }
 
-uint32
+uint32_t
 st_io_buff_vert ()
 {
 	return buffer_vertical;
 }
 
-uint32
+uint32_t
 st_io_buff_hori ()
 {
 	return buffer_horizontal;
 }
 
-uint32
+uint32_t
 st_io_buff_square ()
 {
 	return buffer_square;

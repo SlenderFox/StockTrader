@@ -11,11 +11,11 @@ st_io_terminate ();
 void
 st_io_draw ();
 
-uint32
+uint32_t
 st_io_buff_vert ();
 
-uint32
+uint32_t
 st_io_buff_hori ();
 
-uint32
+uint32_t
 st_io_buff_square ();

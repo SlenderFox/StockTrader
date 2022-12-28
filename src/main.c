@@ -24,19 +24,19 @@ print_shell ()
 }
 
 void
-print_progresses (int _count, int _percent)
+print_progresses (uint16_t _count, uint16_t _percent)
 {
-	for (int i = 0; i < _count; ++i)
+	for (uint16_t i = 0; i < _count; ++i)
 	{
-		printf ("Progress: %d%%\n", _percent);
+		printf ("Progress: %u%%\n", _percent);
 	}
 }
 
 int
 loading ()
 {
-	const int concurrents = 20;
-	int percent_complete = 0;
+	const uint16_t concurrents = 5;
+	uint16_t percent_complete = 0;
 	struct timespec ts_remaining;
 	struct timespec ts_requested =
 	{
@@ -53,7 +53,7 @@ loading ()
 		int ret = nanosleep (&ts_requested, &ts_remaining);
 		if (ret == -1) return errno;
 		++percent_complete;
-		printf ("\033[%dF", concurrents);
+		printf ("\033[%uF", concurrents);
 		print_progresses (concurrents, percent_complete);
 		fflush (stdout);
 	}
