@@ -5,6 +5,7 @@
 #include <stdio.h> // printf, fflush
 #include <time.h> // timespec, nanosleep
 #include <errno.h> // errno
+#include <stdlib.h> // getenv
 
 /* TODO:
  * Input checking
@@ -13,47 +14,70 @@
  * Compare replace for Windows
 */
 
-int
-main (int argc, char *args[])
+void
+print_shell ()
 {
-	//char *envvar = getenv ("SHELL");
-	//if (envvar == NULL) envvar = "NULL\0";
-	//printf ("SHELL: %s\n", envvar);
+	// Test shell
+	char *envvar = getenv ("SHELL");
+	if (envvar == NULL) envvar = "NULL\0";
+	printf ("SHELL: %s\n", envvar);
+}
 
+void
+print_progresses (int _count, int _percent)
+{
+	for (int i = 0; i < _count; ++i)
+	{
+		printf ("Progress: %d%%\n", _percent);
+	}
+}
+
+int
+loading ()
+{
+	const int concurrents = 20;
 	int percent_complete = 0;
+	struct timespec ts_remaining;
 	struct timespec ts_requested =
 	{
 		.tv_sec = 0, // 0 seconds
 		.tv_nsec = 10 * 1000000 // 10 milliseconds in nanoseconds
 	};
-	struct timespec ts_remaining;
-	// \033[5F
+
+	// Initial print
+	print_progresses (concurrents, percent_complete);
+
+	// Move cursor back lines: \033[5F (Replace 5)
 	while (percent_complete < 100)
 	{
-		printf ("\rProgress: %d%%", percent_complete);
-		fflush (stdout);
-		++percent_complete;
 		int ret = nanosleep (&ts_requested, &ts_remaining);
-		if (ret == -1)
-		{
-			return errno;
-		}
-	}
-	// Finally print 100% and a newline
-	printf ("\rProgress: %d%%\n", percent_complete);
-
-	bool play = true;
-	st_io_init ();
-
-	while (play)
-	{
-		// Outputs the contents buffer to the console
-		st_io_draw ();
-
-		play = false;
+		if (ret == -1) return errno;
+		++percent_complete;
+		printf ("\033[%dF", concurrents);
+		print_progresses (concurrents, percent_complete);
+		fflush (stdout);
 	}
 
-	st_io_terminate ();
+	return 0;
+}
+
+int
+main (int argc, char *args[])
+{
+	//print_shell ();
+
+	int res = loading ();
+	if (res != 0) return res;
+
+	//bool play = true;
+	//st_io_init ();
+	//while (play)
+	//{
+	//	// Outputs the contents buffer to the console
+	//	st_io_draw ();
+	//	play = false;
+	//}
+	//st_io_terminate ();
 
 	return 0;
 }
