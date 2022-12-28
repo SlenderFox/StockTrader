@@ -35,7 +35,7 @@ print_progresses (uint16_t _count, uint16_t _percent)
 int
 loading ()
 {
-	const uint16_t concurrents = 5;
+	const uint16_t concurrents = 2;
 	uint16_t percent_complete = 0;
 	struct timespec ts_remaining;
 	struct timespec ts_requested =
@@ -47,13 +47,15 @@ loading ()
 	// Initial print
 	print_progresses (concurrents, percent_complete);
 
-	// Move cursor back lines: \033[5F (Replace 5)
 	while (percent_complete < 100)
 	{
-		int ret = nanosleep (&ts_requested, &ts_remaining);
-		if (ret == -1) return errno;
+		if (nanosleep (&ts_requested, &ts_remaining) == -1)
+		{
+			return errno;
+		}
 		++percent_complete;
-		printf ("\033[%uF", concurrents);
+		// Move cursor back lines: \e[1F
+		printf ("\e[%uF", concurrents);
 		print_progresses (concurrents, percent_complete);
 		fflush (stdout);
 	}
@@ -64,20 +66,24 @@ loading ()
 int
 main (int argc, char *args[])
 {
-	//print_shell ();
+	print_shell ();
 
-	int res = loading ();
-	if (res != 0) return res;
+	if (loading () != 0)
+	{
+		return errno;
+	}
 
-	//bool play = true;
-	//st_io_init ();
-	//while (play)
-	//{
-	//	// Outputs the contents buffer to the console
-	//	st_io_draw ();
-	//	play = false;
-	//}
-	//st_io_terminate ();
+	bool play = true;
+	st_io_init ();
+	while (play)
+	{
+		// Outputs the contents buffer to the console
+		st_io_draw ();
+
+		// End game
+		play = false;
+	}
+	st_io_terminate ();
 
 	return 0;
 }
