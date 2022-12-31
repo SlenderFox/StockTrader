@@ -1,4 +1,3 @@
-# General variables
 NAME:=stocktrader
 CFLAGS:=-std=c17 -Wall
 SRC:=src
@@ -63,16 +62,17 @@ ifeq (releasew,$(ISRELEASEW))
 	BIN:=$(BIN)/$(RELEASE)
 endif
 
-# Input files
 HEADERS:=$(wildcard $(SRC)/*.h)
 SOURCES:=$(wildcard $(SRC)/*.c)
 OBJECTS:=$(patsubst $(SRC)/%.c,$(OBJ)/%.o,$(SOURCES))
 
-# These are targets that do not point to files
 .PHONY: makefile clean build debug release debugw releasew
 
-# Default entry point
 .DEFAULT_GOAL:=debug
+
+clean:
+	rm -rf $(OBJ)/
+	rm -rf $(BIN)/
 
 # Make any needed directories (bad)
 %/: ; mkdir -p $@
@@ -81,7 +81,7 @@ OBJECTS:=$(patsubst $(SRC)/%.c,$(OBJ)/%.o,$(SOURCES))
 $(BIN)/$(NAME): $(OBJECTS)
 	$(C) $(CFLAGS) $(OBJECTS) -o $@ $(LIBPATH) $(LIBS)
 
-# Make the object files that need to be updated
+# Compile any object files that need to be updated
 $(OBJ)/%.o:: $(SRC)/%.c $(HEADERS)
 	$(C) $(CFLAGS) -c $< -o $@ $(INCPATH) $(LIBS)
 
@@ -91,7 +91,3 @@ debug: build
 release: build
 debugw: build
 releasew: build
-
-clean:
-	rm -rf $(OBJ)/
-	rm -rf $(BIN)/
