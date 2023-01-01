@@ -5,7 +5,7 @@ OBJ:=temp
 BIN:=build
 DEBUG:=debug
 RELEASE:=release
-WINDOWS:=win
+WINDOWS:=windows
 
 # For native comiling
 C:=gcc
@@ -19,60 +19,58 @@ INCPATHW:=
 LIBPATHW:=
 LIBSW:=
 
-ISDEBUG:=$(filter debug,$(MAKECMDGOALS))
-ISRELEASE:=$(filter release,$(MAKECMDGOALS))
-ISDEBUGW:=$(filter debugw,$(MAKECMDGOALS))
-ISRELEASEW:=$(filter releasew,$(MAKECMDGOALS))
-
-ifeq (debug,$(ISDEBUG))
+# Dumb way to get variables specific to target
+ifneq (,$(filter debug,$(MAKECMDGOALS)))
 	CFLAGS:=$(CFLAGS) -O1 -DDEBUG
 	OBJ:=$(OBJ)/$(DEBUG)
 	BIN:=$(BIN)/$(DEBUG)
 endif
 
-ifeq (release,$(ISRELEASE))
+ifneq (,$(filter release,$(MAKECMDGOALS)))
 	CFLAGS:=$(CFLAGS) -O3 -DNDEBUG
 	OBJ:=$(OBJ)/$(RELEASE)
 	BIN:=$(BIN)/$(RELEASE)
 endif
 
-ifeq (debugw,$(ISDEBUGW))
-	C:=$(CW)
-	INCPATH:=$(INCPATHW)
-	LIBPATH:=$(LIBPATHW)
-	LIBS:=$(LIBSW)
-	OBJ:=$(OBJ)/$(WINDOWS)
-	BIN:=$(BIN)/$(WINDOWS)
-
+ifneq (,$(filter debugw,$(MAKECMDGOALS)))
 	CFLAGS:=$(CFLAGS) -O1 -DDEBUG
-	OBJ:=$(OBJ)/$(DEBUG)
-	BIN:=$(BIN)/$(DEBUG)
-endif
+	OBJ:=$(WINDOWS)/$(OBJ)/$(DEBUG)
+	BIN:=$(WINDOWS)/$(BIN)/$(DEBUG)
 
-ifeq (releasew,$(ISRELEASEW))
 	C:=$(CW)
 	INCPATH:=$(INCPATHW)
 	LIBPATH:=$(LIBPATHW)
 	LIBS:=$(LIBSW)
-	OBJ:=$(OBJ)/$(WINDOWS)
-	BIN:=$(BIN)/$(WINDOWS)
+endif
 
+ifneq (,$(filter releasew,$(MAKECMDGOALS)))
 	CFLAGS:=$(CFLAGS) -O3 -DNDEBUG
-	OBJ:=$(OBJ)/$(RELEASE)
-	BIN:=$(BIN)/$(RELEASE)
+	OBJ:=$(WINDOWS)/$(OBJ)/$(RELEASE)
+	BIN:=$(WINDOWS)/$(BIN)/$(RELEASE)
+
+	C:=$(CW)
+	INCPATH:=$(INCPATHW)
+	LIBPATH:=$(LIBPATHW)
+	LIBS:=$(LIBSW)
 endif
 
 HEADERS:=$(wildcard $(SRC)/*.h)
 SOURCES:=$(wildcard $(SRC)/*.c)
 OBJECTS:=$(patsubst $(SRC)/%.c,$(OBJ)/%.o,$(SOURCES))
 
-.PHONY: makefile clean build debug release debugw releasew
+.PHONY: makefile all clean build debug release debugw releasew
 
-.DEFAULT_GOAL:=debug
+# Dumb way to get default target working
+.DEFAULT_GOAL:=all
+all: CFLAGS:=$(CFLAGS) -O1 -DDEBUG
+all: OBJ:=$(OBJ)/$(DEBUG)
+all: BIN:=$(BIN)/$(DEBUG)
+all: build
 
 clean:
 	rm -rf $(OBJ)/
 	rm -rf $(BIN)/
+	rm -rf $(WINDOWS)/
 
 # Make any needed directories (bad)
 %/: ; mkdir -p $@
