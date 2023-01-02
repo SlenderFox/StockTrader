@@ -60,17 +60,14 @@ OBJECTS:=$(patsubst $(SRC)/%.c,$(OBJ)/%.o,$(SOURCES))
 
 .PHONY: makefile all clean build debug release debugw releasew
 
-# Dumb way to get default target working
+# Default target simply tells you how to correctly use this makefile
 .DEFAULT_GOAL:=all
-all: CFLAGS:=$(CFLAGS) -O1 -DDEBUG
-all: OBJ:=$(OBJ)/$(DEBUG)
-all: BIN:=$(BIN)/$(DEBUG)
-all: build
+all:
+	@printf "debug, release, debugw, releasew, clean\n"
 
 clean:
 	rm -rf $(OBJ)/
 	rm -rf $(BIN)/
-	rm -rf $(WINDOWS)/
 
 # Make any needed directories (bad)
 %/: ; mkdir -p $@
