@@ -1,10 +1,11 @@
 #include "io.h"
 #include <stdio.h> // printf
 #include <stdbool.h> // bool, true, false
+#include <string.h>
 
 bool loaded = false;
 
-const uint32_t buffer_vertical = 10;
+const uint32_t buffer_vertical = 5;
 const uint32_t buffer_horizontal = 50;
 const uint32_t buffer_square = buffer_vertical * buffer_horizontal;
 
@@ -13,8 +14,6 @@ st_buffer *buffer_b;
 
 st_buffer **buffer_active;
 st_buffer **buffer_inactive;
-
-int *st_io_test;
 
 void
 st_io_init ()
@@ -87,4 +86,33 @@ uint32_t
 st_io_buff_square ()
 {
 	return buffer_square;
+}
+
+void
+st_io_buff_set (uint32_t _row, uint32_t _column, char _val)
+{
+	st_buffer_data_set (*buffer_active, _row, _column, _val);
+}
+
+void
+st_io_buff_set_row (uint32_t _row, const char *_val)
+{
+	size_t len = strlen (_val);
+
+	for (uint32_t i = 0; i < buffer_horizontal; ++i)
+	{
+		char input;
+		/* If the string is shorter than the length of the line
+		 * Set the rest of the line to empty characters */
+		if (i >= len)
+		{
+			input = ' ';
+		}
+		else
+		{
+			input = _val[i];
+		}
+
+		st_buffer_data_set (*buffer_active, _row, i, input);
+	}
 }

@@ -32,7 +32,7 @@ print_progresses (uint16_t _count, uint16_t _percent)
 	}
 }
 
-int
+bool
 loading ()
 {
 	const uint16_t concurrents = 2;
@@ -51,7 +51,7 @@ loading ()
 	{
 		if (nanosleep (&ts_requested, &ts_remaining) == -1)
 		{
-			return errno;
+			return false;
 		}
 		++percent_complete;
 		// Move cursor back lines: \e[1F
@@ -60,23 +60,29 @@ loading ()
 		fflush (stdout);
 	}
 
-	return 0;
+	return true;
 }
 
 int
 main (int argc, char *args[])
 {
-	print_shell ();
+	//print_shell ();
 
-	if (loading () != 0)
-	{
-		return errno;
-	}
+	//if (!loading ())
+	//{
+	//	return errno;
+	//}
 
 	bool play = true;
 	st_io_init ();
 	while (play)
 	{
+		st_io_buff_set_row (0, "Hello world!");
+		st_io_buff_set_row (1, "A long sentence.");
+		st_io_buff_set_row (2, "Pneumonoultramicroscopicsilicovolcanoconiosis.");
+		st_io_buff_set_row (3, "Definitely one of the lines of all time.");
+		st_io_buff_set_row (4, "All of this is being read from a single buffer!");
+
 		// Outputs the contents buffer to the console
 		st_io_draw ();
 

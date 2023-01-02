@@ -1,6 +1,10 @@
 #pragma once
 #include <stdint.h>
 
+/** The buffer is linear array of characters.
+ * The buffer is accessed two dimensionally.
+ * Every row is contiguous in memory,
+ * meaning each rows are offset by sizeof (char) * column */
 typedef struct st_buffer
 {
 	char *m_data;
