@@ -89,6 +89,15 @@ main (int argc, char *args[])
 		// Outputs the contents buffer to the console
 		st_io_draw ();
 
+		st_io_buff_set_row (0, "                   StockTrader");
+		st_io_buff_set_row (1, "+================================================+");
+		st_io_buff_set_row (2, "|              __________________________________|");
+		st_io_buff_set_row (3, "|_____________/                                  |");
+		st_io_buff_set_row (4, "+================================================+");
+
+		// Outputs the contents buffer to the console
+		st_io_draw ();
+
 		// End game
 		play = false;
 	}

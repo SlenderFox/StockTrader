@@ -24,6 +24,13 @@ st_io_init (uint32_t _rows, uint32_t _columns)
 	st_buffer_data_clear (buffer_b, clear_char);
 	buffer_inactive = &buffer_b;
 
+	// Give enough room to print
+	for (uint32_t i = 0; i < _rows; ++i)
+	{
+		printf ("\n");
+	}
+	fflush (stdout);
+
 	loaded = true;
 }
 
@@ -51,6 +58,8 @@ st_io_draw ()
 	{
 		return;
 	}
+
+	printf ("\e[%uF", st_io_buff_rows ());
 
 	for (uint32_t y = 0; y < st_io_buff_rows (); ++y)
 	{
