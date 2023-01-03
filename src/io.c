@@ -5,23 +5,21 @@
 
 bool loaded = false;
 
-const uint32_t buffer_vertical = 5, buffer_horizontal = 50;
-const uint32_t buffer_square = buffer_vertical * buffer_horizontal;
 const char clear_char = '.';
 
 st_buffer *buffer_a, *buffer_b, **buffer_active, **buffer_inactive;
 
 void
-st_io_init ()
+st_io_init (uint32_t _rows, uint32_t _columns)
 {
 	// Buffer a
-	st_buffer_construct (&buffer_a, buffer_vertical, buffer_horizontal);
+	st_buffer_construct (&buffer_a, _rows, _columns);
 	st_buffer_data_init (buffer_a);
 	st_buffer_data_clear (buffer_a, clear_char);
 	buffer_active = &buffer_a;
 
 	// Buffer b
-	st_buffer_construct (&buffer_b, buffer_vertical, buffer_horizontal);
+	st_buffer_construct (&buffer_b, _rows, _columns);
 	st_buffer_data_init (buffer_b);
 	st_buffer_data_clear (buffer_b, clear_char);
 	buffer_inactive = &buffer_b;
@@ -54,11 +52,11 @@ st_io_draw ()
 		return;
 	}
 
-	for (uint32_t y = 0; y < buffer_vertical; ++y)
+	for (uint32_t y = 0; y < st_io_buff_rows (); ++y)
 	{
-		char out[buffer_horizontal+1];
-		out[buffer_horizontal] = '\0';
-		for (uint32_t x = 0; x < buffer_horizontal; ++x)
+		char out[st_io_buff_columns () + 1];
+		out[st_io_buff_columns ()] = '\0';
+		for (uint32_t x = 0; x < st_io_buff_columns (); ++x)
 		{
 			out[x] = st_buffer_data_at (*buffer_active, y, x);
 		}
@@ -67,21 +65,21 @@ st_io_draw ()
 }
 
 uint32_t
-st_io_buff_vert ()
+st_io_buff_rows ()
 {
-	return buffer_vertical;
+	return st_buffer_get_rows (buffer_a);
 }
 
 uint32_t
-st_io_buff_hori ()
+st_io_buff_columns ()
 {
-	return buffer_horizontal;
+	return st_buffer_get_columns (buffer_a);
 }
 
 uint32_t
 st_io_buff_square ()
 {
-	return buffer_square;
+	return st_buffer_get_rows (buffer_a) * st_buffer_get_columns (buffer_a);
 }
 
 void
@@ -95,7 +93,7 @@ st_io_buff_set_row (uint32_t _row, const char *_val)
 {
 	size_t len = strlen (_val);
 
-	for (uint32_t i = 0; i < buffer_horizontal; ++i)
+	for (uint32_t i = 0; i < st_io_buff_columns (); ++i)
 	{
 		char input;
 		/* If the string is shorter than the length of the line

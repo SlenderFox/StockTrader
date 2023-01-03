@@ -7,6 +7,9 @@
 #include <errno.h> // errno
 #include <stdlib.h> // getenv
 
+#define ROWS 5
+#define COLUMNS 50
+
 /* TODO:
  * Input checking
  * Loading info into buffer
@@ -74,14 +77,14 @@ main (int argc, char *args[])
 	//}
 
 	bool play = true;
-	st_io_init ();
+	st_io_init (ROWS, COLUMNS);
 	while (play)
 	{
-		st_io_buff_set_row (0, "Hello world!");
-		st_io_buff_set_row (1, "A long sentence.");
-		st_io_buff_set_row (2, "Pneumonoultramicroscopicsilicovolcanoconiosis.");
-		st_io_buff_set_row (3, "Definitely one of the lines of all time.");
-		st_io_buff_set_row (4, "All of this is being read from a single buffer!");
+		st_io_buff_set_row (0, "                   StockTrader");
+		st_io_buff_set_row (1, "+================================================+");
+		st_io_buff_set_row (2, "|                                                |");
+		st_io_buff_set_row (3, "|                                                |");
+		st_io_buff_set_row (4, "+================================================+");
 
 		// Outputs the contents buffer to the console
 		st_io_draw ();

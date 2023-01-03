@@ -2,7 +2,7 @@
 #include "buffer.h"
 
 void
-st_io_init ();
+st_io_init (uint32_t _rows, uint32_t _columns);
 
 void
 st_io_terminate ();
@@ -12,10 +12,10 @@ void
 st_io_draw ();
 
 uint32_t
-st_io_buff_vert ();
+st_io_buff_rows ();
 
 uint32_t
-st_io_buff_hori ();
+st_io_buff_columns ();
 
 uint32_t
 st_io_buff_square ();
