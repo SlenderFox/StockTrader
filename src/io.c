@@ -5,15 +5,11 @@
 
 bool loaded = false;
 
-const uint32_t buffer_vertical = 5;
-const uint32_t buffer_horizontal = 50;
+const uint32_t buffer_vertical = 5, buffer_horizontal = 50;
 const uint32_t buffer_square = buffer_vertical * buffer_horizontal;
+const char clear_char = '.';
 
-st_buffer *buffer_a;
-st_buffer *buffer_b;
-
-st_buffer **buffer_active;
-st_buffer **buffer_inactive;
+st_buffer *buffer_a, *buffer_b, **buffer_active, **buffer_inactive;
 
 void
 st_io_init ()
@@ -21,13 +17,13 @@ st_io_init ()
 	// Buffer a
 	st_buffer_construct (&buffer_a, buffer_vertical, buffer_horizontal);
 	st_buffer_data_init (buffer_a);
-	st_buffer_data_clear (buffer_a);
+	st_buffer_data_clear (buffer_a, clear_char);
 	buffer_active = &buffer_a;
 
 	// Buffer b
 	st_buffer_construct (&buffer_b, buffer_vertical, buffer_horizontal);
 	st_buffer_data_init (buffer_b);
-	st_buffer_data_clear (buffer_b);
+	st_buffer_data_clear (buffer_b, clear_char);
 	buffer_inactive = &buffer_b;
 
 	loaded = true;
@@ -106,7 +102,7 @@ st_io_buff_set_row (uint32_t _row, const char *_val)
 		 * Set the rest of the line to empty characters */
 		if (i >= len)
 		{
-			input = ' ';
+			input = clear_char;
 		}
 		else
 		{

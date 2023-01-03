@@ -50,10 +50,10 @@ st_buffer_data_terminate (st_buffer *_buf)
 }
 
 void
-st_buffer_data_clear (st_buffer *_buf)
+st_buffer_data_clear (st_buffer *_buf, char _clear)
 {
 	assert_buffer_size (_buf);
-	memset(_buf->m_data, ' ', sizeof (char) * _buf->m_rows * _buf->m_columns);
+	memset(_buf->m_data, _clear, sizeof (char) * _buf->m_rows * _buf->m_columns);
 }
 
 void

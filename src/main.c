@@ -91,5 +91,5 @@ main (int argc, char *args[])
 	}
 	st_io_terminate ();
 
-	return 0;
+	return EXIT_SUCCESS;
 }

@@ -37,9 +37,10 @@ st_buffer_data_terminate (st_buffer *_buf);
 
 /** Set all the memory inside the data of a buffer to a space character
  * @param _buf The buffer
+ * @param _clear What to use as the clear character
  */
 void
-st_buffer_data_clear (st_buffer *_buf);
+st_buffer_data_clear (st_buffer *_buf, char _clear);
 
 /** Set a char at a specific location in a buffers data
  * @param _buf The buffer
