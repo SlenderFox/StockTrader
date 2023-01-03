@@ -26,13 +26,13 @@ st_buffer_construct (st_buffer **_buf, uint32_t _rows, uint32_t _columns)
 }
 
 void
-st_buffer_destruct (st_buffer **_buf)
+st_buffer_destruct (st_buffer *_buf)
 {
-	if ((*_buf)->m_data != NULL)
+	if (_buf->m_data != NULL)
 	{
-		st_buffer_data_terminate (*_buf);
+		st_buffer_data_terminate (_buf);
 	}
-	free (*_buf);
+	free (_buf);
 }
 
 void

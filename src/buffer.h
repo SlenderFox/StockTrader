@@ -21,7 +21,7 @@ st_buffer_construct (st_buffer **_buf, uint32_t _rows, uint32_t _columns);
  * @param _buf The buffer
  */
 void
-st_buffer_destruct (st_buffer **_buf);
+st_buffer_destruct (st_buffer *_buf);
 
 /** Allocate memory for the data stored inside the buffer struct
  * @param _buf The buffer

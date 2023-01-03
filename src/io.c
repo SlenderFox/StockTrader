@@ -44,11 +44,11 @@ st_io_terminate ()
 
 	// Buffer a
 	st_buffer_data_terminate (buffer_a);
-	st_buffer_destruct (&buffer_a);
+	st_buffer_destruct (buffer_a);
 
 	// Buffer b
 	st_buffer_data_terminate (buffer_b);
-	st_buffer_destruct (&buffer_b);
+	st_buffer_destruct (buffer_b);
 }
 
 void
