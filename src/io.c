@@ -5,7 +5,7 @@
 
 bool loaded = false;
 
-const char clear_char = '.';
+const char clear_char = ' ';
 
 st_buffer *buffer_a, *buffer_b, **buffer_active, **buffer_inactive;
 
@@ -100,22 +100,47 @@ st_io_buff_set (uint32_t _row, uint32_t _column, char _val)
 void
 st_io_buff_set_row (uint32_t _row, const char *_val)
 {
+	st_io_buff_set_row_from (_row, 0, _val);
+}
+
+void
+st_io_buff_set_row_from (uint32_t _row, uint32_t _offset, const char *_val)
+{
+	if (_offset >= st_io_buff_columns ())
+	{
+		return;
+	}
+
 	size_t len = strlen (_val);
 
-	for (uint32_t i = 0; i < st_io_buff_columns (); ++i)
+	for (uint32_t i = 0; i + _offset < st_io_buff_columns (); ++i)
 	{
 		char input;
-		/* If the string is shorter than the length of the line
-		 * Set the rest of the line to empty characters */
+
 		if (i >= len)
 		{
-			input = clear_char;
+			return;
 		}
 		else
 		{
 			input = _val[i];
 		}
 
-		st_buffer_data_set (*buffer_active, _row, i, input);
+		st_buffer_data_set (*buffer_active, _row, i + _offset, input);
 	}
+}
+
+void
+st_io_buff_set_row_to (uint32_t _row, char _val)
+{
+	for (uint32_t i = 0; i < st_io_buff_columns (); ++i)
+	{
+		st_buffer_data_set (*buffer_active, _row, i, _val);
+	}
+}
+
+void
+st_io_buff_set_row_clear (uint32_t _row)
+{
+	st_io_buff_set_row_to (_row, clear_char);
 }

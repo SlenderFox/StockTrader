@@ -25,3 +25,12 @@ st_io_buff_set (uint32_t _row, uint32_t _column, char _val);
 
 void
 st_io_buff_set_row (uint32_t _row, const char *_val);
+
+void
+st_io_buff_set_row_from (uint32_t _row, uint32_t _offset, const char *_val);
+
+void
+st_io_buff_set_row_to (uint32_t _row, char _val);
+
+void
+st_io_buff_set_row_clear (uint32_t _row);

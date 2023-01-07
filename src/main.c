@@ -4,8 +4,7 @@
 #include <stdio.h> // printf, fflush
 #include <time.h> // timespec, nanosleep
 #include <errno.h> // errno
-#include <stdlib.h> // getenv, malloc, free
-#include <string.h> // strcat
+#include <stdlib.h> // EXIT_SUCCESS
 #include "io.h"
 #include "company.h"
 
@@ -21,6 +20,9 @@
 */
 
 st_company *companies[COMPANIES];
+
+extern int
+sleep(int);
 
 bool
 loading ()
@@ -59,6 +61,28 @@ loading ()
 	return true;
 }
 
+void
+init ()
+{
+	st_io_init (ROWS, COLUMNS);
+
+	for (uint16_t i = 0; i < COMPANIES; ++i)
+	{
+		st_company_construct (&(companies[i]), "Untitled");
+	}
+}
+
+void
+terminate ()
+{
+	for (uint16_t i = 0; i < COMPANIES; ++i)
+	{
+		st_company_destruct (companies[i]);
+	}
+
+	st_io_terminate ();
+}
+
 int
 main (int argc, char *args[])
 {
@@ -69,37 +93,34 @@ main (int argc, char *args[])
 
 	bool play = true;
 
-	st_io_init (ROWS, COLUMNS);
-
-	for (unsigned int i = 0; i < COMPANIES; ++i)
-	{
-		st_company_construct (&(companies[i]), "Untitled");
-	}
+	init ();
 
 	while (play)
 	{
-		st_io_buff_set_row (0, "                   StockTrader");
-		st_io_buff_set_row (1, "+================================================+");
-		st_io_buff_set_row (2, "|                                                |");
-		st_io_buff_set_row (3, "|                                                |");
-		st_io_buff_set_row (4, "|                                                |");
-		st_io_buff_set_row (5, "|                                                |");
-		st_io_buff_set_row (6, "|                                                |");
-		st_io_buff_set_row (7, "+================================================+");
+		st_io_buff_set_row_from (0, 20, "StockTrader");
+		st_io_buff_set_row_to (1, '=');
+		st_io_buff_set (1, 0, '+');
+		st_io_buff_set (1, st_io_buff_columns (), '+');
+		for (uint16_t i = 0; i < COMPANIES; ++i)
+		{
+			st_io_buff_set_row_clear (i + 2);
+			st_io_buff_set (i + 2, 0, '|');
+			st_io_buff_set (i + 2, st_io_buff_columns (), '|');
+		}
+		st_io_buff_set_row_to (7, '=');
+		st_io_buff_set (7, 0, '+');
+		st_io_buff_set (7, st_io_buff_columns (), '+');
 
 		// Outputs the contents buffer to the console
 		st_io_draw ();
 
 		sleep (1);
 
-		st_io_buff_set_row (0, "                   StockTrader");
-		st_io_buff_set_row (1, "+================================================+");
-		st_io_buff_set_row (2, st_company_name_get (companies[0]));
-		st_io_buff_set_row (3, st_company_name_get (companies[1]));
-		st_io_buff_set_row (4, st_company_name_get (companies[2]));
-		st_io_buff_set_row (5, st_company_name_get (companies[3]));
-		st_io_buff_set_row (6, st_company_name_get (companies[4]));
-		st_io_buff_set_row (7, "+================================================+");
+		for (uint16_t i = 0; i < COMPANIES; ++i)
+		{
+			st_io_buff_set_row_from (i + 2, 21, st_company_name_get (companies[i]));
+			st_io_buff_set (i + 2, st_io_buff_columns (), '|');
+		}
 
 		// Outputs the contents buffer to the console
 		st_io_draw ();
@@ -108,12 +129,7 @@ main (int argc, char *args[])
 		play = false;
 	}
 
-	for (unsigned int i = 0; i < COMPANIES; ++i)
-	{
-		st_company_destruct (companies[i]);
-	}
-
-	st_io_terminate ();
+	terminate ();
 
 	return EXIT_SUCCESS;
 }
