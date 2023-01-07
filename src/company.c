@@ -29,7 +29,10 @@ st_company_name_set (st_company *_company, char *_name)
 	int namelen = strlen (_name);
 	int size = (namelen < ST_COMPANY_NAME_MAX) ? namelen : ST_COMPANY_NAME_MAX;
 	memmove (_company->name, _name, size);
-	_company->name[ST_COMPANY_NAME_MAX - 1] = '\0';
+	if (size == ST_COMPANY_NAME_MAX)
+	{
+		_company->name[ST_COMPANY_NAME_MAX - 1] = '\0';
+	}
 }
 
 char*

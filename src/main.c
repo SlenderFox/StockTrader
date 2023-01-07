@@ -12,6 +12,8 @@
 #define COLUMNS 50
 #define COMPANIES 5
 
+#define FROM_NANO_TO_MILLI(x) x * 1000000
+
 /* TODO:
  * Input checking
  * Loading info into buffer
@@ -33,7 +35,7 @@ loading ()
 	struct timespec ts_requested =
 	{
 		.tv_sec = 0, // 0 seconds
-		.tv_nsec = 10 * 1000000 // 10 milliseconds in nanoseconds
+		.tv_nsec = MILLI_TO_NANO (10) // 10 milliseconds in nanoseconds
 	};
 
 	// Initial print

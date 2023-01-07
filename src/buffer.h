@@ -1,7 +1,7 @@
 #pragma once
 #include <stdint.h>
 
-/** The buffer is linear array of characters.
+/** The buffer is a linear array of characters.
  * The buffer is accessed two dimensionally.
  * Every row is contiguous in memory,
  * meaning each rows are offset by sizeof (char) * column */
@@ -12,7 +12,9 @@ typedef struct st_buffer
 } st_buffer;
 
 /** Allocate memory for the buffer struct and init values
- * @param _buffer The buffer
+ * @param _buffer Output pointer to the buffer
+ * @param _rows How many rows needed
+ * @param _columns How many columns needed
  */
 void
 st_buffer_construct (

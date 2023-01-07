@@ -39,6 +39,7 @@ st_io_terminate ()
 {
 	if (!loaded)
 	{
+		printf ("io not yet loaded\n");
 		return;
 	}
 
@@ -56,6 +57,7 @@ st_io_draw ()
 {
 	if (!loaded)
 	{
+		printf ("io not yet loaded\n");
 		return;
 	}
 
@@ -94,12 +96,24 @@ st_io_square ()
 void
 st_io_set (uint32_t _row, uint32_t _column, char _val)
 {
+	if (!loaded)
+	{
+		printf ("io not yet loaded\n");
+		return;
+	}
+
 	st_buffer_data_set (*buffer_active, _row, _column, _val);
 }
 
 void
 st_io_row_set (uint32_t _row, char _val)
 {
+	if (!loaded)
+	{
+		printf ("io not yet loaded\n");
+		return;
+	}
+
 	for (uint32_t i = 0; i < st_io_columns (); ++i)
 	{
 		st_buffer_data_set (*buffer_active, _row, i, _val);
@@ -115,6 +129,12 @@ st_io_row_clear (uint32_t _row)
 void
 st_io_row_insert (uint32_t _row, uint32_t _offset, const char *_val)
 {
+	if (!loaded)
+	{
+		printf ("io not yet loaded\n");
+		return;
+	}
+
 	if (_offset >= st_io_columns ())
 	{
 		return;

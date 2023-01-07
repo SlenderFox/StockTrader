@@ -1,27 +1,35 @@
 #include "buffer.h"
 #include <stdlib.h> // malloc, free
 #include <memory.h> // memset
-#include <assert.h> // assert
 
-/* Local function */
+/** Local function, returns the minimum of two values
+ * @param _a The first value
+ * @param _b The second value
+ * @return [uint32_t] The lesser of the two values
+ */
 uint32_t
 min (uint32_t _a, uint32_t _b)
 {
 	return (_a < _b) ? _a : _b;
 }
 
-void
-assert_buffer_size (st_buffer *_buffer)
+/** Local function, returns the maximum of two values
+ * @param _a The first value
+ * @param _b The second value
+ * @return [uint32_t] The greater of the two values
+ */
+uint32_t
+max (uint32_t _a, uint32_t _b)
 {
-	assert(_buffer->m_rows > 0 && _buffer->m_columns > 0 && "Error: Buffer size is zero");
+	return (_a > _b) ? _a : _b;
 }
 
 void
 st_buffer_construct (st_buffer **_buffer, uint32_t _rows, uint32_t _columns)
 {
 	*_buffer = malloc (sizeof (st_buffer));
-	(*_buffer)->m_rows = _rows;
-	(*_buffer)->m_columns = _columns;
+	(*_buffer)->m_rows = max (_rows, 1);
+	(*_buffer)->m_columns = max (_columns, 1);
 	(*_buffer)->m_data = NULL;
 }
 
@@ -38,7 +46,6 @@ st_buffer_destruct (st_buffer *_buffer)
 void
 st_buffer_data_init (st_buffer *_buffer)
 {
-	assert_buffer_size (_buffer);
 	_buffer->m_data = malloc (sizeof (char) * _buffer->m_rows * _buffer->m_columns);
 }
 
@@ -52,7 +59,6 @@ st_buffer_data_terminate (st_buffer *_buffer)
 void
 st_buffer_data_clear (st_buffer *_buffer, char _clear)
 {
-	assert_buffer_size (_buffer);
 	memset(_buffer->m_data, _clear, sizeof (char) * _buffer->m_rows * _buffer->m_columns);
 }
 
@@ -64,7 +70,6 @@ st_buffer_data_set (
 	char _val
 )
 {
-	assert_buffer_size (_buffer);
 	_row = min (_row, _buffer->m_rows - 1);
 	_column = min (_column, _buffer->m_columns - 1);
 	uint32_t pos = (_row * _buffer->m_columns) + _column;
@@ -78,7 +83,6 @@ st_buffer_data_at (
 	uint32_t _column
 )
 {
-	assert_buffer_size (_buffer);
 	_row = min (_row, _buffer->m_rows - 1);
 	_column = min (_column, _buffer->m_columns - 1);
 	uint32_t pos = (_row * _buffer->m_columns) + _column;
