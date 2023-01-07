@@ -12,7 +12,7 @@
 #define COLUMNS 50
 #define COMPANIES 5
 
-#define FROM_NANO_TO_MILLI(x) x * 1000000
+#define MILLI_TO_NANO(x) x * 1000000
 
 /* TODO:
  * Input checking
@@ -85,6 +85,36 @@ terminate ()
 	st_io_terminate ();
 }
 
+void
+print_test ()
+{
+	st_io_row_insert (0, 20, "StockTrader");
+	st_io_row_set (1, '=');
+	st_io_set (1, 0, '+');
+	st_io_set (1, st_io_columns (), '+');
+	for (uint16_t i = 0; i < COMPANIES; ++i)
+	{
+		st_io_row_clear (i + 2);
+		st_io_set (i + 2, 0, '|');
+		st_io_set (i + 2, st_io_columns (), '|');
+	}
+	st_io_row_set (7, '=');
+	st_io_set (7, 0, '+');
+	st_io_set (7, st_io_columns (), '+');
+
+	st_io_draw ();
+
+	sleep (1);
+
+	for (uint16_t i = 0; i < COMPANIES; ++i)
+	{
+		st_io_row_insert (i + 2, 21, st_company_name_get (companies[i]));
+		st_io_set (i + 2, st_io_columns (), '|');
+	}
+
+	st_io_draw ();
+}
+
 int
 main (int argc, char *args[])
 {
@@ -93,40 +123,16 @@ main (int argc, char *args[])
 	//	return errno;
 	//}
 
-	bool play = true;
+	bool running = true;
 
 	init ();
 
-	while (play)
+	while (running)
 	{
-		st_io_row_insert (0, 20, "StockTrader");
-		st_io_row_set (1, '=');
-		st_io_set (1, 0, '+');
-		st_io_set (1, st_io_columns (), '+');
-		for (uint16_t i = 0; i < COMPANIES; ++i)
-		{
-			st_io_row_clear (i + 2);
-			st_io_set (i + 2, 0, '|');
-			st_io_set (i + 2, st_io_columns (), '|');
-		}
-		st_io_row_set (7, '=');
-		st_io_set (7, 0, '+');
-		st_io_set (7, st_io_columns (), '+');
-
-		st_io_draw ();
-
-		sleep (1);
-
-		for (uint16_t i = 0; i < COMPANIES; ++i)
-		{
-			st_io_row_insert (i + 2, 21, st_company_name_get (companies[i]));
-			st_io_set (i + 2, st_io_columns (), '|');
-		}
-
-		st_io_draw ();
+		print_test ();
 
 		// End game
-		play = false;
+		running = false;
 	}
 
 	terminate ();
