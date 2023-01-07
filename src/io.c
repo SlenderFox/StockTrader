@@ -59,13 +59,13 @@ st_io_draw ()
 		return;
 	}
 
-	printf ("\e[%uF", st_io_buff_rows ());
+	printf ("\e[%uF", st_io_rows ());
 
-	for (uint32_t y = 0; y < st_io_buff_rows (); ++y)
+	for (uint32_t y = 0; y < st_io_rows (); ++y)
 	{
-		char out[st_io_buff_columns () + 1];
-		out[st_io_buff_columns ()] = '\0';
-		for (uint32_t x = 0; x < st_io_buff_columns (); ++x)
+		char out[st_io_columns () + 1];
+		out[st_io_columns ()] = '\0';
+		for (uint32_t x = 0; x < st_io_columns (); ++x)
 		{
 			out[x] = st_buffer_data_at (*buffer_active, y, x);
 		}
@@ -74,46 +74,55 @@ st_io_draw ()
 }
 
 uint32_t
-st_io_buff_rows ()
+st_io_rows ()
 {
 	return st_buffer_get_rows (buffer_a);
 }
 
 uint32_t
-st_io_buff_columns ()
+st_io_columns ()
 {
 	return st_buffer_get_columns (buffer_a);
 }
 
 uint32_t
-st_io_buff_square ()
+st_io_square ()
 {
 	return st_buffer_get_rows (buffer_a) * st_buffer_get_columns (buffer_a);
 }
 
 void
-st_io_buff_set (uint32_t _row, uint32_t _column, char _val)
+st_io_set (uint32_t _row, uint32_t _column, char _val)
 {
 	st_buffer_data_set (*buffer_active, _row, _column, _val);
 }
 
 void
-st_io_buff_set_row (uint32_t _row, const char *_val)
+st_io_row_set (uint32_t _row, char _val)
 {
-	st_io_buff_set_row_from (_row, 0, _val);
+	for (uint32_t i = 0; i < st_io_columns (); ++i)
+	{
+		st_buffer_data_set (*buffer_active, _row, i, _val);
+	}
 }
 
 void
-st_io_buff_set_row_from (uint32_t _row, uint32_t _offset, const char *_val)
+st_io_row_clear (uint32_t _row)
 {
-	if (_offset >= st_io_buff_columns ())
+	st_io_row_set (_row, clear_char);
+}
+
+void
+st_io_row_insert (uint32_t _row, uint32_t _offset, const char *_val)
+{
+	if (_offset >= st_io_columns ())
 	{
 		return;
 	}
 
 	size_t len = strlen (_val);
 
-	for (uint32_t i = 0; i + _offset < st_io_buff_columns (); ++i)
+	for (uint32_t i = 0; i + _offset < st_io_columns (); ++i)
 	{
 		char input;
 
@@ -128,19 +137,4 @@ st_io_buff_set_row_from (uint32_t _row, uint32_t _offset, const char *_val)
 
 		st_buffer_data_set (*buffer_active, _row, i + _offset, input);
 	}
-}
-
-void
-st_io_buff_set_row_to (uint32_t _row, char _val)
-{
-	for (uint32_t i = 0; i < st_io_buff_columns (); ++i)
-	{
-		st_buffer_data_set (*buffer_active, _row, i, _val);
-	}
-}
-
-void
-st_io_buff_set_row_clear (uint32_t _row)
-{
-	st_io_buff_set_row_to (_row, clear_char);
 }

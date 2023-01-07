@@ -97,32 +97,30 @@ main (int argc, char *args[])
 
 	while (play)
 	{
-		st_io_buff_set_row_from (0, 20, "StockTrader");
-		st_io_buff_set_row_to (1, '=');
-		st_io_buff_set (1, 0, '+');
-		st_io_buff_set (1, st_io_buff_columns (), '+');
+		st_io_row_insert (0, 20, "StockTrader");
+		st_io_row_set (1, '=');
+		st_io_set (1, 0, '+');
+		st_io_set (1, st_io_columns (), '+');
 		for (uint16_t i = 0; i < COMPANIES; ++i)
 		{
-			st_io_buff_set_row_clear (i + 2);
-			st_io_buff_set (i + 2, 0, '|');
-			st_io_buff_set (i + 2, st_io_buff_columns (), '|');
+			st_io_row_clear (i + 2);
+			st_io_set (i + 2, 0, '|');
+			st_io_set (i + 2, st_io_columns (), '|');
 		}
-		st_io_buff_set_row_to (7, '=');
-		st_io_buff_set (7, 0, '+');
-		st_io_buff_set (7, st_io_buff_columns (), '+');
+		st_io_row_set (7, '=');
+		st_io_set (7, 0, '+');
+		st_io_set (7, st_io_columns (), '+');
 
-		// Outputs the contents buffer to the console
 		st_io_draw ();
 
 		sleep (1);
 
 		for (uint16_t i = 0; i < COMPANIES; ++i)
 		{
-			st_io_buff_set_row_from (i + 2, 21, st_company_name_get (companies[i]));
-			st_io_buff_set (i + 2, st_io_buff_columns (), '|');
+			st_io_row_insert (i + 2, 21, st_company_name_get (companies[i]));
+			st_io_set (i + 2, st_io_columns (), '|');
 		}
 
-		// Outputs the contents buffer to the console
 		st_io_draw ();
 
 		// End game
