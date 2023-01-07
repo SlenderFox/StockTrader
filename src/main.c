@@ -1,14 +1,17 @@
 #define _POSIX_C_SOURCE 200112L // For nanosleep to be used without warning
 
-#include "io.h"
 #include <stdbool.h> // bool, true, false
 #include <stdio.h> // printf, fflush
 #include <time.h> // timespec, nanosleep
 #include <errno.h> // errno
-#include <stdlib.h> // getenv
+#include <stdlib.h> // getenv, malloc, free
+#include <string.h> // strcat
+#include "io.h"
+#include "company.h"
 
-#define ROWS 5
+#define ROWS 8
 #define COLUMNS 50
+#define COMPANIES 5
 
 /* TODO:
  * Input checking
@@ -17,23 +20,7 @@
  * Compare replace for Windows
 */
 
-void
-print_shell ()
-{
-	// Test shell
-	char *envvar = getenv ("SHELL");
-	if (envvar == NULL) envvar = "NULL\0";
-	printf ("SHELL: %s\n", envvar);
-}
-
-void
-print_progresses (uint16_t _count, uint16_t _percent)
-{
-	for (uint16_t i = 0; i < _count; ++i)
-	{
-		printf ("Progress: %u%%\n", _percent);
-	}
-}
+st_company *companies[COMPANIES];
 
 bool
 loading ()
@@ -48,7 +35,10 @@ loading ()
 	};
 
 	// Initial print
-	print_progresses (concurrents, percent_complete);
+	for (uint16_t i = 0; i < concurrents; ++i)
+	{
+		printf ("Progress: %u%%\n", percent_complete);
+	}
 
 	while (percent_complete < 100)
 	{
@@ -59,7 +49,10 @@ loading ()
 		++percent_complete;
 		// Move cursor back lines: \e[1F
 		printf ("\e[%uF", concurrents);
-		print_progresses (concurrents, percent_complete);
+		for (uint16_t i = 0; i < concurrents; ++i)
+		{
+			printf ("Progress: %u%%\n", percent_complete);
+		}
 		fflush (stdout);
 	}
 
@@ -69,31 +62,44 @@ loading ()
 int
 main (int argc, char *args[])
 {
-	//print_shell ();
-
 	//if (!loading ())
 	//{
 	//	return errno;
 	//}
 
 	bool play = true;
+
 	st_io_init (ROWS, COLUMNS);
+
+	for (unsigned int i = 0; i < COMPANIES; ++i)
+	{
+		st_company_construct (&(companies[i]), "Untitled");
+	}
+
 	while (play)
 	{
 		st_io_buff_set_row (0, "                   StockTrader");
 		st_io_buff_set_row (1, "+================================================+");
 		st_io_buff_set_row (2, "|                                                |");
 		st_io_buff_set_row (3, "|                                                |");
-		st_io_buff_set_row (4, "+================================================+");
+		st_io_buff_set_row (4, "|                                                |");
+		st_io_buff_set_row (5, "|                                                |");
+		st_io_buff_set_row (6, "|                                                |");
+		st_io_buff_set_row (7, "+================================================+");
 
 		// Outputs the contents buffer to the console
 		st_io_draw ();
 
+		sleep (1);
+
 		st_io_buff_set_row (0, "                   StockTrader");
 		st_io_buff_set_row (1, "+================================================+");
-		st_io_buff_set_row (2, "|              __________________________________|");
-		st_io_buff_set_row (3, "|_____________/                                  |");
-		st_io_buff_set_row (4, "+================================================+");
+		st_io_buff_set_row (2, st_company_name_get (companies[0]));
+		st_io_buff_set_row (3, st_company_name_get (companies[1]));
+		st_io_buff_set_row (4, st_company_name_get (companies[2]));
+		st_io_buff_set_row (5, st_company_name_get (companies[3]));
+		st_io_buff_set_row (6, st_company_name_get (companies[4]));
+		st_io_buff_set_row (7, "+================================================+");
 
 		// Outputs the contents buffer to the console
 		st_io_draw ();
@@ -101,6 +107,12 @@ main (int argc, char *args[])
 		// End game
 		play = false;
 	}
+
+	for (unsigned int i = 0; i < COMPANIES; ++i)
+	{
+		st_company_destruct (companies[i]);
+	}
+
 	st_io_terminate ();
 
 	return EXIT_SUCCESS;
