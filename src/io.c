@@ -4,44 +4,48 @@
 
 #include "io.h"
 #include "buffer.h"
+#include "utils.h"
 
 enum { MIN_GRAPH_ROWS = 4 };
 enum { MIN_GRAPH_COLS = 10 };
 
+// Title, graph border, and info
 enum { ROW_FLUFF = 3 };
+// Graph border
 enum { COL_FLUFF = 2 };
 
 bool loaded = false;
-
 const char clear_char = '.';
 
-uint16_t graph_rows, graph_cols;
+uint16_t total_rows = 0, total_columns = 0;
+uint16_t graph_rows = 0, graph_columns = 0;
+uint16_t row_overflow = 0;
 
 st_buffer *buffer_a, *buffer_b, **buffer_active, **buffer_inactive;
 
 void
 st_io_init (uint16_t _rows, uint16_t _columns)
 {
-	graph_rows = (_rows > MIN_GRAPH_ROWS) ? _rows : MIN_GRAPH_ROWS;
-	graph_cols = (_columns > MIN_GRAPH_COLS) ? _columns : MIN_GRAPH_COLS;
+	graph_rows = MAX (_rows, MIN_GRAPH_ROWS);
+	graph_columns = MAX (_columns, MIN_GRAPH_COLS);
 
-	uint16_t rows = graph_rows + ROW_FLUFF;
-	uint16_t columns = graph_cols + COL_FLUFF;
+	total_rows = graph_rows + ROW_FLUFF;
+	total_columns = graph_columns + COL_FLUFF;
 
 	// Buffer a
-	st_buffer_construct (&buffer_a, rows, columns);
+	st_buffer_construct (&buffer_a, total_rows, total_columns);
 	st_buffer_data_init (buffer_a);
 	st_buffer_data_clear (buffer_a, clear_char);
 	buffer_active = &buffer_a;
 
 	// Buffer b
-	st_buffer_construct (&buffer_b, rows, columns);
+	st_buffer_construct (&buffer_b, total_rows, total_columns);
 	st_buffer_data_init (buffer_b);
 	st_buffer_data_clear (buffer_b, clear_char);
 	buffer_inactive = &buffer_b;
 
 	// Give enough room to print
-	for (uint16_t i = 0; i < rows; ++i)
+	for (uint16_t i = 0; i < total_rows; ++i)
 	{
 		printf ("\n");
 	}
@@ -102,7 +106,7 @@ st_io_draw ()
 		return;
 	}
 
-	printf ("\e[%uF", st_io_rows ());
+	printf ("\e[%uF", st_io_rows () + row_overflow);
 
 	for (uint16_t y = 0; y < st_io_rows (); ++y)
 	{
