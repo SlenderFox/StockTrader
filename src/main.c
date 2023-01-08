@@ -3,8 +3,8 @@
 #include "io.h"
 #include "company.h"
 
-enum { ROWS = 0 };
-enum { COLUMNS = 0 };
+enum { ROWS = 8};
+enum { COLUMNS = 30 };
 enum { COMPANIES = 5 };
 
 /* TODO:

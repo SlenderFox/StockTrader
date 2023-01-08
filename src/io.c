@@ -7,15 +7,14 @@
 #include "buffer.h"
 #include "utils.h"
 
-enum { MIN_GRAPH_ROWS = 5 };
+enum { MIN_GRAPH_ROWS = 4 };
 enum { MIN_GRAPH_COLS = 20 };
 
-// Graph border
-enum { COL_PADDING = 2 };
-// Title and graph border
-enum { ROW_PADDING = 3 };
-// Info length
-enum { INFO_LENGTH = 5 };
+// Title and vetical graph border
+enum { GRAPH_PADDING_ROW = 3 };
+// Side graph border
+enum { GRAPH_PADDING_COL = 2 };
+enum { INFO_LENGTH = 7 };
 
 bool loaded = false;
 const char clear_char = '.';
@@ -34,9 +33,9 @@ st_io_init (uint16_t _rows, uint16_t _columns)
 	graph_rows = MAX (_rows, MIN_GRAPH_ROWS);
 	graph_columns = MAX (_columns, MIN_GRAPH_COLS);
 
-	info_offset = graph_rows + ROW_PADDING;
+	info_offset = graph_rows + GRAPH_PADDING_ROW;
 	total_rows = info_offset + INFO_LENGTH;
-	total_columns = graph_columns + COL_PADDING;
+	total_columns = graph_columns + GRAPH_PADDING_COL;
 
 	// Buffer a
 	st_buff_construct (&buffer_a, total_rows, total_columns);
@@ -100,10 +99,13 @@ st_io_init_graph ()
 	st_buff_data_set (*buffer_active, info_offset - 1, total_columns, '+');
 
 	// Info
-	for (uint16_t i = 0; i < INFO_LENGTH; ++i)
-	{
-		st_buff_data_row_insert (*buffer_active, info_offset + i, 0, "Info");
-	}
+	st_buff_data_row_insert (*buffer_active, info_offset, 0, "Day 69");
+	st_buff_data_row_insert (*buffer_active, info_offset + 1, 0, "Money: $1000");
+	st_buff_data_row_insert (*buffer_active, info_offset + 2, 0, "Company");
+	st_buff_data_row_insert (*buffer_active, info_offset + 3, 0, "$0.01 per");
+	st_buff_data_row_insert (*buffer_active, info_offset + 4, 0, "50 owned");
+	st_buff_data_row_set (*buffer_active, info_offset + 5, '-');
+	st_buff_data_row_insert (*buffer_active, info_offset + 6, 0, "> ");
 }
 
 void
