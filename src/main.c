@@ -30,6 +30,8 @@ init ()
 	{
 		st_company_construct (&(companies[i]), "Untitled");
 	}
+
+	st_io_init_graph ();
 }
 
 void
@@ -43,36 +45,6 @@ terminate ()
 	st_io_terminate ();
 }
 
-void
-print_test ()
-{
-	st_io_row_insert (0, 20, "StockTrader");
-	st_io_row_set (1, '=');
-	st_io_set (1, 0, '+');
-	st_io_set (1, st_io_columns (), '+');
-	for (uint16_t i = 0; i < COMPANIES; ++i)
-	{
-		st_io_row_clear (i + 2);
-		st_io_set (i + 2, 0, '|');
-		st_io_set (i + 2, st_io_columns (), '|');
-	}
-	st_io_row_set (7, '=');
-	st_io_set (7, 0, '+');
-	st_io_set (7, st_io_columns (), '+');
-
-	st_io_draw ();
-
-	sleep (1);
-
-	for (uint16_t i = 0; i < COMPANIES; ++i)
-	{
-		st_io_row_insert (i + 2, 21, st_company_name_get (companies[i]));
-		st_io_set (i + 2, st_io_columns (), '|');
-	}
-
-	st_io_draw ();
-}
-
 int
 main (int argc, char *args[])
 {
@@ -80,9 +52,6 @@ main (int argc, char *args[])
 
 	while (running)
 	{
-		//print_test ();
-		st_io_init_graph ();
-
 		st_io_draw ();
 
 		// End game
