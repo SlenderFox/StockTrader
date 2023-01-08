@@ -1,18 +1,21 @@
 #include <stdio.h> // printf
 #include <stdbool.h> // bool, true, false
 #include <string.h> // strlen
+#include <assert.h> // assert
 
 #include "io.h"
 #include "buffer.h"
 #include "utils.h"
 
-enum { MIN_GRAPH_ROWS = 4 };
-enum { MIN_GRAPH_COLS = 10 };
+enum { MIN_GRAPH_ROWS = 5 };
+enum { MIN_GRAPH_COLS = 20 };
 
-// Title, graph border, and info
-enum { ROW_FLUFF = 3 };
 // Graph border
-enum { COL_FLUFF = 2 };
+enum { COL_PADDING = 2 };
+// Title and graph border
+enum { ROW_PADDING = 3 };
+// Info length
+enum { INFO_LENGTH = 5 };
 
 bool loaded = false;
 const char clear_char = '.';
@@ -20,6 +23,8 @@ const char clear_char = '.';
 uint16_t total_rows = 0, total_columns = 0;
 uint16_t graph_rows = 0, graph_columns = 0;
 uint16_t row_overflow = 0;
+
+uint16_t info_offset;
 
 st_buffer *buffer_a, *buffer_b, **buffer_active, **buffer_inactive;
 
@@ -29,8 +34,9 @@ st_io_init (uint16_t _rows, uint16_t _columns)
 	graph_rows = MAX (_rows, MIN_GRAPH_ROWS);
 	graph_columns = MAX (_columns, MIN_GRAPH_COLS);
 
-	total_rows = graph_rows + ROW_FLUFF;
-	total_columns = graph_columns + COL_FLUFF;
+	info_offset = graph_rows + ROW_PADDING;
+	total_rows = info_offset + INFO_LENGTH;
+	total_columns = graph_columns + COL_PADDING;
 
 	// Buffer a
 	st_buffer_construct (&buffer_a, total_rows, total_columns);
@@ -57,11 +63,7 @@ st_io_init (uint16_t _rows, uint16_t _columns)
 void
 st_io_terminate ()
 {
-	if (!loaded)
-	{
-		printf ("io not yet loaded\n");
-		return;
-	}
+	assert (loaded && "io not yet loaded\n");
 
 	// Buffer a
 	st_buffer_data_terminate (buffer_a);
@@ -75,6 +77,8 @@ st_io_terminate ()
 void
 st_io_init_graph ()
 {
+	assert (loaded && "io not yet loaded\n");
+
 	// Title
 	st_io_row_insert (0, 0, "STOCKTRADER");
 
@@ -92,22 +96,26 @@ st_io_init_graph ()
 	}
 
 	// Graph bottom  edge
-	st_io_row_set (graph_rows + 3, '=');
-	st_io_set (graph_rows + 3, 0, '+');
-	st_io_set (graph_rows + 3, st_io_columns (), '+');
+	st_io_row_set (info_offset - 1, '=');
+	st_io_set (info_offset - 1, 0, '+');
+	st_io_set (info_offset - 1, st_io_columns (), '+');
+
+	// Info
+	for (uint16_t i = 0; i < INFO_LENGTH; ++i)
+	{
+		st_io_row_insert (info_offset + i, 0, "Info");
+	}
 }
 
 void
 st_io_draw ()
 {
-	if (!loaded)
-	{
-		printf ("io not yet loaded\n");
-		return;
-	}
+	assert (loaded && "io not yet loaded\n");
 
+	// Move cursor back to start
 	printf ("\e[%uF", st_io_rows () + row_overflow);
 
+	// Output the contents of the active buffer
 	for (uint16_t y = 0; y < st_io_rows (); ++y)
 	{
 		char out[st_io_columns () + 1];
@@ -118,6 +126,7 @@ st_io_draw ()
 		}
 		printf ("%s\n", out);
 	}
+	fflush (stdout);
 }
 
 uint16_t
@@ -141,23 +150,14 @@ st_io_square ()
 void
 st_io_set (uint16_t _row, uint16_t _column, char _val)
 {
-	if (!loaded)
-	{
-		printf ("io not yet loaded\n");
-		return;
-	}
-
+	assert (loaded && "io not yet loaded\n");
 	st_buffer_data_set (*buffer_active, _row, _column, _val);
 }
 
 void
 st_io_row_set (uint16_t _row, char _val)
 {
-	if (!loaded)
-	{
-		printf ("io not yet loaded\n");
-		return;
-	}
+	assert (loaded && "io not yet loaded\n");
 
 	for (uint16_t i = 0; i < st_io_columns (); ++i)
 	{
@@ -174,11 +174,7 @@ st_io_row_clear (uint16_t _row)
 void
 st_io_row_insert (uint16_t _row, uint16_t _offset, const char *_val)
 {
-	if (!loaded)
-	{
-		printf ("io not yet loaded\n");
-		return;
-	}
+	assert (loaded && "io not yet loaded\n");
 
 	if (_offset >= st_io_columns ())
 	{

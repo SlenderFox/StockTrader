@@ -2,8 +2,8 @@
 #include <stdint.h>
 
 /** Constrcuts all the buffers
- * @param _rows How many rows the buffers will have
- * @param _columns How many columns the buffers will have
+ * @param _rows How many rows the graph will have
+ * @param _columns How many columns the graph will have
  */
 void
 st_io_init (uint16_t _rows, uint16_t _columns);
