@@ -1,18 +1,21 @@
 #pragma once
+#include <stdint.h>
 
-#define ST_COMPANY_NAME_MAX 32
+enum { ST_COMPANY_NAME_MAX = 32 };
 
 /** A company that can have stocks bought and sold from.
  * Every company havea value that is updated with each timestep,
  * a count of how many stocks in the company are owned by the player,
  * and a name.
  */
-typedef struct st_company
+struct st_company
 {
-	int value;
-	int owned_stocks;
+	double value;
+	uint32_t owned_stocks;
 	char name[ST_COMPANY_NAME_MAX];
-} st_company;
+};
+
+typedef struct st_company st_company;
 
 /** Allocate memory for the company struct and init a name
  * @param _company Output pointer to the company

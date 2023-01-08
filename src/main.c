@@ -1,10 +1,11 @@
 #include <stdbool.h> // bool, true, false
+
 #include "io.h"
 #include "company.h"
 
-#define ROWS 8
-#define COLUMNS 50
-#define COMPANIES 5
+enum { ROWS = 0 };
+enum { COLUMNS = 0 };
+enum { COMPANIES = 5 };
 
 /* TODO:
  * Input checking
@@ -14,6 +15,7 @@
 */
 
 bool running = true;
+
 st_company *companies[COMPANIES];
 
 extern int
@@ -78,7 +80,10 @@ main (int argc, char *args[])
 
 	while (running)
 	{
-		print_test ();
+		//print_test ();
+		st_io_init_graph ();
+
+		st_io_draw ();
 
 		// End game
 		running = false;

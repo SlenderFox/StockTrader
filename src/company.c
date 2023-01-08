@@ -1,12 +1,13 @@
-#include "company.h"
 #include <stdlib.h> // malloc, free
 #include <memory.h> // memmove
+
+#include "company.h"
 
 void
 st_company_construct (st_company **_company, char *_name)
 {
 	*_company = malloc (sizeof (st_company));
-	(*_company)->value = 0;
+	(*_company)->value = 0.0;
 	(*_company)->owned_stocks = 0;
 	st_company_name_set (*_company, "Untitled");
 }

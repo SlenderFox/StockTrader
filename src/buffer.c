@@ -1,14 +1,15 @@
-#include "buffer.h"
 #include <stdlib.h> // malloc, free
 #include <memory.h> // memset
+
+#include "buffer.h"
 
 /** Local function, returns the minimum of two values
  * @param _a The first value
  * @param _b The second value
- * @return [uint32_t] The lesser of the two values
+ * @return [uint16_t] The lesser of the two values
  */
-uint32_t
-min (uint32_t _a, uint32_t _b)
+uint16_t
+min (uint16_t _a, uint16_t _b)
 {
 	return (_a < _b) ? _a : _b;
 }
@@ -16,16 +17,16 @@ min (uint32_t _a, uint32_t _b)
 /** Local function, returns the maximum of two values
  * @param _a The first value
  * @param _b The second value
- * @return [uint32_t] The greater of the two values
+ * @return [uint16_t] The greater of the two values
  */
-uint32_t
-max (uint32_t _a, uint32_t _b)
+uint16_t
+max (uint16_t _a, uint16_t _b)
 {
 	return (_a > _b) ? _a : _b;
 }
 
 void
-st_buffer_construct (st_buffer **_buffer, uint32_t _rows, uint32_t _columns)
+st_buffer_construct (st_buffer **_buffer, uint16_t _rows, uint16_t _columns)
 {
 	*_buffer = malloc (sizeof (st_buffer));
 	(*_buffer)->m_rows = max (_rows, 1);
@@ -65,37 +66,37 @@ st_buffer_data_clear (st_buffer *_buffer, char _clear)
 void
 st_buffer_data_set (
 	st_buffer *_buffer,
-	uint32_t _row,
-	uint32_t _column,
+	uint16_t _row,
+	uint16_t _column,
 	char _val
 )
 {
 	_row = min (_row, _buffer->m_rows - 1);
 	_column = min (_column, _buffer->m_columns - 1);
-	uint32_t pos = (_row * _buffer->m_columns) + _column;
+	uint16_t pos = (_row * _buffer->m_columns) + _column;
 	_buffer->m_data [pos] = _val;
 }
 
 char
 st_buffer_data_at (
 	st_buffer *_buffer,
-	uint32_t _row,
-	uint32_t _column
+	uint16_t _row,
+	uint16_t _column
 )
 {
 	_row = min (_row, _buffer->m_rows - 1);
 	_column = min (_column, _buffer->m_columns - 1);
-	uint32_t pos = (_row * _buffer->m_columns) + _column;
+	uint16_t pos = (_row * _buffer->m_columns) + _column;
 	return _buffer->m_data [pos];
 }
 
-uint32_t
+uint16_t
 st_buffer_get_rows (st_buffer *_buffer)
 {
 	return _buffer->m_rows;
 }
 
-uint32_t
+uint16_t
 st_buffer_get_columns (st_buffer *_buffer)
 {
 	return _buffer->m_columns;
