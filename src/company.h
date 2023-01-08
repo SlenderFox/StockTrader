@@ -46,5 +46,5 @@ st_company_name_set (st_company *_company, char *_name);
  * @param _company The company to get the name from
  * @return [char*] The name as a char*
  */
-char*
+char *
 st_company_name_get (st_company *_company);

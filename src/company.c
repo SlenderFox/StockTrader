@@ -35,7 +35,7 @@ st_company_name_set (st_company *_company, char *_name)
 	}
 }
 
-char*
+char *
 st_company_name_get (st_company *_company)
 {
 	return _company->name;

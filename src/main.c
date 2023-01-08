@@ -1,18 +1,10 @@
-#define _POSIX_C_SOURCE 200112L // For nanosleep to be used without warning
-
 #include <stdbool.h> // bool, true, false
-#include <stdio.h> // printf, fflush
-#include <time.h> // timespec, nanosleep
-#include <errno.h> // errno
-#include <stdlib.h> // EXIT_SUCCESS
 #include "io.h"
 #include "company.h"
 
 #define ROWS 8
 #define COLUMNS 50
 #define COMPANIES 5
-
-#define MILLI_TO_NANO(x) x * 1000000
 
 /* TODO:
  * Input checking
@@ -21,47 +13,11 @@
  * Compare replace for Windows
 */
 
+bool running = true;
 st_company *companies[COMPANIES];
 
 extern int
 sleep(int);
-
-bool
-loading ()
-{
-	const uint16_t concurrents = 2;
-	uint16_t percent_complete = 0;
-	struct timespec ts_remaining;
-	struct timespec ts_requested =
-	{
-		.tv_sec = 0, // 0 seconds
-		.tv_nsec = MILLI_TO_NANO (10) // 10 milliseconds in nanoseconds
-	};
-
-	// Initial print
-	for (uint16_t i = 0; i < concurrents; ++i)
-	{
-		printf ("Progress: %u%%\n", percent_complete);
-	}
-
-	while (percent_complete < 100)
-	{
-		if (nanosleep (&ts_requested, &ts_remaining) == -1)
-		{
-			return false;
-		}
-		++percent_complete;
-		// Move cursor back lines: \e[1F
-		printf ("\e[%uF", concurrents);
-		for (uint16_t i = 0; i < concurrents; ++i)
-		{
-			printf ("Progress: %u%%\n", percent_complete);
-		}
-		fflush (stdout);
-	}
-
-	return true;
-}
 
 void
 init ()
@@ -118,13 +74,6 @@ print_test ()
 int
 main (int argc, char *args[])
 {
-	//if (!loading ())
-	//{
-	//	return errno;
-	//}
-
-	bool running = true;
-
 	init ();
 
 	while (running)
@@ -137,5 +86,5 @@ main (int argc, char *args[])
 
 	terminate ();
 
-	return EXIT_SUCCESS;
+	return 0;
 }
