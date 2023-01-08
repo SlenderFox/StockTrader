@@ -39,15 +39,15 @@ st_io_init (uint16_t _rows, uint16_t _columns)
 	total_columns = graph_columns + COL_PADDING;
 
 	// Buffer a
-	st_buffer_construct (&buffer_a, total_rows, total_columns);
-	st_buffer_data_init (buffer_a);
-	st_buffer_data_clear (buffer_a, clear_char);
+	st_buff_construct (&buffer_a, total_rows, total_columns);
+	st_buff_data_init (buffer_a);
+	st_buff_data_clear (buffer_a, clear_char);
 	buffer_active = &buffer_a;
 
 	// Buffer b
-	st_buffer_construct (&buffer_b, total_rows, total_columns);
-	st_buffer_data_init (buffer_b);
-	st_buffer_data_clear (buffer_b, clear_char);
+	st_buff_construct (&buffer_b, total_rows, total_columns);
+	st_buff_data_init (buffer_b);
+	st_buff_data_clear (buffer_b, clear_char);
 	buffer_inactive = &buffer_b;
 
 	// Give enough room to print
@@ -66,12 +66,12 @@ st_io_terminate ()
 	assert (loaded && "io not yet loaded\n");
 
 	// Buffer a
-	st_buffer_data_terminate (buffer_a);
-	st_buffer_destruct (buffer_a);
+	st_buff_data_terminate (buffer_a);
+	st_buff_destruct (buffer_a);
 
 	// Buffer b
-	st_buffer_data_terminate (buffer_b);
-	st_buffer_destruct (buffer_b);
+	st_buff_data_terminate (buffer_b);
+	st_buff_destruct (buffer_b);
 }
 
 void
@@ -80,30 +80,29 @@ st_io_init_graph ()
 	assert (loaded && "io not yet loaded\n");
 
 	// Title
-	st_io_row_insert (0, 0, "STOCKTRADER");
+	st_buff_data_row_insert (*buffer_active, 0, 0, "STOCKTRADER");
 
 	// Graph top edge
-	st_io_row_set (1, '=');
-	st_io_set (1, 0, '+');
-	st_io_set (1, st_io_columns (), '+');
+	st_buff_data_row_set (*buffer_active, 1, '=');
+	st_buff_data_set (*buffer_active, 1, 0, '+');
+	st_buff_data_set (*buffer_active, 1, total_columns, '+');
 
 	// Graph side edges
 	for (uint16_t i = 0; i < graph_rows; ++i)
 	{
-		st_io_row_clear (i + 2);
-		st_io_set (i + 2, 0, '|');
-		st_io_set (i + 2, st_io_columns (), '|');
+		st_buff_data_set (*buffer_active, i + 2, 0, '|');
+		st_buff_data_set (*buffer_active, i + 2, total_columns, '|');
 	}
 
 	// Graph bottom  edge
-	st_io_row_set (info_offset - 1, '=');
-	st_io_set (info_offset - 1, 0, '+');
-	st_io_set (info_offset - 1, st_io_columns (), '+');
+	st_buff_data_row_set (*buffer_active, info_offset - 1, '=');
+	st_buff_data_set (*buffer_active, info_offset - 1, 0, '+');
+	st_buff_data_set (*buffer_active, info_offset - 1, total_columns, '+');
 
 	// Info
 	for (uint16_t i = 0; i < INFO_LENGTH; ++i)
 	{
-		st_io_row_insert (info_offset + i, 0, "Info");
+		st_buff_data_row_insert (*buffer_active, info_offset + i, 0, "Info");
 	}
 }
 
@@ -113,89 +112,18 @@ st_io_draw ()
 	assert (loaded && "io not yet loaded\n");
 
 	// Move cursor back to start
-	printf ("\e[%uF", st_io_rows () + row_overflow);
+	printf ("\e[%uF", total_rows + row_overflow);
 
 	// Output the contents of the active buffer
-	for (uint16_t y = 0; y < st_io_rows (); ++y)
+	for (uint16_t y = 0; y < total_rows; ++y)
 	{
-		char out[st_io_columns () + 1];
-		out[st_io_columns ()] = '\0';
-		for (uint16_t x = 0; x < st_io_columns (); ++x)
+		char out[total_columns + 1];
+		out[total_columns] = '\0';
+		for (uint16_t x = 0; x < total_columns; ++x)
 		{
-			out[x] = st_buffer_data_at (*buffer_active, y, x);
+			out[x] = st_buff_data_get (*buffer_active, y, x);
 		}
 		printf ("%s\n", out);
 	}
 	fflush (stdout);
-}
-
-uint16_t
-st_io_rows ()
-{
-	return st_buffer_get_rows (buffer_a);
-}
-
-uint16_t
-st_io_columns ()
-{
-	return st_buffer_get_columns (buffer_a);
-}
-
-uint16_t
-st_io_square ()
-{
-	return st_buffer_get_rows (buffer_a) * st_buffer_get_columns (buffer_a);
-}
-
-void
-st_io_set (uint16_t _row, uint16_t _column, char _val)
-{
-	assert (loaded && "io not yet loaded\n");
-	st_buffer_data_set (*buffer_active, _row, _column, _val);
-}
-
-void
-st_io_row_set (uint16_t _row, char _val)
-{
-	assert (loaded && "io not yet loaded\n");
-
-	for (uint16_t i = 0; i < st_io_columns (); ++i)
-	{
-		st_buffer_data_set (*buffer_active, _row, i, _val);
-	}
-}
-
-void
-st_io_row_clear (uint16_t _row)
-{
-	st_io_row_set (_row, clear_char);
-}
-
-void
-st_io_row_insert (uint16_t _row, uint16_t _offset, const char *_val)
-{
-	assert (loaded && "io not yet loaded\n");
-
-	if (_offset >= st_io_columns ())
-	{
-		return;
-	}
-
-	size_t len = strlen (_val);
-
-	for (uint16_t i = 0; i + _offset < st_io_columns (); ++i)
-	{
-		char input;
-
-		if (i >= len)
-		{
-			return;
-		}
-		else
-		{
-			input = _val[i];
-		}
-
-		st_buffer_data_set (*buffer_active, _row, i + _offset, input);
-	}
 }
