@@ -2,7 +2,7 @@
 #include <stdbool.h> // bool, true, false
 #include <string.h> // strlen
 #include <assert.h> // assert
-#include <stdlib.h> // system
+#include <stdlib.h> // system, malloc, realloc, free
 
 #include "io.h"
 #include "buffer.h"
@@ -18,7 +18,7 @@ enum { GRAPH_PADDING_COL = 2 };
 enum { INFO_LENGTH = 7 };
 
 bool loaded = false;
-const char clear_char = '.';
+const char clear_char = ' ';
 
 uint16_t total_rows = 0, total_columns = 0;
 uint16_t graph_rows = 0, graph_columns = 0;
@@ -81,34 +81,13 @@ st_io_init_graph ()
 {
 	assert (loaded && "io not yet loaded\n");
 
-	// Title
-	st_buff_data_row_insert (*buffer_active, 0, 0, "STOCKTRADER");
-
-	// Graph top edge
-	st_buff_data_row_set (*buffer_active, 1, '=');
-	st_buff_data_set (*buffer_active, 1, 0, '+');
-	st_buff_data_set (*buffer_active, 1, total_columns, '+');
-
-	// Graph side edges
-	for (uint16_t i = 0; i < graph_rows; ++i)
-	{
-		st_buff_data_set (*buffer_active, i + 2, 0, '|');
-		st_buff_data_set (*buffer_active, i + 2, total_columns, '|');
-	}
-
-	// Graph bottom  edge
-	st_buff_data_row_set (*buffer_active, info_offset - 1, '=');
-	st_buff_data_set (*buffer_active, info_offset - 1, 0, '+');
-	st_buff_data_set (*buffer_active, info_offset - 1, total_columns, '+');
-
-	// Info
-	st_buff_data_row_insert (*buffer_active, info_offset, 0, "Day 69");
-	st_buff_data_row_insert (*buffer_active, info_offset + 1, 0, "Money: $1000");
-	st_buff_data_row_insert (*buffer_active, info_offset + 2, 0, "Company");
-	st_buff_data_row_insert (*buffer_active, info_offset + 3, 0, "$0.01 per");
-	st_buff_data_row_insert (*buffer_active, info_offset + 4, 0, "50 owned");
-	st_buff_data_row_set (*buffer_active, info_offset + 5, '-');
-	st_buff_data_row_insert (*buffer_active, info_offset + 6, 0, "> ");
+	st_io_load_title ("STOCKTRADER");
+	st_io_load_graph_frame ();
+	st_io_load_info_day (69);
+	st_io_load_info_money (10000);
+	st_io_load_info_company ("Company", 0.01, 50);
+	st_io_load_info_separator ();
+	st_io_load_prompt ();
 }
 
 void
@@ -142,4 +121,140 @@ st_io_clear ()
 	#else
 	 system ("clear");
 	#endif
+}
+
+void
+st_io_load_title (char *_title)
+{
+	st_buff_data_row_insert (*buffer_active, 0, 0, _title);
+}
+
+void
+st_io_load_graph_frame ()
+{
+	// Graph top edge
+	st_buff_data_row_set (*buffer_active, 1, '=');
+	st_buff_data_set (*buffer_active, 1, 0, '+');
+	st_buff_data_set (*buffer_active, 1, total_columns, '+');
+
+	// Graph side edges
+	for (uint16_t i = 0; i < graph_rows; ++i)
+	{
+		st_buff_data_set (*buffer_active, i + 2, 0, '|');
+		st_buff_data_set (*buffer_active, i + 2, total_columns, '|');
+	}
+
+	// Graph bottom  edge
+	st_buff_data_row_set (*buffer_active, info_offset - 1, '=');
+	st_buff_data_set (*buffer_active, info_offset - 1, 0, '+');
+	st_buff_data_set (*buffer_active, info_offset - 1, total_columns, '+');
+}
+
+void
+st_io_load_graph_data ()
+{
+	// TODO
+}
+
+void
+st_io_load_info_day  (uint16_t _day)
+{
+	// Trickey to get the length of the integer
+	int length = snprintf (NULL, 0, "%u", _day);
+	char *value = malloc (++length);
+	// Print the integer into the string, null terminating
+	snprintf (value, length, "%u", _day);
+	value[length - 1] = '\0';
+
+	// Prepend the descriptor
+	char *input = malloc (length + 5);
+	sprintf (input, "Day: ");
+	strcat (input, value);
+
+	st_buff_data_row_insert (*buffer_active, info_offset, 0, input);
+
+	free (value);
+	free (input);
+}
+
+// TODO: Look into combining repetition into one function
+
+void
+st_io_load_info_money (double _money)
+{
+	// Trickey to get the length of the integer
+	int length = snprintf (NULL, 0, "%.2f", _money);
+	char *value = malloc (++length);
+	// Print the integer into the string, null terminating
+	snprintf (value, length, "%.2f", _money);
+	value[length - 1] = '\0';
+
+	// Prepend the descriptor
+	char *input = malloc (length + 8);
+	sprintf (input, "Money: $");
+	strcat (input, value);
+
+	st_buff_data_row_insert (*buffer_active, info_offset + 1, 0, input);
+
+	free (value);
+	free (input);
+}
+
+void
+st_io_load_info_company (
+	char *_name,
+	double _value,
+	uint32_t _owned
+)
+{
+	int length = strlen (_name);
+	char *value = malloc (length + 1);
+	sprintf (value, _name);
+	strcat (value, ":");
+	st_buff_data_row_insert (*buffer_active, info_offset + 2, 0, value);
+
+	// Trickey to get the length of the integer
+	length = snprintf (NULL, 0, "%.2f", _value);
+	value = realloc (value, ++length);
+	// Print the integer into the string, null terminating
+	snprintf (value, length, "%.2f", _value);
+	value[length - 1] = '\0';
+
+	// Prepend the descriptor
+	char *input = malloc (length + 8);
+	sprintf (input, "   $");
+	strcat (input, value);
+	strcat (input, " per");
+
+	st_buff_data_row_insert (*buffer_active, info_offset + 3, 0, input);
+
+	// Trickey to get the length of the integer
+	length = snprintf (NULL, 0, "%u", _owned);
+	value = realloc (value, ++length);
+	// Print the integer into the string, null terminating
+	snprintf (value, length, "%u", _owned);
+	value[length - 1] = '\0';
+
+	// Prepend the descriptor
+	input = realloc (input, length + 9);
+	sprintf (input, "   ");
+	strcat (input, value);
+	strcat (input, " owned");
+
+	st_buff_data_row_insert (*buffer_active, info_offset + 4, 0, input);
+
+	free (value);
+	free (input);
+}
+
+void
+st_io_load_info_separator ()
+{
+	st_buff_data_row_set (*buffer_active, info_offset + 5, '-');
+}
+
+void
+st_io_load_prompt ()
+{
+	st_buff_data_row_insert (*buffer_active, info_offset + 6, 0, "> ");
 }
