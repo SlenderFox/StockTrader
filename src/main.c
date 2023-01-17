@@ -18,9 +18,6 @@ bool running = true;
 
 st_company *companies[COMPANIES];
 
-extern int
-sleep(int);
-
 void
 init ()
 {

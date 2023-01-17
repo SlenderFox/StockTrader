@@ -2,6 +2,7 @@
 #include <stdbool.h> // bool, true, false
 #include <string.h> // strlen
 #include <assert.h> // assert
+#include <stdlib.h> // system
 
 #include "io.h"
 #include "buffer.h"
@@ -48,6 +49,8 @@ st_io_init (uint16_t _rows, uint16_t _columns)
 	st_buff_data_init (buffer_b);
 	st_buff_data_clear (buffer_b, clear_char);
 	buffer_inactive = &buffer_b;
+
+	st_io_clear ();
 
 	// Give enough room to print
 	for (uint16_t i = 0; i < total_rows; ++i)
@@ -128,4 +131,15 @@ st_io_draw ()
 		printf ("%s\n", out);
 	}
 	fflush (stdout);
+}
+
+void
+st_io_clear ()
+{
+	// If no working, do _WIN32
+	#ifdef __WINDOWS__
+	 system ("cls");
+	#else
+	 system ("clear");
+	#endif
 }

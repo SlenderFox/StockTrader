@@ -18,3 +18,6 @@ st_io_init_graph ();
 /** Outputs the contents of the buffer to the standard output */
 void
 st_io_draw ();
+
+void
+st_io_clear ();
