@@ -159,7 +159,7 @@ st_io_load_graph_data ()
 void
 st_io_load_info_day  (uint16_t _day)
 {
-	// Trickey to get the length of the integer
+	// Trickery to get the length of the integer
 	int length = snprintf (NULL, 0, "%u", _day);
 	char *value = malloc (++length);
 	// Print the integer into the string, null terminating
@@ -182,7 +182,7 @@ st_io_load_info_day  (uint16_t _day)
 void
 st_io_load_info_money (double _money)
 {
-	// Trickey to get the length of the integer
+	// Trickery to get the length of the integer
 	int length = snprintf (NULL, 0, "%.2f", _money);
 	char *value = malloc (++length);
 	// Print the integer into the string, null terminating
@@ -213,7 +213,7 @@ st_io_load_info_company (
 	strcat (value, ":");
 	st_buff_data_row_insert (*buffer_active, info_offset + 2, 0, value);
 
-	// Trickey to get the length of the integer
+	// Trickery to get the length of the integer
 	length = snprintf (NULL, 0, "%.2f", _value);
 	value = realloc (value, ++length);
 	// Print the integer into the string, null terminating
@@ -228,7 +228,7 @@ st_io_load_info_company (
 
 	st_buff_data_row_insert (*buffer_active, info_offset + 3, 0, input);
 
-	// Trickey to get the length of the integer
+	// Trickery to get the length of the integer
 	length = snprintf (NULL, 0, "%u", _owned);
 	value = realloc (value, ++length);
 	// Print the integer into the string, null terminating
