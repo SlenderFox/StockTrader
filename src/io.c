@@ -155,46 +155,77 @@ st_io_load_graph_data ()
 	// TODO
 }
 
-// TODO: Look into combining repetition into one function
-
+/** Will place a formatted value into the info panel
+ * @param _offset The offset within the info panel
+ * @param _format The string formatting applied to the value (use %s for value)
+ * @param _value The value in question, must be int, uint, double, or string
+ * @param _type The type of the string as single char, follows fmt (d,u,f,s)
+ * @remark Passing a shorter type (float, int, short) is undefined behaviour
+ */
 void
-st_io_load_info_day  (uint16_t _day)
+st_io_load_info (
+	uint8_t _offset,
+	char *_format,
+	void *_value,
+	char _type
+)
 {
-	// Trickery to get the length of the integer
-	int length = snprintf (NULL, 0, "%u", _day);
-	char *value = malloc (++length);
-	// Print the integer into the string, null terminating
-	snprintf (value, length, "%u", _day);
-	value[length - 1] = '\0';
+	int valueLength;
+	char *value = NULL;
 
-	// Prepend the descriptor
-	char *input = malloc (length + 5);
-	snprintf (input, length + 5, "Day: %s", value);
+	switch (_type)
+	{
+	case 'd': // int
+		int32_t dval = *(int32_t*)_value;
+		valueLength = snprintf (NULL, 0, "%d", dval);
+		value = malloc (++valueLength);
+		snprintf (value, valueLength, "%d", dval);
+		break;
+	case 'u': // unsigned int
+		uint32_t uval = *(uint32_t*)_value;
+		valueLength = snprintf (NULL, 0, "%u", uval);
+		value = malloc (++valueLength);
+		snprintf (value, valueLength, "%u", uval);
+		break;
+	case 'f': // float (double)
+		double fval = *(double*)_value;
+		valueLength = snprintf (NULL, 0, "%.2f", fval);
+		value = malloc (++valueLength);
+		snprintf (value, valueLength, "%.2f", fval);
+		break;
+	case 's': // string
+		char *cval = (char*)_value;
+		valueLength = strlen (cval);
+		value = malloc (valueLength);
+		snprintf (value, valueLength, "%s", cval);
+		break;
+	default: // handle error
+		return;
+	}
 
-	st_buff_data_row_insert (*buffer_active, info_offset, 0, input);
+	// Make last character a null terminator
+	value[valueLength - 1] = '\0';
+
+	int totalLength = strlen (_format) + valueLength;
+	char *input = malloc (totalLength);
+	snprintf (input, totalLength, _format, value);
+
+	st_buff_data_row_insert (*buffer_active, info_offset + _offset, 0, input);
 
 	free (value);
 	free (input);
 }
 
 void
+st_io_load_info_day  (uint32_t _day)
+{
+	st_io_load_info (0, "Day: %s", &_day, 'u');
+}
+
+void
 st_io_load_info_money (double _money)
 {
-	// Trickery to get the length of the integer
-	int length = snprintf (NULL, 0, "%.2f", _money);
-	char *value = malloc (++length);
-	// Print the integer into the string, null terminating
-	snprintf (value, length, "%.2f", _money);
-	value[length - 1] = '\0';
-
-	// Prepend the descriptor
-	char *input = malloc (length + 8);
-	snprintf (input, length + 8, "Money: $%s", value);
-
-	st_buff_data_row_insert (*buffer_active, info_offset + 1, 0, input);
-
-	free (value);
-	free (input);
+	st_io_load_info (1, "Money: $%s", &_money, 'f');
 }
 
 void
@@ -204,40 +235,9 @@ st_io_load_info_company (
 	uint32_t _owned
 )
 {
-	int length = strlen (_name);
-	char *value = malloc (length + 1);
-	snprintf (value, length + 1, "%s:", _name);
-
-	st_buff_data_row_insert (*buffer_active, info_offset + 2, 0, value);
-
-	// Trickery to get the length of the integer
-	length = snprintf (NULL, 0, "%.2f", _value);
-	value = realloc (value, ++length);
-	// Print the integer into the string, null terminating
-	snprintf (value, length, "%.2f", _value);
-	value[length - 1] = '\0';
-
-	// Prepend the descriptor
-	char *input = malloc (length + 8);
-	snprintf (input, length + 8, "   $%s per", value);
-
-	st_buff_data_row_insert (*buffer_active, info_offset + 3, 0, input);
-
-	// Trickery to get the length of the integer
-	length = snprintf (NULL, 0, "%u", _owned);
-	value = realloc (value, ++length);
-	// Print the integer into the string, null terminating
-	snprintf (value, length, "%u", _owned);
-	value[length - 1] = '\0';
-
-	// Prepend the descriptor
-	input = realloc (input, length + 9);
-	snprintf (input, length + 9, "   %s owned", value);
-
-	st_buff_data_row_insert (*buffer_active, info_offset + 4, 0, input);
-
-	free (value);
-	free (input);
+	st_io_load_info (2, "%s:", _name, 's');
+	st_io_load_info (3, "   $%s per", &_value, 'f');
+	st_io_load_info (4, "   %s owned", &_owned, 'u');
 }
 
 void

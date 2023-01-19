@@ -32,7 +32,7 @@ void
 st_io_load_graph_data ();
 
 void
-st_io_load_info_day (uint16_t _day);
+st_io_load_info_day (uint32_t _day);
 
 void
 st_io_load_info_money (double _money);
