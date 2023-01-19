@@ -156,6 +156,8 @@ st_io_load_graph_data ()
 	// TODO
 }
 
+// TODO: Look into combining repetition into one function
+
 void
 st_io_load_info_day  (uint16_t _day)
 {
@@ -176,8 +178,6 @@ st_io_load_info_day  (uint16_t _day)
 	free (value);
 	free (input);
 }
-
-// TODO: Look into combining repetition into one function
 
 void
 st_io_load_info_money (double _money)
