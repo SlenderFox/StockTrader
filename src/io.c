@@ -1,4 +1,4 @@
-#include <stdio.h> // printf
+#include <stdio.h> // printf, snprintf
 #include <stdbool.h> // bool, true, false
 #include <string.h> // strlen
 #include <assert.h> // assert
@@ -115,8 +115,7 @@ st_io_draw ()
 void
 st_io_clear ()
 {
-	// If no working, do _WIN32
-	#ifdef __WINDOWS__
+	#ifdef __WIN32
 	 system ("cls");
 	#else
 	 system ("clear");
@@ -170,8 +169,7 @@ st_io_load_info_day  (uint16_t _day)
 
 	// Prepend the descriptor
 	char *input = malloc (length + 5);
-	sprintf (input, "Day: ");
-	strcat (input, value);
+	snprintf (input, length + 5, "Day: %s", value);
 
 	st_buff_data_row_insert (*buffer_active, info_offset, 0, input);
 
@@ -191,8 +189,7 @@ st_io_load_info_money (double _money)
 
 	// Prepend the descriptor
 	char *input = malloc (length + 8);
-	sprintf (input, "Money: $");
-	strcat (input, value);
+	snprintf (input, length + 8, "Money: $%s", value);
 
 	st_buff_data_row_insert (*buffer_active, info_offset + 1, 0, input);
 
@@ -209,8 +206,8 @@ st_io_load_info_company (
 {
 	int length = strlen (_name);
 	char *value = malloc (length + 1);
-	sprintf (value, _name);
-	strcat (value, ":");
+	snprintf (value, length + 1, "%s:", _name);
+
 	st_buff_data_row_insert (*buffer_active, info_offset + 2, 0, value);
 
 	// Trickery to get the length of the integer
@@ -222,9 +219,7 @@ st_io_load_info_company (
 
 	// Prepend the descriptor
 	char *input = malloc (length + 8);
-	sprintf (input, "   $");
-	strcat (input, value);
-	strcat (input, " per");
+	snprintf (input, length + 8, "   $%s per", value);
 
 	st_buff_data_row_insert (*buffer_active, info_offset + 3, 0, input);
 
@@ -237,9 +232,7 @@ st_io_load_info_company (
 
 	// Prepend the descriptor
 	input = realloc (input, length + 9);
-	sprintf (input, "   ");
-	strcat (input, value);
-	strcat (input, " owned");
+	snprintf (input, length + 9, "   %s owned", value);
 
 	st_buff_data_row_insert (*buffer_active, info_offset + 4, 0, input);
 
