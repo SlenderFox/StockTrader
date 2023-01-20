@@ -6,16 +6,16 @@
 #include "utils.h"
 
 void
-st_buff_construct (st_buffer **_buff, uint16_t _rows, uint16_t _columns)
+st_buff_construct (st_buffer_t **_buff, uint16_t _rows, uint16_t _columns)
 {
-	*_buff = malloc (sizeof (st_buffer));
+	*_buff = malloc (sizeof (st_buffer_t));
 	(*_buff)->m_rows = MAX (_rows, 1);
 	(*_buff)->m_columns = MAX (_columns, 1);
 	(*_buff)->m_data = NULL;
 }
 
 void
-st_buff_destruct (st_buffer *_buff)
+st_buff_destruct (st_buffer_t *_buff)
 {
 	if (_buff->m_data != NULL)
 	{
@@ -25,34 +25,34 @@ st_buff_destruct (st_buffer *_buff)
 }
 
 void
-st_buff_data_init (st_buffer *_buff)
+st_buff_data_init (st_buffer_t *_buff)
 {
 	_buff->m_data = malloc (sizeof (char) * _buff->m_rows * _buff->m_columns);
 }
 
 void
-st_buff_data_terminate (st_buffer *_buff)
+st_buff_data_terminate (st_buffer_t *_buff)
 {
 	free(_buff->m_data);
 	_buff->m_data = NULL;
 }
 
 void
-st_buff_data_clear (st_buffer *_buff, char _clear)
+st_buff_data_clear (st_buffer_t *_buff, char _clear)
 {
 	assert (_buff->m_data != NULL && "Buffer data not allocated");
 	memset(_buff->m_data, _clear, sizeof (char) * _buff->m_rows * _buff->m_columns);
 }
 
 uint16_t
-st_buff_get_rows (st_buffer *_buff)
+st_buff_get_rows (st_buffer_t *_buff)
 {
 	assert (_buff->m_data != NULL && "Buffer data not allocated");
 	return _buff->m_rows;
 }
 
 uint16_t
-st_buff_get_columns (st_buffer *_buff)
+st_buff_get_columns (st_buffer_t *_buff)
 {
 	assert (_buff->m_data != NULL && "Buffer data not allocated");
 	return _buff->m_columns;
@@ -60,7 +60,7 @@ st_buff_get_columns (st_buffer *_buff)
 
 void
 st_buff_data_set (
-	st_buffer *_buff,
+	st_buffer_t *_buff,
 	uint16_t _row,
 	uint16_t _column,
 	char _val
@@ -75,7 +75,7 @@ st_buff_data_set (
 
 void
 st_buff_data_row_set (
-	st_buffer *_buff,
+	st_buffer_t *_buff,
 	uint16_t _row,
 	char _val
 )
@@ -90,7 +90,7 @@ st_buff_data_row_set (
 
 void
 st_buff_data_row_clear (
-	st_buffer *_buff,
+	st_buffer_t *_buff,
 	uint16_t _row,
 	char _clear
 )
@@ -100,7 +100,7 @@ st_buff_data_row_clear (
 
 void
 st_buff_data_row_insert (
-	st_buffer *_buff,
+	st_buffer_t *_buff,
 	uint16_t _row,
 	uint16_t _offset,
 	const char *_val
@@ -134,7 +134,7 @@ st_buff_data_row_insert (
 
 char
 st_buff_data_get (
-	st_buffer *_buff,
+	st_buffer_t *_buff,
 	uint16_t _row,
 	uint16_t _column
 )

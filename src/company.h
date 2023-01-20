@@ -8,33 +8,33 @@ enum { ST_COMPANY_NAME_MAX = 32 };
  * a count of how many stocks in the company are owned by the player,
  * and a name.
  */
-struct st_company
+struct st_company_s
 {
 	double value;
 	uint32_t owned_stocks;
 	char name[ST_COMPANY_NAME_MAX];
 };
 
-typedef struct st_company st_company;
+typedef struct st_company_s st_company_t;
 
 /** Allocate memory for the company struct and init a name
  * @param _company Output pointer to the company
  * @param _name The name for the company
  */
 void
-st_company_construct (st_company **_company, char *_name);
+st_company_construct (st_company_t **_company, char *_name);
 
 /** Free the memory of the company struct
  * @param _company The company
  */
 void
-st_company_destruct (st_company *_company);
+st_company_destruct (st_company_t *_company);
 
 /** Will update the value of the company struct
  * @param _company The company
  */
 void
-st_company_update (st_company *_company);
+st_company_update (st_company_t *_company);
 
 /** Set the name of a company
  * Has overflow protection
@@ -42,7 +42,7 @@ st_company_update (st_company *_company);
  * @param _name
  */
 void
-st_company_name_set (st_company *_company, char *_name);
+st_company_name_set (st_company_t *_company, char *_name);
 
 /** Safe and easy way to get the name of a company
  * The name is stored in a char array which can cause some issues
@@ -50,4 +50,4 @@ st_company_name_set (st_company *_company, char *_name);
  * @return [char*] The name as a char*
  */
 char *
-st_company_name_get (st_company *_company);
+st_company_name_get (st_company_t *_company);

@@ -26,7 +26,7 @@ uint16_t row_overflow = 0;
 
 uint16_t info_offset;
 
-st_buffer *buffer_a, *buffer_b, **buffer_active, **buffer_inactive;
+st_buffer_t *buffer_a, *buffer_b, **buffer_active, **buffer_inactive;
 
 void
 st_io_init (uint16_t _rows, uint16_t _columns)

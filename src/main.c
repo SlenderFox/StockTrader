@@ -16,7 +16,7 @@ enum { COMPANIES = 5 };
 
 bool running = true;
 
-st_company *companies[COMPANIES];
+st_company_t *companies[COMPANIES];
 
 void
 init ()

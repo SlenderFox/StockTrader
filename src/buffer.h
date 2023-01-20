@@ -5,13 +5,13 @@
  * The buffer is accessed two dimensionally.
  * Every row is contiguous in memory,
  * meaning each rows are offset by sizeof (char) * column */
-struct st_buffer
+struct st_buffer_s
 {
 	uint16_t m_rows, m_columns;
 	char *m_data;
 };
 
-typedef struct st_buffer st_buffer;
+typedef struct st_buffer_s st_buffer_t;
 
 /** Allocate memory for the buffer struct and init values
  * @param _buff Output pointer to the buffer
@@ -20,7 +20,7 @@ typedef struct st_buffer st_buffer;
  */
 void
 st_buff_construct (
-	st_buffer **_buff,
+	st_buffer_t **_buff,
 	uint16_t _rows,
 	uint16_t _columns
 );
@@ -29,40 +29,40 @@ st_buff_construct (
  * @param _buff The buffer struct to be deallocated
  */
 void
-st_buff_destruct (st_buffer *_buff);
+st_buff_destruct (st_buffer_t *_buff);
 
 /** Allocate memory for the data stored inside the buffer struct
  * @param _buff The buffer struct whose data will be allocated
  */
 void
-st_buff_data_init (st_buffer *_buff);
+st_buff_data_init (st_buffer_t *_buff);
 
 /** Free the memory for the data stored inside the buffer struct
  * @param _buff The buffer struct whose data will be deallocated
  */
 void
-st_buff_data_terminate (st_buffer *_buff);
+st_buff_data_terminate (st_buffer_t *_buff);
 
 /** Set all the memory inside the data of a buffer to a given character
  * @param _buff The buffer struct to be modified
  * @param _clear What to use as the clear character
  */
 void
-st_buff_data_clear (st_buffer *_buff, char _clear);
+st_buff_data_clear (st_buffer_t *_buff, char _clear);
 
 /** Return the amount of rows in a buffer
  * @param _buff The buffer struct to be modified
  * @return [uint32_t] The amount of rows in the buffer
  */
 uint16_t
-st_buff_get_rows (st_buffer *_buff);
+st_buff_get_rows (st_buffer_t *_buff);
 
 /** Return the amount of columns in a buffer
  * @param _buff The buffer struct to be modified
  * @return [uint32_t] The amount of columns in the buffer
  */
 uint16_t
-st_buff_get_columns (st_buffer *_buff);
+st_buff_get_columns (st_buffer_t *_buff);
 
 /** Set a char at a specific location in a buffers data.
  * Position is clamped
@@ -73,7 +73,7 @@ st_buff_get_columns (st_buffer *_buff);
  */
 void
 st_buff_data_set (
-	st_buffer *_buff,
+	st_buffer_t *_buff,
 	uint16_t _row,
 	uint16_t _column,
 	char _val
@@ -86,7 +86,7 @@ st_buff_data_set (
  */
 void
 st_buff_data_row_set (
-	st_buffer *_buff,
+	st_buffer_t *_buff,
 	uint16_t _row,
 	char _val
 );
@@ -98,7 +98,7 @@ st_buff_data_row_set (
  */
 void
 st_buff_data_row_clear (
-	st_buffer *_buff,
+	st_buffer_t *_buff,
 	uint16_t _row,
 	char _clear
 );
@@ -112,7 +112,7 @@ st_buff_data_row_clear (
  */
 void
 st_buff_data_row_insert (
-	st_buffer *_buff,
+	st_buffer_t *_buff,
 	uint16_t _row,
 	uint16_t _offset,
 	const char *_val
@@ -126,7 +126,7 @@ st_buff_data_row_insert (
  */
 char
 st_buff_data_get (
-	st_buffer *_buff,
+	st_buffer_t *_buff,
 	uint16_t _row,
 	uint16_t _column
 );
