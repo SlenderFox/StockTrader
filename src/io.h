@@ -63,7 +63,4 @@ void
 st_io_load_info_separator ();
 
 void
-st_io_load_prompt ();
-
-void
 st_io_process_input ();

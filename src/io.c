@@ -15,7 +15,7 @@ enum { MIN_GRAPH_COLS = 20 };
 enum { GRAPH_PADDING_ROW = 3 };
 // Side graph border
 enum { GRAPH_PADDING_COL = 2 };
-enum { INFO_LENGTH = 7 };
+enum { INFO_LENGTH = 6 };
 
 bool loaded = false;
 const char clear_char = ' ';
@@ -87,7 +87,6 @@ st_io_init_graph ()
 	st_io_load_info_money (10000);
 	st_io_load_info_company ("Company", 0.01, 50);
 	st_io_load_info_separator ();
-	st_io_load_prompt ();
 }
 
 void
@@ -247,12 +246,6 @@ st_io_load_info_separator ()
 }
 
 void
-st_io_load_prompt ()
-{
-	st_buff_data_row_insert (*buffer_active, info_offset + 6, 0, "> ");
-}
-
-void
 st_io_process_input ()
 {
 	/* Maybe make an array of strings (char*)
@@ -262,14 +255,17 @@ st_io_process_input ()
 	 * a-z = 97-122
 	 * space = 32
 	*/
-	while (true)
-	{
-		char oog = fgetc (stdin);
-		if (oog == EOF || oog == '\n')
-		{
-			return;
-		}
 
-		printf ("oog: %d\n", (int)oog);
+	printf ("> ");
+
+	char input[50];
+	int res = scanf ("%49s", input);
+
+	if (res < 0)
+	{
+		// Failed
+		return;
 	}
+
+	printf ("%s\n", input);
 }
