@@ -51,6 +51,8 @@ main (int argc, char *args[])
 	{
 		st_io_draw ();
 
+		st_io_process_input ();
+
 		// End game
 		running = false;
 	}

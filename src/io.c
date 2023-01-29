@@ -251,3 +251,25 @@ st_io_load_prompt ()
 {
 	st_buff_data_row_insert (*buffer_active, info_offset + 6, 0, "> ");
 }
+
+void
+st_io_process_input ()
+{
+	/* Maybe make an array of strings (char*)
+	 * only allow alphanumeric characters and space
+	 * 0-9 = 48-57
+	 * A-Z = 65-90
+	 * a-z = 97-122
+	 * space = 32
+	*/
+	while (true)
+	{
+		char oog = fgetc (stdin);
+		if (oog == EOF || oog == '\n')
+		{
+			return;
+		}
+
+		printf ("oog: %d\n", (int)oog);
+	}
+}

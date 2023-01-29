@@ -1,6 +1,21 @@
 #pragma once
 #include <stdint.h>
 
+/** The state of the game that defines the behaviour for the next print */
+enum game_state
+{
+	invalid,
+	clear,
+	gameover,
+	info,
+	help,
+	endday,
+	gotoday,
+	select,
+	buy,
+	sell
+};
+
 /** Constructs all the buffers
  * @param _rows How many rows the graph will have
  * @param _columns How many columns the graph will have
@@ -49,3 +64,6 @@ st_io_load_info_separator ();
 
 void
 st_io_load_prompt ();
+
+void
+st_io_process_input ();
