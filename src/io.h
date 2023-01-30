@@ -2,19 +2,18 @@
 #include <stdint.h>
 
 /** The state of the game that defines the behaviour for the next print */
-enum game_state
+enum st_io_request_e
 {
-	invalid,
-	clear,
-	gameover,
-	info,
-	help,
-	endday,
-	gotoday,
-	select,
-	buy,
-	sell
+	st_io_request_invalid,
+	st_io_request_help,
+	st_io_request_endday,
+	st_io_request_gotoday,
+	st_io_request_select,
+	st_io_request_buy,
+	st_io_request_sell
 };
+
+typedef enum st_io_request_e st_io_request_t;
 
 /** Constructs all the buffers
  * @param _rows How many rows the graph will have
@@ -60,7 +59,10 @@ st_io_load_info_company (
 );
 
 void
-st_io_load_info_separator ();
-
-void
 st_io_process_input ();
+
+double
+st_io_get_input_value ();
+
+char *
+st_io_get_invalid_message ();
