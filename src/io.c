@@ -108,6 +108,7 @@ st_io_process_command ()
 	 * a-z = 97-122
 	 * space = 32
 	*/
+	return 0;
 }
 
 /** Parse stdin looking for a valid value to go with the current command
@@ -116,7 +117,7 @@ st_io_process_command ()
 int
 st_io_process_value ()
 {
-
+	return 0;
 }
 
 void

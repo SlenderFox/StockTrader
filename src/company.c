@@ -1,5 +1,5 @@
 #include <stdlib.h> // malloc, free
-#include <memory.h> // memmove
+#include <string.h> // strlen, memmove
 
 #include "company.h"
 
