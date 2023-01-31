@@ -30,7 +30,7 @@ st_buffer_t *buffer_a, *buffer_b, **buffer_active, **buffer_inactive;
 
 st_io_request_t command = st_io_request_invalid;
 double input_value = 0;
-char* invalid_message;
+char *invalid_message;
 
 // ----- Local functions ------
 
@@ -108,6 +108,10 @@ st_io_process_command ()
 	 * a-z = 97-122
 	 * space = 32
 	*/
+
+	// Read up to 6 lower case letters or until a whitespace
+	//scanf ("%6[a-z]");
+
 	return 0;
 }
 
@@ -123,7 +127,7 @@ st_io_process_value ()
 void
 st_io_set_invalid_message (char *_message)
 {
-
+	(*invalid_message) = *_message;
 }
 
 // ----- Public Functions -----
@@ -160,7 +164,7 @@ st_io_init (uint16_t _rows, uint16_t _columns)
 	fflush (stdout);
 
 	// Initialise the invalid input message
-	invalid_message = malloc (100);
+	invalid_message = malloc (sizeof(char) * 100);
 
 	loaded = true;
 }
@@ -261,7 +265,6 @@ st_io_load_graph_data ()
 	// TODO
 }
 
-
 void
 st_io_load_info_day  (uint32_t _day)
 {
@@ -296,6 +299,12 @@ st_io_process_input ()
 	printf ("> ");
 	st_io_process_command ();
 	st_io_process_value ();
+}
+
+st_io_request_t
+st_io_get_request ()
+{
+	return command;
 }
 
 double
