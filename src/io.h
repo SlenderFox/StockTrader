@@ -1,6 +1,10 @@
 #pragma once
 #include <stdint.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /** The state of the game that defines the behaviour for the next print */
 enum st_io_command_e
 {
@@ -69,3 +73,7 @@ st_io_get_input_value ();
 
 void
 st_io_print_invalid_message ();
+
+#ifdef __cplusplus
+}
+#endif

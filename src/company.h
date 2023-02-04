@@ -1,6 +1,10 @@
 #pragma once
 #include <stdint.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 enum { ST_COMPANY_NAME_MAX = 32 };
 
 /** A company that can have stocks bought and sold from.
@@ -51,3 +55,7 @@ st_company_name_set (st_company_t *_company, char *_name);
  */
 char *
 st_company_name_get (st_company_t *_company);
+
+#ifdef __cplusplus
+}
+#endif
