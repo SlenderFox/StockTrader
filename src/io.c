@@ -32,7 +32,7 @@ st_buffer_t *buffer_a, *buffer_b, **buffer_active, **buffer_inactive;
 
 st_io_command_t command = st_io_command_invalid;
 double input_value = 0;
-char* invalid_message;
+char *invalid_message;
 
 // ----- Local functions ------
 
@@ -176,7 +176,7 @@ st_io_init (uint16_t _rows, uint16_t _columns)
 	fflush (stdout);
 
 	// Initialise the invalid input message
-	invalid_message = malloc (100);
+	invalid_message = malloc (sizeof(char) * 100);
 
 	loaded = true;
 }
@@ -276,7 +276,6 @@ st_io_load_graph_data ()
 {
 	// TODO
 }
-
 
 void
 st_io_load_info_day  (uint32_t _day)

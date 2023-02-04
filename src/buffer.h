@@ -1,6 +1,10 @@
 #pragma once
 #include <stdint.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /** The buffer is a linear array of characters.
  * The buffer is accessed two dimensionally.
  * Every row is contiguous in memory,
@@ -130,3 +134,7 @@ st_buff_data_get (
 	uint16_t _row,
 	uint16_t _column
 );
+
+#ifdef __cplusplus
+}
+#endif
