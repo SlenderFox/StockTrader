@@ -18,6 +18,8 @@ enum { GRAPH_PADDING_COL = 2 };
 enum { INFO_LENGTH = 6 };
 
 bool loaded = false;
+#define CHECK_LOADED assert (loaded && "io not yet loaded\n");
+
 const char clear_char = ' ';
 
 uint16_t total_rows = 0, total_columns = 0;
@@ -28,7 +30,7 @@ uint16_t info_offset = 0;
 
 st_buffer_t *buffer_a, *buffer_b, **buffer_active, **buffer_inactive;
 
-st_io_request_t command = st_io_request_invalid;
+st_io_command_t command = st_io_command_invalid;
 double input_value = 0;
 char* invalid_message;
 
@@ -95,10 +97,16 @@ st_io_load_info (
 	free (input);
 }
 
+void
+st_io_set_invalid_message (char *_message)
+{
+	strncpy (invalid_message, _message, 99);
+}
+
 /** Parse stdin looking for a valid command
  * @return [int] -1 for failure
 */
-int
+void
 st_io_process_command ()
 {
 	/* Maybe make an array of strings (char*)
@@ -108,21 +116,30 @@ st_io_process_command ()
 	 * a-z = 97-122
 	 * space = 32
 	*/
+
+	char input[16] = "\0";
+	int res = scanf ("%14[a-z]", input);
+	if (res == 0)
+	{
+		command = st_io_command_invalid;
+		st_io_set_invalid_message ("Invalid input, lowercase letters only");
+		return;
+	}
+
+	// Temp
+	command = st_io_command_help;
+
+	command = st_io_command_invalid;
+	st_io_set_invalid_message ("Command not found");
 }
 
 /** Parse stdin looking for a valid value to go with the current command
  * @return [int] -1 for failure
  */
-int
+void
 st_io_process_value ()
 {
-
-}
-
-void
-st_io_set_invalid_message (char *_message)
-{
-
+	return;
 }
 
 // ----- Public Functions -----
@@ -167,7 +184,7 @@ st_io_init (uint16_t _rows, uint16_t _columns)
 void
 st_io_terminate ()
 {
-	assert (loaded && "io not yet loaded\n");
+	CHECK_LOADED
 
 	// Buffer a
 	st_buff_data_terminate (buffer_a);
@@ -183,7 +200,7 @@ st_io_terminate ()
 void
 st_io_init_graph ()
 {
-	assert (loaded && "io not yet loaded\n");
+	CHECK_LOADED
 
 	st_io_load_title ("STOCKTRADER");
 	st_io_load_graph_frame ();
@@ -196,7 +213,7 @@ st_io_init_graph ()
 void
 st_io_draw ()
 {
-	assert (loaded && "io not yet loaded\n");
+	CHECK_LOADED
 
 	// Move cursor back to start
 	printf ("\e[%uF", total_rows + row_overflow);
@@ -234,7 +251,7 @@ st_io_load_title (char *_title)
 void
 st_io_load_graph_frame ()
 {
-	assert (loaded && "io not yet loaded\n");
+	CHECK_LOADED
 
 	// Graph top edge
 	st_buff_data_row_set (*buffer_active, 1, '=');
@@ -264,14 +281,14 @@ st_io_load_graph_data ()
 void
 st_io_load_info_day  (uint32_t _day)
 {
-	assert (loaded && "io not yet loaded\n");
+	CHECK_LOADED
 	st_io_load_info (0, "Day: %s", &_day, 'u');
 }
 
 void
 st_io_load_info_money (double _money)
 {
-	assert (loaded && "io not yet loaded\n");
+	CHECK_LOADED
 	st_io_load_info (1, "Money: $%s", &_money, 'f');
 }
 
@@ -282,7 +299,7 @@ st_io_load_info_company (
 	uint32_t _owned
 )
 {
-	assert (loaded && "io not yet loaded\n");
+	CHECK_LOADED
 	st_io_load_info (2, "%s:", _name, 's');
 	st_io_load_info (3, "   $%s per", &_value, 'f');
 	st_io_load_info (4, "   %s owned", &_owned, 'u');
@@ -291,10 +308,26 @@ st_io_load_info_company (
 void
 st_io_process_input ()
 {
-	assert (loaded && "io not yet loaded\n");
+	CHECK_LOADED
+
+	// Clear previous values
+	command = st_io_command_invalid;
+	input_value = 0;
+	st_io_set_invalid_message ("No command processed");
+
+	// Print prompt
 	printf ("> ");
 	st_io_process_command ();
 	st_io_process_value ();
+
+	// Clear the input
+	fflush (stdin);
+}
+
+st_io_command_t
+st_io_get_command ()
+{
+	return command;
 }
 
 double
@@ -303,8 +336,8 @@ st_io_get_input_value ()
 	return input_value;
 }
 
-char *
-st_io_get_invalid_message ()
+void
+st_io_print_invalid_message ()
 {
-	return invalid_message;
+	printf ("%s\n", invalid_message);
 }

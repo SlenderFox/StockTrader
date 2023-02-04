@@ -1,4 +1,5 @@
 #include <stdbool.h> // bool, true, false
+#include <assert.h> // assert
 
 #include "io.h"
 #include "company.h"
@@ -52,6 +53,16 @@ main (int argc, char *args[])
 		st_io_draw ();
 
 		st_io_process_input ();
+
+		switch (st_io_get_command ())
+		{
+		case st_io_command_invalid:
+			st_io_print_invalid_message ();
+		default:
+			assert ("Unexpected control path");
+		}
+
+		// TODO: Enabling looping breaks everything
 
 		// End game
 		running = false;

@@ -5,6 +5,8 @@
 #include "buffer.h"
 #include "utils.h"
 
+#define CHECK_LOADED assert (_buff->m_data != NULL && "Buffer data not allocated");
+
 void
 st_buff_construct (st_buffer_t **_buff, uint16_t _rows, uint16_t _columns)
 {
@@ -40,21 +42,21 @@ st_buff_data_terminate (st_buffer_t *_buff)
 void
 st_buff_data_clear (st_buffer_t *_buff, char _clear)
 {
-	assert (_buff->m_data != NULL && "Buffer data not allocated");
+	CHECK_LOADED
 	memset(_buff->m_data, _clear, sizeof (char) * _buff->m_rows * _buff->m_columns);
 }
 
 uint16_t
 st_buff_get_rows (st_buffer_t *_buff)
 {
-	assert (_buff->m_data != NULL && "Buffer data not allocated");
+	CHECK_LOADED
 	return _buff->m_rows;
 }
 
 uint16_t
 st_buff_get_columns (st_buffer_t *_buff)
 {
-	assert (_buff->m_data != NULL && "Buffer data not allocated");
+	CHECK_LOADED
 	return _buff->m_columns;
 }
 
@@ -66,7 +68,7 @@ st_buff_data_set (
 	char _val
 )
 {
-	assert (_buff->m_data != NULL && "Buffer data not allocated");
+	CHECK_LOADED
 	_row = MIN (_row, _buff->m_rows - 1);
 	_column = MIN (_column, _buff->m_columns - 1);
 	uint16_t pos = (_row * _buff->m_columns) + _column;
@@ -80,7 +82,7 @@ st_buff_data_row_set (
 	char _val
 )
 {
-	assert (_buff->m_data != NULL && "Buffer data not allocated");
+	CHECK_LOADED
 
 	for (uint16_t i = 0; i < _buff->m_columns; ++i)
 	{
@@ -106,7 +108,7 @@ st_buff_data_row_insert (
 	const char *_val
 )
 {
-	assert (_buff->m_data != NULL && "Buffer data not allocated");
+	CHECK_LOADED
 
 	if (_offset >= _buff->m_columns)
 	{
@@ -139,7 +141,7 @@ st_buff_data_get (
 	uint16_t _column
 )
 {
-	assert (_buff->m_data != NULL && "Buffer data not allocated");
+	CHECK_LOADED
 	_row = MIN (_row, _buff->m_rows - 1);
 	_column = MIN (_column, _buff->m_columns - 1);
 	uint16_t pos = (_row * _buff->m_columns) + _column;
