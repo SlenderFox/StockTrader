@@ -329,12 +329,6 @@ st_io_get_command ()
 	return command;
 }
 
-st_io_request_t
-st_io_get_request ()
-{
-	return command;
-}
-
 double
 st_io_get_input_value ()
 {
