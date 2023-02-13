@@ -1,5 +1,6 @@
 #include <stdbool.h> // bool, true, false
 #include <assert.h> // assert
+#include <stdio.h>
 
 #include "io.h"
 #include "company.h"
@@ -58,6 +59,25 @@ main (int argc, char *args[])
 		{
 		case st_io_command_invalid:
 			st_io_print_invalid_message ();
+			break;
+		case st_io_command_help:
+			printf ("Help\n");
+			break;
+		case st_io_command_endday:
+			printf ("Endday\n");
+			break;
+		case st_io_command_gotoday:
+			printf ("Gotoday\n");
+			break;
+		case st_io_command_select:
+			printf ("Select\n");
+			break;
+		case st_io_command_buy:
+			printf ("Buy\n");
+			break;
+		case st_io_command_sell:
+			printf ("Sell\n");
+			break;
 		default:
 			assert ("Unexpected control path");
 		}

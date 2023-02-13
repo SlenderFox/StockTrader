@@ -1,6 +1,7 @@
 #include <stdio.h> // printf, snprintf
 #include <stdbool.h> // bool, true, false
 #include <string.h> // strlen
+#include <strings.h> // strcasecmp
 #include <assert.h> // assert
 #include <stdlib.h> // system, malloc, realloc, free
 
@@ -118,7 +119,7 @@ st_io_process_command ()
 	*/
 
 	char input[16] = "\0";
-	int res = scanf ("%14[a-z]", input);
+	int res = scanf ("%14s", input);
 	if (res == 0)
 	{
 		command = st_io_command_invalid;
@@ -126,8 +127,41 @@ st_io_process_command ()
 		return;
 	}
 
-	// Temp
-	command = st_io_command_help;
+	if (strcasecmp (input, "help") == 0)
+	{
+		command = st_io_command_help;
+		return;
+	}
+
+	if (strcasecmp (input, "endday") == 0)
+	{
+		command = st_io_command_endday;
+		return;
+	}
+
+	if (strcasecmp (input, "gotoday") == 0)
+	{
+		command = st_io_command_gotoday;
+		return;
+	}
+
+	if (strcasecmp (input, "select") == 0)
+	{
+		command = st_io_command_select;
+		return;
+	}
+
+	if (strcasecmp (input, "buy") == 0)
+	{
+		command = st_io_command_buy;
+		return;
+	}
+
+	if (strcasecmp (input, "sell") == 0)
+	{
+		command = st_io_command_sell;
+		return;
+	}
 
 	command = st_io_command_invalid;
 	st_io_set_invalid_message ("Command not found");
