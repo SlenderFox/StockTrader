@@ -1,6 +1,6 @@
 #include <stdbool.h> // bool, true, false
 #include <assert.h> // assert
-#include <stdio.h>
+#include <stdio.h> // printf
 
 #include "io.h"
 #include "company.h"
@@ -8,13 +8,6 @@
 enum { ROWS = 8};
 enum { COLUMNS = 30 };
 enum { COMPANIES = 5 };
-
-/* TODO:
- * Input checking
- * Loading info into buffer
- * Redraw for linux
- * Compare replace for Windows
-*/
 
 bool running = true;
 
@@ -58,6 +51,7 @@ main (int argc, char *args[])
 		switch (st_io_get_command ())
 		{
 		default:
+		//	assert ("Unexpected control path");
 		case st_io_command_invalid:
 			st_io_print_invalid_message ();
 			break;
@@ -79,11 +73,7 @@ main (int argc, char *args[])
 		case st_io_command_sell:
 			printf ("Sell\n");
 			break;
-		//default:
-		//	assert ("Unexpected control path");
 		}
-
-		// TODO: Enabling looping breaks everything
 
 		// End game
 		running = false;
