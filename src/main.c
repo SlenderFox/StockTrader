@@ -57,6 +57,7 @@ main (int argc, char *args[])
 
 		switch (st_io_get_command ())
 		{
+		default:
 		case st_io_command_invalid:
 			st_io_print_invalid_message ();
 			break;
@@ -78,8 +79,8 @@ main (int argc, char *args[])
 		case st_io_command_sell:
 			printf ("Sell\n");
 			break;
-		default:
-			assert ("Unexpected control path");
+		//default:
+		//	assert ("Unexpected control path");
 		}
 
 		// TODO: Enabling looping breaks everything
