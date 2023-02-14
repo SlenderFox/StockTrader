@@ -21,6 +21,8 @@ enum { INFO_LENGTH = 6 };
 bool loaded = false;
 #define CHECK_LOADED assert (loaded && "io not yet loaded\n");
 
+bool ready_for_value = false;
+
 const char clear_char = ' ';
 
 uint16_t total_rows = 0, total_columns = 0;
@@ -104,26 +106,16 @@ st_io_set_invalid_message (char *_message)
 	strncpy (invalid_message, _message, 99);
 }
 
-/** Parse stdin looking for a valid command
- * @return [int] -1 for failure
-*/
+/** Parse stdin looking for a valid command */
 void
 st_io_process_command ()
 {
-	/* Maybe make an array of strings (char*)
-	 * only allow alphanumeric characters and space
-	 * 0-9 = 48-57
-	 * A-Z = 65-90
-	 * a-z = 97-122
-	 * space = 32
-	*/
-
 	char input[16] = "\0";
-	int res = scanf ("%14s", input);
+	int res = scanf ("%15s", input);
 	if (res == 0)
 	{
 		command = st_io_command_invalid;
-		st_io_set_invalid_message ("Invalid input, lowercase letters only");
+		st_io_set_invalid_message ("Invalid input");
 		return;
 	}
 
@@ -142,24 +134,28 @@ st_io_process_command ()
 	if (strcasecmp (input, "gotoday") == 0)
 	{
 		command = st_io_command_gotoday;
+		ready_for_value = true;
 		return;
 	}
 
 	if (strcasecmp (input, "select") == 0)
 	{
 		command = st_io_command_select;
+		ready_for_value = true;
 		return;
 	}
 
 	if (strcasecmp (input, "buy") == 0)
 	{
 		command = st_io_command_buy;
+		ready_for_value = true;
 		return;
 	}
 
 	if (strcasecmp (input, "sell") == 0)
 	{
 		command = st_io_command_sell;
+		ready_for_value = true;
 		return;
 	}
 
@@ -167,13 +163,65 @@ st_io_process_command ()
 	st_io_set_invalid_message ("Command not found");
 }
 
-/** Parse stdin looking for a valid value to go with the current command
- * @return [int] -1 for failure
- */
+/** Parse stdin looking for a valid value to go with the current command */
 void
 st_io_process_value ()
 {
-	return;
+	if (!ready_for_value)
+	{
+		return;
+	}
+
+	char input[64] = "\0";
+	int res = scanf ("%63s", input);
+	if (res == 0)
+	{
+		command = st_io_command_invalid;
+		st_io_set_invalid_message ("Invalid input");
+		return;
+	}
+
+	if (input[0] == '\0')
+	{
+		command = st_io_command_invalid;
+		st_io_set_invalid_message ("No input provided");
+		return;
+	}
+
+	uint8_t endpos = 0;
+
+	// Verify only numbers or decimal place present
+	for (uint8_t i = 0; i < 64; ++i)
+	{
+		if (input[i] == '\0')
+		{
+			endpos = i;
+			break;
+		}
+
+		if (input[i] != '0'
+			&& input[i] != '1'
+			&& input[i] != '2'
+			&& input[i] != '3'
+			&& input[i] != '4'
+			&& input[i] != '5'
+			&& input[i] != '6'
+			&& input[i] != '7'
+			&& input[i] != '8'
+			&& input[i] != '9'
+			&& input[i] != '.'
+		)
+		{
+			command = st_io_command_invalid;
+			st_io_set_invalid_message ("Incorrect input");
+			return;
+		}
+	}
+
+	char *end = &(input[endpos]);
+	input_value = strtod (input, &end);
+
+	ready_for_value = false;
 }
 
 // ----- Public Functions -----
@@ -248,6 +296,8 @@ void
 st_io_draw ()
 {
 	CHECK_LOADED
+
+	// TODO: Currently very broken
 
 	// Move cursor back to start
 	printf ("\e[%uF", total_rows + row_overflow);
@@ -373,4 +423,37 @@ void
 st_io_print_invalid_message ()
 {
 	printf ("%s\n", invalid_message);
+}
+
+void
+st_io_print_command ()
+{
+	switch (st_io_get_command ())
+	{
+	default:
+	//	assert ("Unexpected control path");
+	case st_io_command_invalid:
+		st_io_print_invalid_message ();
+		break;
+	case st_io_command_help:
+		printf ("Help\n");
+		break;
+	case st_io_command_endday:
+		printf ("Endday\n");
+		break;
+	case st_io_command_gotoday:
+		printf ("Gotoday %f\n", st_io_get_input_value ());
+		break;
+	case st_io_command_select:
+		printf ("Select %f\n", st_io_get_input_value ());
+		break;
+	case st_io_command_buy:
+		printf ("Buy %f\n", st_io_get_input_value ());
+		break;
+	case st_io_command_sell:
+		printf ("Sell %f\n", st_io_get_input_value ());
+		break;
+	}
+
+	row_overflow = 1;
 }

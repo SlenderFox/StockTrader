@@ -74,6 +74,9 @@ st_io_get_input_value ();
 void
 st_io_print_invalid_message ();
 
+void
+st_io_print_command ();
+
 #ifdef __cplusplus
 }
 #endif
