@@ -119,40 +119,56 @@ st_io_process_command ()
 		return;
 	}
 
-	if (strcasecmp (input, "help") == 0)
+	if (strcasecmp (input, "help") == 0
+		|| strcasecmp (input, "h") == 0
+	)
 	{
 		command = st_io_command_help;
 		return;
 	}
 
-	if (strcasecmp (input, "endday") == 0)
+	if (strcasecmp (input, "endday") == 0
+		|| strcasecmp (input, "end") == 0
+		|| strcasecmp (input, "e") == 0
+		|| strcasecmp (input, "next") == 0
+		|| strcasecmp (input, "n") == 0
+	)
 	{
 		command = st_io_command_endday;
 		return;
 	}
 
-	if (strcasecmp (input, "gotoday") == 0)
+	if (strcasecmp (input, "gotoday") == 0
+		|| strcasecmp (input, "goto") == 0
+		|| strcasecmp (input, "g") == 0
+	)
 	{
 		command = st_io_command_gotoday;
 		ready_for_value = true;
 		return;
 	}
 
-	if (strcasecmp (input, "select") == 0)
+	if (strcasecmp (input, "select") == 0
+		|| strcasecmp (input, "c") == 0
+	)
 	{
 		command = st_io_command_select;
 		ready_for_value = true;
 		return;
 	}
 
-	if (strcasecmp (input, "buy") == 0)
+	if (strcasecmp (input, "buy") == 0
+		|| strcasecmp (input, "b") == 0
+	)
 	{
 		command = st_io_command_buy;
 		ready_for_value = true;
 		return;
 	}
 
-	if (strcasecmp (input, "sell") == 0)
+	if (strcasecmp (input, "sell") == 0
+		|| strcasecmp (input, "s") == 0
+	)
 	{
 		command = st_io_command_sell;
 		ready_for_value = true;
