@@ -215,6 +215,7 @@ st_io_process_value ()
 			break;
 		}
 
+		// Intended to "fail quickly"
 		if (input[i] != '0'
 			&& input[i] != '1'
 			&& input[i] != '2'
