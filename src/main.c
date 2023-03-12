@@ -48,14 +48,15 @@ main (int argc, char *args[])
 
 		st_io_process_input ();
 
-		// Output the recieved command for testing
-		st_io_print_command ();
-
-		// End game
-		running = false;
+		if (st_io_get_command () == st_io_command_exit)
+		{
+			// End game
+			running = false;
+		}
 	}
 
 	terminate ();
 
+	printf ("Bye\n");
 	return 0;
 }

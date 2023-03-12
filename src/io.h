@@ -8,13 +8,15 @@ extern "C" {
 /** The state of the game that defines the behaviour for the next print */
 enum st_io_command_e
 {
+	st_io_command_none,
 	st_io_command_invalid,
 	st_io_command_help,
 	st_io_command_endday,
 	st_io_command_gotoday,
 	st_io_command_select,
 	st_io_command_buy,
-	st_io_command_sell
+	st_io_command_sell,
+	st_io_command_exit
 };
 
 typedef enum st_io_command_e st_io_command_t;
@@ -70,12 +72,6 @@ st_io_get_command ();
 
 double
 st_io_get_input_value ();
-
-void
-st_io_print_invalid_message ();
-
-void
-st_io_print_command ();
 
 #ifdef __cplusplus
 }

@@ -33,7 +33,7 @@ uint16_t info_offset = 0;
 
 st_buffer_t *buffer_a, *buffer_b, **buffer_active, **buffer_inactive;
 
-st_io_command_t command = st_io_command_invalid;
+st_io_command_t command = st_io_command_none;
 double input_value = 0;
 char *invalid_message;
 
@@ -175,6 +175,12 @@ st_io_process_command ()
 		return;
 	}
 
+	if (strcasecmp (input, "exit") == 0)
+	{
+		command = st_io_command_exit;
+		return;
+	}
+
 	command = st_io_command_invalid;
 	st_io_set_invalid_message ("Command not found");
 }
@@ -239,6 +245,51 @@ st_io_process_value ()
 	input_value = strtod (input, &end);
 
 	ready_for_value = false;
+}
+
+void
+st_io_print_invalid_message ()
+{
+	printf ("%s\n", invalid_message);
+}
+
+void
+st_io_print_command ()
+{
+	switch (st_io_get_command ())
+	{
+	default:
+	//	assert ("Unexpected control path");
+	case st_io_command_none:
+		// Just print nothing
+		break;
+	case st_io_command_invalid:
+		st_io_print_invalid_message ();
+		break;
+	case st_io_command_help:
+		printf ("Help\n");
+		break;
+	case st_io_command_endday:
+		printf ("Endday\n");
+		break;
+	case st_io_command_gotoday:
+		printf ("Gotoday %f\n", st_io_get_input_value ());
+		break;
+	case st_io_command_select:
+		printf ("Select %f\n", st_io_get_input_value ());
+		break;
+	case st_io_command_buy:
+		printf ("Buy %f\n", st_io_get_input_value ());
+		break;
+	case st_io_command_sell:
+		printf ("Sell %f\n", st_io_get_input_value ());
+		break;
+	case st_io_command_exit:
+		printf ("Exit now\n");
+		break;
+	}
+
+	row_overflow = 1;
 }
 
 // ----- Public Functions -----
@@ -331,6 +382,7 @@ st_io_draw ()
 		}
 		printf ("%s\n", out);
 	}
+	st_io_print_command ();
 	fflush (stdout);
 }
 
@@ -435,43 +487,4 @@ double
 st_io_get_input_value ()
 {
 	return input_value;
-}
-
-void
-st_io_print_invalid_message ()
-{
-	printf ("%s\n", invalid_message);
-}
-
-void
-st_io_print_command ()
-{
-	switch (st_io_get_command ())
-	{
-	default:
-	//	assert ("Unexpected control path");
-	case st_io_command_invalid:
-		st_io_print_invalid_message ();
-		break;
-	case st_io_command_help:
-		printf ("Help\n");
-		break;
-	case st_io_command_endday:
-		printf ("Endday\n");
-		break;
-	case st_io_command_gotoday:
-		printf ("Gotoday %f\n", st_io_get_input_value ());
-		break;
-	case st_io_command_select:
-		printf ("Select %f\n", st_io_get_input_value ());
-		break;
-	case st_io_command_buy:
-		printf ("Buy %f\n", st_io_get_input_value ());
-		break;
-	case st_io_command_sell:
-		printf ("Sell %f\n", st_io_get_input_value ());
-		break;
-	}
-
-	row_overflow = 1;
 }
