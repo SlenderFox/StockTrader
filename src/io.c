@@ -317,7 +317,10 @@ st_io_draw ()
 	// TODO: Currently very broken
 
 	// Move cursor back to start
-	printf ("\e[%uF", total_rows + row_overflow);
+	//printf ("\e[%uF", total_rows + row_overflow);
+
+	// Temporarily clear whole screen instead
+	st_io_clear ();
 
 	// Output the contents of the active buffer
 	for (uint16_t y = 0; y < total_rows; ++y)
