@@ -1,5 +1,10 @@
+# MAKEFILE
+
 NAME:=stocktrader
 CFLAGS:=-std=c17 -Wall
+DFLAGS:=-Og -DDEBUG -D_DEBUG
+RFLAGS:=-O3 -DNDEBUG -D_RELEASE
+
 SRC:=src
 OBJ:=temp
 BIN:=build
@@ -21,21 +26,33 @@ LIBSW:=
 
 # Dumb way to get variables specific to target
 ifneq (,$(filter debug,$(MAKECMDGOALS)))
-	CFLAGS:=$(CFLAGS) -O1 -DDEBUG
-	OBJ:=$(OBJ)/$(DEBUG)
-	BIN:=$(BIN)/$(DEBUG)
+	CFLAGS:=$(CFLAGS) $(DFLAGS)
+	ifeq (,$(filter clean,$(MAKECMDGOALS)))
+		OBJ:=$(OBJ)/$(DEBUG)
+	endif
+	ifeq (,$(filter clear,$(MAKECMDGOALS)))
+		BIN:=$(BIN)/$(DEBUG)
+	endif
 endif
 
 ifneq (,$(filter release,$(MAKECMDGOALS)))
-	CFLAGS:=$(CFLAGS) -O3 -DNDEBUG
-	OBJ:=$(OBJ)/$(RELEASE)
-	BIN:=$(BIN)/$(RELEASE)
+	CFLAGS:=$(CFLAGS) $(RFLAGS)
+	ifeq (,$(filter clean,$(MAKECMDGOALS)))
+		OBJ:=$(OBJ)/$(RELEASE)
+	endif
+	ifeq (,$(filter clear,$(MAKECMDGOALS)))
+		BIN:=$(BIN)/$(RELEASE)
+	endif
 endif
 
 ifneq (,$(filter debugw,$(MAKECMDGOALS)))
-	CFLAGS:=$(CFLAGS) -O1 -DDEBUG
-	OBJ:=$(WINDOWS)/$(OBJ)/$(DEBUG)
-	BIN:=$(WINDOWS)/$(BIN)/$(DEBUG)
+	CFLAGS:=$(CFLAGS) $(DFLAGS)
+	ifeq (,$(filter clean,$(MAKECMDGOALS)))
+		OBJ:=$(OBJ)/$(WINDOWS)/$(DEBUG)
+	endif
+	ifeq (,$(filter clear,$(MAKECMDGOALS)))
+		BIN:=$(BIN)/$(WINDOWS)/$(DEBUG)
+	endif
 
 	C:=$(CW)
 	INCPATH:=$(INCPATHW)
@@ -44,9 +61,13 @@ ifneq (,$(filter debugw,$(MAKECMDGOALS)))
 endif
 
 ifneq (,$(filter releasew,$(MAKECMDGOALS)))
-	CFLAGS:=$(CFLAGS) -O3 -DNDEBUG
-	OBJ:=$(WINDOWS)/$(OBJ)/$(RELEASE)
-	BIN:=$(WINDOWS)/$(BIN)/$(RELEASE)
+	CFLAGS:=$(CFLAGS) $(RFLAGS)
+	ifeq (,$(filter clean,$(MAKECMDGOALS)))
+		OBJ:=$(OBJ)/$(WINDOWS)/$(RELEASE)
+	endif
+	ifeq (,$(filter clear,$(MAKECMDGOALS)))
+		BIN:=$(BIN)/$(WINDOWS)/$(RELEASE)
+	endif
 
 	C:=$(CW)
 	INCPATH:=$(INCPATHW)
@@ -58,31 +79,37 @@ HEADERS:=$(wildcard $(SRC)/*.h)
 SOURCES:=$(wildcard $(SRC)/*.c)
 OBJECTS:=$(patsubst $(SRC)/%.c,$(OBJ)/%.o,$(SOURCES))
 
-.PHONY: makefile all clean build debug release debugw releasew
+.PHONY: makefile help clear clean debug release debugw releasew
 
 # Default target simply tells you how to correctly use this makefile
-.DEFAULT_GOAL:=all
-all:
-	@printf "debug, release, debugw, releasew, clean\n"
+.DEFAULT_GOAL:=help
+help:
+	@printf "clear: Remove bin files\n\
+	clean: Remove temp files\n\
+	debug: Make a debug build\n\
+	release: Make a release build\n\
+	debugw: Make a debug build for windows\n\
+	releasew: Make a release build for windows\n"
+
+clear:
+	rm -rf $(BIN)/
 
 clean:
 	rm -rf $(OBJ)/
-	rm -rf $(BIN)/
-
-# Make any needed directories (bad)
-%/: ; mkdir -p $@
-
-# Link the object files into the binary file
-$(BIN)/$(NAME): $(OBJECTS)
-	$(C) $(CFLAGS) $(OBJECTS) -o $@ $(LIBPATH) $(LIBS)
 
 # Compile any object files that need to be updated
 $(OBJ)/%.o:: $(SRC)/%.c $(HEADERS)
-	$(C) $(CFLAGS) -c $< -o $@ $(INCPATH) $(LIBS)
+	$(C) $(CFLAGS) -c -o $@ $< $(INCPATH) $(LIBS)
 
-build: $(OBJ)/ $(BIN)/ $(BIN)/$(NAME)
+# Link the object files into the binary file
+$(BIN)/$(NAME): $(OBJ)/ $(BIN)/ $(OBJECTS)
+	$(C) $(CFLAGS) -o $@ $(LIBPATH) $(LIBS) $(OBJECTS)
 
-debug: build
-release: build
-debugw: build
-releasew: build
+debug: $(BIN)/$(NAME)
+release: $(BIN)/$(NAME)
+debugw: $(BIN)/$(NAME)
+releasew: $(BIN)/$(NAME)
+
+# Make directories as needed
+$(BIN)/: ; mkdir -p $@
+$(OBJ)/: ; mkdir -p $@
