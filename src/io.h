@@ -74,5 +74,5 @@ double
 st_io_get_input_value ();
 
 #ifdef __cplusplus
-}
+} // extern "C"
 #endif

@@ -57,5 +57,5 @@ char *
 st_company_name_get (st_company_t *_company);
 
 #ifdef __cplusplus
-}
+} // extern "C"
 #endif

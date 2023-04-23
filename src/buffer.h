@@ -136,5 +136,5 @@ st_buff_data_get (
 );
 
 #ifdef __cplusplus
-}
+} // extern "C"
 #endif
