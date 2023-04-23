@@ -9,7 +9,11 @@
 #define CHECK_LOADED assert (_buff->m_data != NULL && "Buffer data not allocated");
 
 void
-st_buff_construct (st_buffer_t **_buff, uint16_t _rows, uint16_t _columns)
+st_buff_construct (
+	st_buffer_t **_buff,
+	uint16_t _rows,
+	uint16_t _columns
+)
 {
 	*_buff = malloc (sizeof (st_buffer_t));
 	(*_buff)->m_rows = MAX (_rows, 1);
