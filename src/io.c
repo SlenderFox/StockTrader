@@ -40,64 +40,79 @@ char *invalid_message;
 // ----- Local functions ------
 
 /** Will place a formatted value into the info panel
- * @param _offset The offset within the info panel
+ * @param _offset The row offset within the info panel
  * @param _format The string formatting applied to the value (use %s for value)
- * @param _value The value in question, must be int, uint, double, or string
- * @param _type The type of the string as single char, follows fmt (d,u,f,s)
- * @remark Passing a shorter type (float, int, short) is undefined behaviour
+ * @param *_value The string to be loaded into the info panel
+ * @param _valueLength How long the string is
+ * @todo Does not check if overflowing the buffer width
  */
 void
 st_io_load_info (
 	uint8_t _offset,
 	char *_format,
-	void *_value,
-	char _type
+	char *_value,
+	uint8_t _valueLength
 )
 {
-	int valueLength;
-	char *value = NULL;
-
-	switch (_type)
-	{
-	case 'd': // int
-		int32_t dval = *(int32_t*)_value;
-		valueLength = snprintf (NULL, 0, "%d", dval);
-		value = malloc (++valueLength);
-		snprintf (value, valueLength, "%d", dval);
-		break;
-	case 'u': // unsigned int
-		uint32_t uval = *(uint32_t*)_value;
-		valueLength = snprintf (NULL, 0, "%u", uval);
-		value = malloc (++valueLength);
-		snprintf (value, valueLength, "%u", uval);
-		break;
-	case 'f': // float (double)
-		double fval = *(double*)_value;
-		valueLength = snprintf (NULL, 0, "%.2f", fval);
-		value = malloc (++valueLength);
-		snprintf (value, valueLength, "%.2f", fval);
-		break;
-	case 's': // string
-		char *cval = (char*)_value;
-		valueLength = strlen (cval);
-		value = malloc (valueLength);
-		snprintf (value, valueLength, "%s", cval);
-		break;
-	default: // handle error
-		return;
-	}
-
-	// Make last character a null terminator
-	value[valueLength - 1] = '\0';
-
-	int totalLength = strlen (_format) + valueLength;
+	int totalLength = strlen (_format) + _valueLength;
 	char *input = malloc (totalLength);
-	snprintf (input, totalLength, _format, value);
-
+	snprintf (input, totalLength, _format, _value);
 	st_buff_data_row_insert (*buffer_active, info_offset + _offset, 0, input);
-
-	free (value);
 	free (input);
+}
+
+void
+st_io_load_info_int(
+	uint8_t _offset,
+	char *_format,
+	int32_t _value
+)
+{
+	int strLength = snprintf (NULL, 0, "%d", _value) + 1;
+	char *valString = malloc (strLength);
+	snprintf (valString, strLength, "%d", _value);
+	st_io_load_info (_offset, _format, valString, strLength);
+	free (valString);
+}
+
+void
+st_io_load_info_uint(
+	uint8_t _offset,
+	char *_format,
+	uint32_t _value
+)
+{
+	int strLength = snprintf (NULL, 0, "%u", _value) + 1;
+	char *valString = malloc (strLength);
+	snprintf (valString, strLength, "%u", _value);
+	st_io_load_info (_offset, _format, valString, strLength);
+	free (valString);
+}
+
+void
+st_io_load_info_double(
+	uint8_t _offset,
+	char *_format,
+	double _value
+)
+{
+
+	int strLength = snprintf (NULL, 0, "%.2f", _value) + 1;
+	char *valString = malloc (strLength);
+	snprintf (valString, strLength, "%.2f", _value);
+	st_io_load_info (_offset, _format, valString, strLength);
+	free (valString);
+}
+
+void
+st_io_load_info_string(
+	uint8_t _offset,
+	char *_format,
+	char *_value
+)
+{
+	int strLength = strlen (_value) + 1;
+	st_io_load_info (_offset, _format, _value, strLength);
 }
 
 void
@@ -435,14 +450,14 @@ void
 st_io_load_info_day  (uint32_t _day)
 {
 	CHECK_LOADED
-	st_io_load_info (0, "Day: %s", &_day, 'u');
+	st_io_load_info_uint (0, "Day: %s", _day);
 }
 
 void
 st_io_load_info_money (double _money)
 {
 	CHECK_LOADED
-	st_io_load_info (1, "Money: $%s", &_money, 'f');
+	st_io_load_info_double (1, "Money: $%s", _money);
 }
 
 void
@@ -453,9 +468,9 @@ st_io_load_info_company (
 )
 {
 	CHECK_LOADED
-	st_io_load_info (2, "%s:", _name, 's');
-	st_io_load_info (3, "   $%s per", &_value, 'f');
-	st_io_load_info (4, "   %s owned", &_owned, 'u');
+	st_io_load_info_string (2, "%s:", _name);
+	st_io_load_info_double (3, "   $%s per", _value);
+	st_io_load_info_uint (4, "   %s owned", _owned);
 }
 
 void
