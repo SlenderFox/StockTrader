@@ -17,7 +17,8 @@ typedef struct
 	double value;
 	uint32_t owned_stocks;
 	char name[ST_COMPANY_NAME_MAX];
-} st_company_t;
+}
+st_company_t;
 
 /** Allocate memory for the company struct and init a name
  * @param _company Output pointer to the company

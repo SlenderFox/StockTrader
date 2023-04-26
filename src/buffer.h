@@ -13,7 +13,8 @@ typedef struct
 {
 	uint16_t m_rows, m_columns;
 	char *m_data;
-} st_buffer_t;
+}
+st_buffer_t;
 
 /** Allocate memory for the buffer struct and init values
  * @param _buffer Output pointer to the buffer
