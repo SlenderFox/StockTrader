@@ -5,13 +5,18 @@
 #include "io.h"
 #include "company.h"
 
-enum { ROWS = 8};
-enum { COLUMNS = 30 };
-enum { COMPANIES = 5 };
+// Constants
+enum {
+	ROWS = 8,
+	COLUMNS = 30,
+	COMPANIES = 5,
+	YEAR = 365
+};
 
 bool running = true;
 
 st_company_t *companies[COMPANIES];
+uint16_t day = 0;
 
 void
 init ()
@@ -48,6 +53,7 @@ main (int argc, char *args[])
 
 		st_io_process_input ();
 
+		// Temporary exit command
 		if (st_io_get_command () == st_io_command_exit)
 		{
 			// End game

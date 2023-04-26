@@ -9,14 +9,17 @@
 #include "buffer.h"
 #include "utils.h"
 
-enum { MIN_GRAPH_ROWS = 4 };
-enum { MIN_GRAPH_COLS = 20 };
+// Constants
+enum {
+	MIN_GRAPH_ROWS = 4,
+	MIN_GRAPH_COLS = 20,
 
-// Title and vetical graph border
-enum { GRAPH_PADDING_ROW = 3 };
-// Side graph border
-enum { GRAPH_PADDING_COL = 2 };
-enum { INFO_LENGTH = 6 };
+	// Title and vetical graph border
+	GRAPH_PADDING_ROW = 3,
+	// Side graph border
+	GRAPH_PADDING_COL = 2,
+	INFO_LENGTH = 6
+};
 
 bool loaded = false;
 #define CHECK_LOADED assert (loaded && "io not yet loaded\n");
@@ -483,13 +486,13 @@ st_io_process_input ()
 	input_value = 0;
 	st_io_set_invalid_message ("No command processed");
 
+	// Clear the input
+	fflush (stdin);
+
 	// Print prompt
 	printf ("> ");
 	st_io_process_command ();
 	st_io_process_value ();
-
-	// Clear the input
-	fflush (stdin);
 }
 
 st_io_command_t
