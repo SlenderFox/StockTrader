@@ -28,7 +28,9 @@ bool ready_for_value = false;
 
 const char clear_char = ' ';
 
+/** The amount of rows and columns in the render buffer */
 uint16_t total_rows = 0, total_columns = 0;
+/** The amount of rows and coloums available to the graph */
 uint16_t graph_rows = 0, graph_columns = 0;
 //uint16_t row_overflow = 0;
 
@@ -444,7 +446,9 @@ st_io_load_graph_frame ()
 void
 st_io_load_graph_data ()
 {
-	// TODO
+	/* TODO
+	 * graph_rows and graph_columns provide info about the dimensions of the graph
+	*/
 }
 
 void
