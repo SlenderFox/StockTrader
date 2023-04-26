@@ -30,7 +30,7 @@ const char clear_char = ' ';
 
 uint16_t total_rows = 0, total_columns = 0;
 uint16_t graph_rows = 0, graph_columns = 0;
-uint16_t row_overflow = 0;
+//uint16_t row_overflow = 0;
 
 uint16_t info_offset = 0;
 
@@ -306,8 +306,6 @@ st_io_print_command ()
 		printf ("Exit now\n");
 		break;
 	}
-
-	row_overflow = 1;
 }
 
 // ----- Public Functions -----
@@ -372,9 +370,9 @@ st_io_init_graph ()
 
 	st_io_load_title ("STOCKTRADER");
 	st_io_load_graph_frame ();
-	st_io_load_info_day (69);
-	st_io_load_info_money (10000);
-	st_io_load_info_company ("Company", 0.01, 50);
+	st_io_load_info_day (0);
+	st_io_load_info_money (0);
+	st_io_load_info_company ("Unknown", 0.00, 0);
 	st_buff_data_row_set (*buffer_active, info_offset + 5, '-');
 }
 
