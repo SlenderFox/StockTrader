@@ -6,7 +6,7 @@ extern "C" {
 #endif
 
 /** The state of the game that defines the behaviour for the next print */
-enum st_io_command_e
+typedef enum
 {
 	st_io_command_none,
 	st_io_command_invalid,
@@ -17,9 +17,7 @@ enum st_io_command_e
 	st_io_command_buy,
 	st_io_command_sell,
 	st_io_command_exit
-};
-
-typedef enum st_io_command_e st_io_command_t;
+} st_io_command_t;
 
 /** Constructs all the buffers
  * @param _rows How many rows the graph will have

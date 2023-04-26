@@ -12,14 +12,12 @@ enum { ST_COMPANY_NAME_MAX = 32 };
  * a count of how many stocks in the company are owned by the player,
  * and a name.
  */
-struct st_company_s
+typedef struct
 {
 	double value;
 	uint32_t owned_stocks;
 	char name[ST_COMPANY_NAME_MAX];
-};
-
-typedef struct st_company_s st_company_t;
+} st_company_t;
 
 /** Allocate memory for the company struct and init a name
  * @param _company Output pointer to the company

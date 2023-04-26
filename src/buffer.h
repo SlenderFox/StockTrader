@@ -9,13 +9,11 @@ extern "C" {
  * The buffer is accessed two dimensionally.
  * Every row is contiguous in memory,
  * meaning each rows are offset by sizeof (char) * column */
-struct st_buffer_s
+typedef struct
 {
 	uint16_t m_rows, m_columns;
 	char *m_data;
-};
-
-typedef struct st_buffer_s st_buffer_t;
+} st_buffer_t;
 
 /** Allocate memory for the buffer struct and init values
  * @param _buff Output pointer to the buffer
