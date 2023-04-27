@@ -3,11 +3,14 @@
 #include <string.h> // strlen
 #include <strings.h> // strcasecmp
 #include <assert.h> // assert
-#include <stdlib.h> // system, malloc, realloc, free
+#include <stdlib.h> // system, malloc, realloc, free, strtod
 
 #include "io.h"
 #include "buffer.h"
-#include "utils.h"
+
+#ifndef MAX
+	#define MAX(_a, _b) (_a > _b) ? _a : _b
+#endif
 
 // Constants
 enum {
@@ -62,7 +65,7 @@ st_load_info (
 	int totalLength = strlen (_format) + _valueLength;
 	char *input = malloc (totalLength);
 	snprintf (input, totalLength, _format, _value);
-	st_buff_data_row_insert (*buffer_active, info_offset + _offset, 0, input);
+	st_buffer_data_row_insert (*buffer_active, info_offset + _offset, 0, input);
 	free (input);
 }
 
@@ -323,15 +326,15 @@ st_io_init (uint16_t _rows, uint16_t _columns)
 	total_columns = graph_columns + GRAPH_PADDING_COL;
 
 	// Buffer a
-	st_buff_construct (&buffer_a, total_rows, total_columns);
-	st_buff_data_init (buffer_a);
-	st_buff_data_clear (buffer_a, clear_char);
+	st_buffer_construct (&buffer_a, total_rows, total_columns);
+	st_buffer_data_init (buffer_a);
+	st_buffer_data_clear (buffer_a, clear_char);
 	buffer_active = &buffer_a;
 
 	// Buffer b
-	st_buff_construct (&buffer_b, total_rows, total_columns);
-	st_buff_data_init (buffer_b);
-	st_buff_data_clear (buffer_b, clear_char);
+	st_buffer_construct (&buffer_b, total_rows, total_columns);
+	st_buffer_data_init (buffer_b);
+	st_buffer_data_clear (buffer_b, clear_char);
 	buffer_inactive = &buffer_b;
 
 	st_io_clear ();
@@ -355,12 +358,12 @@ st_io_terminate ()
 	CHECK_LOADED
 
 	// Buffer a
-	st_buff_data_terminate (buffer_a);
-	st_buff_destruct (buffer_a);
+	st_buffer_data_terminate (buffer_a);
+	st_buffer_destruct (buffer_a);
 
 	// Buffer b
-	st_buff_data_terminate (buffer_b);
-	st_buff_destruct (buffer_b);
+	st_buffer_data_terminate (buffer_b);
+	st_buffer_destruct (buffer_b);
 
 	free (invalid_message);
 }
@@ -375,7 +378,7 @@ st_io_init_graph ()
 	st_io_load_info_day (0);
 	st_io_load_info_money (0);
 	st_io_load_info_company ("Unknown", 0.00, 0);
-	st_buff_data_row_set (*buffer_active, info_offset + 5, '-');
+	st_buffer_data_row_set (*buffer_active, info_offset + 5, '-');
 }
 
 void
@@ -392,11 +395,11 @@ st_io_draw ()
 	// Output the contents of the active buffer
 	for (uint16_t y = 0; y < total_rows; ++y)
 	{
-		char out[total_columns + 1];
+		char out[total_columns];
 		out[total_columns] = '\0';
 		for (uint16_t x = 0; x < total_columns; ++x)
 		{
-			out[x] = st_buff_data_get (*buffer_active, y, x);
+			out[x] = st_buffer_data_get (*buffer_active, y, x);
 		}
 		printf ("%s\n", out);
 	}
@@ -417,7 +420,7 @@ st_io_clear ()
 void
 st_io_load_title (char *_title)
 {
-	st_buff_data_row_insert (*buffer_active, 0, 0, _title);
+	st_buffer_data_row_insert (*buffer_active, 0, 0, _title);
 }
 
 void
@@ -426,21 +429,21 @@ st_io_load_graph_frame ()
 	CHECK_LOADED
 
 	// Graph top edge
-	st_buff_data_row_set (*buffer_active, 1, '=');
-	st_buff_data_set (*buffer_active, 1, 0, '+');
-	st_buff_data_set (*buffer_active, 1, total_columns, '+');
+	st_buffer_data_row_set (*buffer_active, 1, '=');
+	st_buffer_data_set (*buffer_active, 1, 0, '+');
+	st_buffer_data_set (*buffer_active, 1, total_columns - 1, '+');
 
 	// Graph side edges
 	for (uint16_t i = 0; i < graph_rows; ++i)
 	{
-		st_buff_data_set (*buffer_active, i + 2, 0, '|');
-		st_buff_data_set (*buffer_active, i + 2, total_columns, '|');
+		st_buffer_data_set (*buffer_active, i + 2, 0, '|');
+		st_buffer_data_set (*buffer_active, i + 2, total_columns - 1, '|');
 	}
 
 	// Graph bottom  edge
-	st_buff_data_row_set (*buffer_active, info_offset - 1, '=');
-	st_buff_data_set (*buffer_active, info_offset - 1, 0, '+');
-	st_buff_data_set (*buffer_active, info_offset - 1, total_columns, '+');
+	st_buffer_data_row_set (*buffer_active, info_offset - 1, '=');
+	st_buffer_data_set (*buffer_active, info_offset - 1, 0, '+');
+	st_buffer_data_set (*buffer_active, info_offset - 1, total_columns - 1, '+');
 }
 
 void

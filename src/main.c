@@ -1,5 +1,3 @@
-#include <stdbool.h> // bool, true, false
-#include <assert.h> // assert
 #include <stdio.h> // printf
 
 #include "game.h"

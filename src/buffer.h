@@ -22,7 +22,7 @@ st_buffer_t;
  * @param _columns How many columns needed
  */
 void
-st_buff_construct (
+st_buffer_construct (
 	st_buffer_t **_buffer,
 	uint16_t _rows,
 	uint16_t _columns
@@ -32,40 +32,40 @@ st_buff_construct (
  * @param _buffer The buffer struct to be deallocated
  */
 void
-st_buff_destruct (st_buffer_t *_buffer);
+st_buffer_destruct (st_buffer_t *_buffer);
 
 /** Allocate memory for the data stored inside the buffer struct
  * @param _buffer The buffer struct whose data will be allocated
  */
 void
-st_buff_data_init (st_buffer_t *_buffer);
+st_buffer_data_init (st_buffer_t *_buffer);
 
 /** Free the memory for the data stored inside the buffer struct
  * @param _buffer The buffer struct whose data will be deallocated
  */
 void
-st_buff_data_terminate (st_buffer_t *_buffer);
+st_buffer_data_terminate (st_buffer_t *_buffer);
 
 /** Set all the memory inside the data of a buffer to a given character
  * @param _buffer The buffer struct to be modified
  * @param _clear What to use as the clear character
  */
 void
-st_buff_data_clear (st_buffer_t *_buffer, char _clear);
+st_buffer_data_clear (st_buffer_t *_buffer, char _clear);
 
 /** Return the amount of rows in a buffer
  * @param _buffer The buffer struct to be modified
  * @return [uint32_t] The amount of rows in the buffer
  */
 uint16_t
-st_buff_get_rows (st_buffer_t *_buffer);
+st_buffer_get_rows (st_buffer_t *_buffer);
 
 /** Return the amount of columns in a buffer
  * @param _buffer The buffer struct to be modified
  * @return [uint32_t] The amount of columns in the buffer
  */
 uint16_t
-st_buff_get_columns (st_buffer_t *_buffer);
+st_buffer_get_columns (st_buffer_t *_buffer);
 
 /** Set a char at a specific location in a buffers data.
  * Position is clamped
@@ -75,7 +75,7 @@ st_buff_get_columns (st_buffer_t *_buffer);
  * @param _val The character to be placed at the location
  */
 void
-st_buff_data_set (
+st_buffer_data_set (
 	st_buffer_t *_buffer,
 	uint16_t _row,
 	uint16_t _column,
@@ -88,7 +88,7 @@ st_buff_data_set (
  * @param _val The character to set it to
  */
 void
-st_buff_data_row_set (
+st_buffer_data_row_set (
 	st_buffer_t *_buffer,
 	uint16_t _row,
 	char _val
@@ -100,7 +100,7 @@ st_buff_data_row_set (
  * @param _clear The character used to clear with
  */
 void
-st_buff_data_row_clear (
+st_buffer_data_row_clear (
 	st_buffer_t *_buffer,
 	uint16_t _row,
 	char _clear
@@ -114,7 +114,7 @@ st_buff_data_row_clear (
  * @param _val The string that is inserted
  */
 void
-st_buff_data_row_insert (
+st_buffer_data_row_insert (
 	st_buffer_t *_buffer,
 	uint16_t _row,
 	uint16_t _offset,
@@ -128,7 +128,7 @@ st_buff_data_row_insert (
  * @return [char] The character at the location
  */
 char
-st_buff_data_get (
+st_buffer_data_get (
 	st_buffer_t *_buffer,
 	uint16_t _row,
 	uint16_t _column
