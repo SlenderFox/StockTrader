@@ -52,7 +52,7 @@ char *invalid_message;
  * @todo Does not check if overflowing the buffer width
  */
 void
-st_io_load_info (
+st_load_info (
 	uint8_t _offset,
 	char *_format,
 	char *_value,
@@ -67,7 +67,7 @@ st_io_load_info (
 }
 
 void
-st_io_load_info_int(
+st_load_info_int(
 	uint8_t _offset,
 	char *_format,
 	int32_t _value
@@ -76,12 +76,12 @@ st_io_load_info_int(
 	int strLength = snprintf (NULL, 0, "%d", _value) + 1;
 	char *valString = malloc (strLength);
 	snprintf (valString, strLength, "%d", _value);
-	st_io_load_info (_offset, _format, valString, strLength);
+	st_load_info (_offset, _format, valString, strLength);
 	free (valString);
 }
 
 void
-st_io_load_info_uint(
+st_load_info_uint(
 	uint8_t _offset,
 	char *_format,
 	uint32_t _value
@@ -90,12 +90,12 @@ st_io_load_info_uint(
 	int strLength = snprintf (NULL, 0, "%u", _value) + 1;
 	char *valString = malloc (strLength);
 	snprintf (valString, strLength, "%u", _value);
-	st_io_load_info (_offset, _format, valString, strLength);
+	st_load_info (_offset, _format, valString, strLength);
 	free (valString);
 }
 
 void
-st_io_load_info_double(
+st_load_info_double(
 	uint8_t _offset,
 	char *_format,
 	double _value
@@ -105,19 +105,19 @@ st_io_load_info_double(
 	int strLength = snprintf (NULL, 0, "%.2f", _value) + 1;
 	char *valString = malloc (strLength);
 	snprintf (valString, strLength, "%.2f", _value);
-	st_io_load_info (_offset, _format, valString, strLength);
+	st_load_info (_offset, _format, valString, strLength);
 	free (valString);
 }
 
 void
-st_io_load_info_string(
+st_load_info_string(
 	uint8_t _offset,
 	char *_format,
 	char *_value
 )
 {
 	int strLength = strlen (_value) + 1;
-	st_io_load_info (_offset, _format, _value, strLength);
+	st_load_info (_offset, _format, _value, strLength);
 }
 
 void
@@ -455,14 +455,14 @@ void
 st_io_load_info_day  (uint32_t _day)
 {
 	CHECK_LOADED
-	st_io_load_info_uint (0, "Day: %s", _day);
+	st_load_info_uint (0, "Day: %s", _day);
 }
 
 void
 st_io_load_info_money (double _money)
 {
 	CHECK_LOADED
-	st_io_load_info_double (1, "Money: $%s", _money);
+	st_load_info_double (1, "Money: $%s", _money);
 }
 
 void
@@ -473,9 +473,9 @@ st_io_load_info_company (
 )
 {
 	CHECK_LOADED
-	st_io_load_info_string (2, "%s:", _name);
-	st_io_load_info_double (3, "   $%s per", _value);
-	st_io_load_info_uint (4, "   %s owned", _owned);
+	st_load_info_string (2, "%s:", _name);
+	st_load_info_double (3, "   $%s per", _value);
+	st_load_info_uint (4, "   %s owned", _owned);
 }
 
 void
