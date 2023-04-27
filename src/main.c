@@ -26,7 +26,7 @@ init ()
 
 	for (uint16_t i = 0; i < COMPANIES; ++i)
 	{
-		st_company_construct (&(companies[i]), "Untitled");
+		st_company_construct (&(companies[i]), "Company Name That Is Really Long");
 	}
 
 	st_io_init_graph ();
