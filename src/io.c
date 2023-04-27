@@ -9,7 +9,7 @@
 #include "buffer.h"
 
 #ifndef MAX
-	#define MAX(_a, _b) (_a > _b) ? _a : _b
+	#define MAX(_a, _b) ((_a > _b) ? _a : _b)
 #endif
 
 // Constants
