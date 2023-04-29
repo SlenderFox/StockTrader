@@ -44,14 +44,20 @@ st_terminate ()
 void
 st_update ()
 {
+	if (st_io_get_command () != st_io_command_endday
+		&& st_io_get_command () != st_io_command_gotoday)
+	{
+		return;
+	}
+
 	++day;
+	st_io_load_info_day (day);
 
 	for (uint16_t i = 0; i < COMPANIES; ++i)
 	{
 		st_company_update (companies[i]);
 	}
 
-	st_io_load_info_day (day);
 	st_io_load_info_company (
 		companies[1]->name,
 		companies[1]->value,
