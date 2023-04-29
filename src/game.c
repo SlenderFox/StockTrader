@@ -14,6 +14,7 @@ enum {
 
 bool game_over = false;
 bool request_exit = false;
+bool going_to_day = false;
 
 st_company_t *companies[COMPANIES];
 uint32_t day = 0;
@@ -70,9 +71,19 @@ st_game_attempt_sell ()
 void
 st_game_process_command ()
 {
-	// Temporary exit command
 	switch (st_io_get_command ())
 	{
+	case st_io_command_invalid:
+		break;
+	case st_io_command_help:
+		break;
+	case st_io_command_endday:
+		break;
+	case st_io_command_gotoday:
+		going_to_day = true;
+		break;
+	case st_io_command_select:
+		break;
 	case st_io_command_buy:
 		st_game_attempt_buy ();
 		break;
@@ -95,6 +106,14 @@ st_game_update ()
 		&& st_io_get_command () != st_io_command_gotoday
 	)
 	{
+		return;
+	}
+
+	if (st_io_get_command () == st_io_command_gotoday
+		&& st_io_get_input_value () <= day
+	)
+	{
+		going_to_day = false;
 		return;
 	}
 
@@ -123,16 +142,13 @@ st_game_run ()
 		st_io_load_info_money (money);
 		st_io_draw ();
 
-		// Basic goto functionality
-		// Done this way to many sure goto command is true before checking value
-		// BUG: Will always step at least 1 day, even when command is incorrect
-		if (!(st_io_get_command () == st_io_command_gotoday
-			&& day < (uint32_t)st_io_get_input_value ()
-		))
+		if (going_to_day)
 		{
-			st_io_process_input ();
-			st_game_process_command();
+			continue;
 		}
+
+		st_io_process_input ();
+		st_game_process_command();
 	}
 
 	st_game_terminate ();
