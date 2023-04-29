@@ -50,6 +50,14 @@ st_update ()
 	{
 		st_company_update (companies[i]);
 	}
+
+	st_io_load_info_day (day);
+	st_io_load_info_company (
+		companies[1]->name,
+		companies[1]->value,
+		companies[1]->owned_stocks
+	);
+	st_io_load_info_money (money);
 }
 
 bool
@@ -60,17 +68,9 @@ st_game_run ()
 	while (!game_over)
 	{
 		st_update();
-
-		st_io_load_info_day (day);
-		st_io_load_info_company (
-			companies[1]->name,
-			companies[1]->value,
-			companies[1]->owned_stocks
-		);
-		st_io_load_info_money (money);
-
 		st_io_draw ();
 
+		// Basic goto functionality
 		if (st_io_get_command () == st_io_command_gotoday
 			&& day < (uint32_t)st_io_get_input_value ()
 		)
@@ -91,5 +91,5 @@ st_game_run ()
 
 	st_terminate ();
 
-	return !request_exit;
+	return request_exit;
 }

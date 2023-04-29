@@ -9,7 +9,7 @@ main (int argc, char *args[])
 {
 	while (running)
 	{
-		if (!st_game_run ())
+		if (st_game_run ())
 		{
 			running = false;
 		}
