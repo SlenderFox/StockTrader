@@ -20,7 +20,7 @@ uint32_t day = 0;
 int64_t money = 1000;
 
 void
-st_init ()
+st_game_init ()
 {
 	st_io_init (ROWS, COLUMNS);
 
@@ -33,7 +33,7 @@ st_init ()
 }
 
 void
-st_terminate ()
+st_game_terminate ()
 {
 	for (uint16_t i = 0; i < COMPANIES; ++i)
 	{
@@ -44,7 +44,7 @@ st_terminate ()
 }
 
 void
-st_attempt_buy ()
+st_game_attempt_buy ()
 {
 	if (money < companies[1]->value * st_io_get_input_value ())
 	{
@@ -56,7 +56,7 @@ st_attempt_buy ()
 }
 
 void
-st_attempt_sell ()
+st_game_attempt_sell ()
 {
 	if (companies[1]->owned_stocks < st_io_get_input_value ())
 	{
@@ -74,10 +74,10 @@ st_game_process_command ()
 	switch (st_io_get_command ())
 	{
 	case st_io_command_buy:
-		st_attempt_buy ();
+		st_game_attempt_buy ();
 		break;
 	case st_io_command_sell:
-		st_attempt_sell ();
+		st_game_attempt_sell ();
 		break;
 	case st_io_command_exit:
 		// End game and ask to shutdown
@@ -89,7 +89,7 @@ st_game_process_command ()
 }
 
 void
-st_update ()
+st_game_update ()
 {
 	if (st_io_get_command () != st_io_command_endday
 		&& st_io_get_command () != st_io_command_gotoday
@@ -110,11 +110,11 @@ st_update ()
 bool
 st_game_run ()
 {
-	st_init ();
+	st_game_init ();
 
 	while (!game_over)
 	{
-		st_update();
+		st_game_update();
 		st_io_load_info_company (
 			companies[1]->name,
 			companies[1]->value,
@@ -135,7 +135,7 @@ st_game_run ()
 		}
 	}
 
-	st_terminate ();
+	st_game_terminate ();
 
 	return request_exit;
 }

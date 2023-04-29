@@ -56,7 +56,7 @@ char *invalid_message;
  * @todo Does not check if overflowing the buffer width
  */
 void
-st_load_info (
+st_io_load_info (
 	uint8_t _offset,
 	char *_format,
 	char *_value,
@@ -71,7 +71,7 @@ st_load_info (
 }
 
 void
-st_load_info_int(
+st_io_load_info_int(
 	uint8_t _offset,
 	char *_format,
 	int32_t _value
@@ -80,12 +80,12 @@ st_load_info_int(
 	int strLength = snprintf (NULL, 0, "%d", _value) + 1;
 	char *valString = malloc (strLength);
 	snprintf (valString, strLength, "%d", _value);
-	st_load_info (_offset, _format, valString, strLength);
+	st_io_load_info (_offset, _format, valString, strLength);
 	free (valString);
 }
 
 void
-st_load_info_uint(
+st_io_load_info_uint(
 	uint8_t _offset,
 	char *_format,
 	uint32_t _value
@@ -94,12 +94,12 @@ st_load_info_uint(
 	int strLength = snprintf (NULL, 0, "%u", _value) + 1;
 	char *valString = malloc (strLength);
 	snprintf (valString, strLength, "%u", _value);
-	st_load_info (_offset, _format, valString, strLength);
+	st_io_load_info (_offset, _format, valString, strLength);
 	free (valString);
 }
 
 void
-st_load_info_double(
+st_io_load_info_double(
 	uint8_t _offset,
 	char *_format,
 	double _value
@@ -109,37 +109,37 @@ st_load_info_double(
 	int strLength = snprintf (NULL, 0, "%.2f", _value) + 1;
 	char *valString = malloc (strLength);
 	snprintf (valString, strLength, "%.2f", _value);
-	st_load_info (_offset, _format, valString, strLength);
+	st_io_load_info (_offset, _format, valString, strLength);
 	free (valString);
 }
 
 void
-st_load_info_string(
+st_io_load_info_string(
 	uint8_t _offset,
 	char *_format,
 	char *_value
 )
 {
 	int strLength = strlen (_value) + 1;
-	st_load_info (_offset, _format, _value, strLength);
+	st_io_load_info (_offset, _format, _value, strLength);
 }
 
 void
-st_set_invalid_message (char *_message)
+st_io_set_invalid_message (char *_message)
 {
 	strncpy (invalid_message, _message, 99);
 }
 
 /** Parse stdin looking for a valid command */
 void
-st_process_command ()
+st_io_process_command ()
 {
 	char input[16] = "\0";
 	int res = scanf ("%15s", input);
 	if (res == 0)
 	{
 		command = st_io_command_invalid;
-		st_set_invalid_message ("Invalid input");
+		st_io_set_invalid_message ("Invalid input");
 		return;
 	}
 
@@ -206,12 +206,12 @@ st_process_command ()
 	}
 
 	command = st_io_command_invalid;
-	st_set_invalid_message ("Command not found");
+	st_io_set_invalid_message ("Command not found");
 }
 
 /** Parse stdin looking for a valid value to go with the current command */
 void
-st_process_value ()
+st_io_process_value ()
 {
 	if (!ready_for_value)
 	{
@@ -223,14 +223,14 @@ st_process_value ()
 	if (res == 0)
 	{
 		command = st_io_command_invalid;
-		st_set_invalid_message ("Invalid input");
+		st_io_set_invalid_message ("Invalid input");
 		return;
 	}
 
 	if (input[0] == '\0')
 	{
 		command = st_io_command_invalid;
-		st_set_invalid_message ("No input provided");
+		st_io_set_invalid_message ("No input provided");
 		return;
 	}
 
@@ -260,7 +260,7 @@ st_process_value ()
 		)
 		{
 			command = st_io_command_invalid;
-			st_set_invalid_message ("Incorrect input");
+			st_io_set_invalid_message ("Incorrect input");
 			return;
 		}
 	}
@@ -272,18 +272,18 @@ st_process_value ()
 }
 
 void
-st_print_invalid_message ()
+st_io_print_invalid_message ()
 {
 	printf ("%s\n", invalid_message);
 }
 
 void
-st_print_command ()
+st_io_print_command ()
 {
 	switch (st_io_get_command ())
 	{
 	case st_io_command_invalid:
-		st_print_invalid_message ();
+		st_io_print_invalid_message ();
 		break;
 	case st_io_command_help:
 		printf ("Help\n");
@@ -399,7 +399,7 @@ st_io_draw ()
 		}
 		printf ("%s\n", out);
 	}
-	st_print_command ();
+	st_io_print_command ();
 	fflush (stdout);
 }
 
@@ -454,14 +454,14 @@ void
 st_io_load_info_day  (uint32_t _day)
 {
 	CHECK_LOADED
-	st_load_info_uint (0, "Day: %s", _day);
+	st_io_load_info_uint (0, "Day: %s", _day);
 }
 
 void
 st_io_load_info_money (double _money)
 {
 	CHECK_LOADED
-	st_load_info_double (1, "Money: $%s", _money);
+	st_io_load_info_double (1, "Money: $%s", _money);
 }
 
 void
@@ -472,9 +472,9 @@ st_io_load_info_company (
 )
 {
 	CHECK_LOADED
-	st_load_info_string (2, "%s:", _name);
-	st_load_info_double (3, "   $%s per", _value);
-	st_load_info_uint (4, "   %s owned", _owned);
+	st_io_load_info_string (2, "%s:", _name);
+	st_io_load_info_double (3, "   $%s per", _value);
+	st_io_load_info_uint (4, "   %s owned", _owned);
 }
 
 void
@@ -485,15 +485,15 @@ st_io_process_input ()
 	// Clear previous values
 	command = st_io_command_invalid;
 	input_value = 0;
-	st_set_invalid_message ("No command processed");
+	st_io_set_invalid_message ("No command processed");
 
 	// Clear the input
 	fflush (stdin);
 
 	// Print prompt
 	printf ("> ");
-	st_process_command ();
-	st_process_value ();
+	st_io_process_command ();
+	st_io_process_value ();
 }
 
 st_io_command_t
