@@ -8,7 +8,6 @@ extern "C" {
 /** The state of the game that defines the behaviour for the next print */
 typedef enum
 {
-	st_io_command_none,
 	st_io_command_invalid,
 	st_io_command_help,
 	st_io_command_endday,

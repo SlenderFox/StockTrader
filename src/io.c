@@ -41,7 +41,8 @@ uint16_t info_offset = 0;
 
 st_buffer_t *buffer_a, *buffer_b, **buffer_active, **buffer_inactive;
 
-st_io_command_t command = st_io_command_none;
+// Start with this to roll into first day
+st_io_command_t command = st_io_command_endday;
 double input_value = 0;
 char *invalid_message;
 
@@ -281,11 +282,6 @@ st_io_print_command ()
 {
 	switch (st_io_get_command ())
 	{
-	default:
-	//	assert ("Unexpected control path");
-	case st_io_command_none:
-		// Just print nothing
-		break;
 	case st_io_command_invalid:
 		st_io_print_invalid_message ();
 		break;
