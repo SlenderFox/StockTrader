@@ -44,14 +44,40 @@ st_terminate ()
 }
 
 void
-st_process_command ()
+st_attempt_buy ()
+{
+	if (money < companies[1]->value * st_io_get_input_value ())
+	{
+		return;
+	}
+
+	money -= companies[1]->value * st_io_get_input_value ();
+	companies[1]->owned_stocks += st_io_get_input_value ();
+}
+
+void
+st_attempt_sell ()
+{
+	if (companies[1]->owned_stocks < st_io_get_input_value ())
+	{
+		return;
+	}
+
+	money += companies[1]->value * st_io_get_input_value ();
+	companies[1]->owned_stocks -= st_io_get_input_value ();
+}
+
+void
+st_game_process_command ()
 {
 	// Temporary exit command
 	switch (st_io_get_command ())
 	{
 	case st_io_command_buy:
+		st_attempt_buy ();
 		break;
 	case st_io_command_sell:
+		st_attempt_sell ();
 		break;
 	case st_io_command_exit:
 		// End game and ask to shutdown
@@ -79,13 +105,6 @@ st_update ()
 	{
 		st_company_update (companies[i]);
 	}
-
-	st_io_load_info_company (
-		companies[1]->name,
-		companies[1]->value,
-		companies[1]->owned_stocks
-	);
-	st_io_load_info_money (money);
 }
 
 bool
@@ -96,6 +115,12 @@ st_game_run ()
 	while (!game_over)
 	{
 		st_update();
+		st_io_load_info_company (
+			companies[1]->name,
+			companies[1]->value,
+			companies[1]->owned_stocks
+		);
+		st_io_load_info_money (money);
 		st_io_draw ();
 
 		// Basic goto functionality
@@ -106,7 +131,7 @@ st_game_run ()
 		))
 		{
 			st_io_process_input ();
-			st_process_command();
+			st_game_process_command();
 		}
 	}
 
