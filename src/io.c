@@ -125,21 +125,21 @@ st_load_info_string(
 }
 
 void
-st_io_set_invalid_message (char *_message)
+st_set_invalid_message (char *_message)
 {
 	strncpy (invalid_message, _message, 99);
 }
 
 /** Parse stdin looking for a valid command */
 void
-st_io_process_command ()
+st_process_command ()
 {
 	char input[16] = "\0";
 	int res = scanf ("%15s", input);
 	if (res == 0)
 	{
 		command = st_io_command_invalid;
-		st_io_set_invalid_message ("Invalid input");
+		st_set_invalid_message ("Invalid input");
 		return;
 	}
 
@@ -206,12 +206,12 @@ st_io_process_command ()
 	}
 
 	command = st_io_command_invalid;
-	st_io_set_invalid_message ("Command not found");
+	st_set_invalid_message ("Command not found");
 }
 
 /** Parse stdin looking for a valid value to go with the current command */
 void
-st_io_process_value ()
+st_process_value ()
 {
 	if (!ready_for_value)
 	{
@@ -223,14 +223,14 @@ st_io_process_value ()
 	if (res == 0)
 	{
 		command = st_io_command_invalid;
-		st_io_set_invalid_message ("Invalid input");
+		st_set_invalid_message ("Invalid input");
 		return;
 	}
 
 	if (input[0] == '\0')
 	{
 		command = st_io_command_invalid;
-		st_io_set_invalid_message ("No input provided");
+		st_set_invalid_message ("No input provided");
 		return;
 	}
 
@@ -260,7 +260,7 @@ st_io_process_value ()
 		)
 		{
 			command = st_io_command_invalid;
-			st_io_set_invalid_message ("Incorrect input");
+			st_set_invalid_message ("Incorrect input");
 			return;
 		}
 	}
@@ -272,18 +272,18 @@ st_io_process_value ()
 }
 
 void
-st_io_print_invalid_message ()
+st_print_invalid_message ()
 {
 	printf ("%s\n", invalid_message);
 }
 
 void
-st_io_print_command ()
+st_print_command ()
 {
 	switch (st_io_get_command ())
 	{
 	case st_io_command_invalid:
-		st_io_print_invalid_message ();
+		st_print_invalid_message ();
 		break;
 	case st_io_command_help:
 		printf ("Help\n");
@@ -399,7 +399,7 @@ st_io_draw ()
 		}
 		printf ("%s\n", out);
 	}
-	st_io_print_command ();
+	st_print_command ();
 	fflush (stdout);
 }
 
@@ -485,15 +485,15 @@ st_io_process_input ()
 	// Clear previous values
 	command = st_io_command_invalid;
 	input_value = 0;
-	st_io_set_invalid_message ("No command processed");
+	st_set_invalid_message ("No command processed");
 
 	// Clear the input
 	fflush (stdin);
 
 	// Print prompt
 	printf ("> ");
-	st_io_process_command ();
-	st_io_process_value ();
+	st_process_command ();
+	st_process_value ();
 }
 
 st_io_command_t
