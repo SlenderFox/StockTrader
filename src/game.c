@@ -124,7 +124,7 @@ st_game_run ()
 		st_io_draw ();
 
 		// Basic goto functionality
-		// Done this way so many sure goto command is true before checking value
+		// Done this way to many sure goto command is true before checking value
 		// BUG: Will always step at least 1 day, even when command is incorrect
 		if (!(st_io_get_command () == st_io_command_gotoday
 			&& day < (uint32_t)st_io_get_input_value ()
