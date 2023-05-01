@@ -387,6 +387,7 @@ st_io_draw ()
 		}
 		printf ("%s\n", out);
 	}
+	// TODO: Must do it this way until log messages as added to the buffer
 	st_io_print_command ();
 	fflush (stdout);
 }
