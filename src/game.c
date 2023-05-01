@@ -32,7 +32,7 @@ st_game_init ()
 
 	for (uint16_t i = 0; i < COMPANIES; ++i)
 	{
-		snprintf (name, COLUMNS + 3, "Company Number %u", i + 1);
+		snprintf (name, ST_COMPANY_NAME_MAX, "Company Number %u", i + 1);
 		st_company_construct (&(companies[i]), name);
 	}
 
