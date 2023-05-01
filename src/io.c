@@ -124,12 +124,6 @@ st_io_load_info_string(
 	st_io_load_info (_offset, _format, _value, strLength);
 }
 
-void
-st_io_set_invalid_message (char *_message)
-{
-	strncpy (invalid_message, _message, 99);
-}
-
 /** Parse stdin looking for a valid command */
 void
 st_io_process_command ()
@@ -269,12 +263,6 @@ st_io_process_value ()
 	input_value = strtod (input, &end);
 
 	ready_for_value = false;
-}
-
-void
-st_io_print_invalid_message ()
-{
-	printf ("%s\n", invalid_message);
 }
 
 void
@@ -506,4 +494,16 @@ double
 st_io_get_input_value ()
 {
 	return input_value;
+}
+
+void
+st_io_set_invalid_message (char *_message)
+{
+	strncpy (invalid_message, _message, 99);
+}
+
+void
+st_io_print_invalid_message ()
+{
+	printf ("%s\n", invalid_message);
 }

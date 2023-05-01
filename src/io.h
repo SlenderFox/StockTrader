@@ -71,6 +71,12 @@ st_io_get_command ();
 double
 st_io_get_input_value ();
 
+void
+st_io_set_invalid_message (char *_message);
+
+void
+st_io_print_invalid_message ();
+
 #ifdef __cplusplus
 } // extern "C"
 #endif
