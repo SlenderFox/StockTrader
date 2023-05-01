@@ -5,7 +5,7 @@
 extern "C" {
 #endif
 
-enum { ST_COMPANY_NAME_MAX = 32 };
+enum { ST_COMPANY_NAME_MAX = 31 };
 
 /** A company that can have stocks bought and sold from.
  * Every company havea value that is updated with each timestep,

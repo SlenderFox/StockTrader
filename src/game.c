@@ -28,7 +28,7 @@ st_game_init ()
 {
 	st_io_init (ROWS, COLUMNS);
 
-	char *name = malloc (COLUMNS + 3);
+	char *name = malloc (ST_COMPANY_NAME_MAX);
 
 	for (uint16_t i = 0; i < COMPANIES; ++i)
 	{
