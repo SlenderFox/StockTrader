@@ -3,7 +3,7 @@
 #include <string.h> // strlen
 #include <strings.h> // strcasecmp
 #include <assert.h> // assert
-#include <stdlib.h> // system, malloc, realloc, free, strtod
+#include <stdlib.h> // system, malloc, free, strtod
 
 #include "io.h"
 #include "buffer.h"

@@ -1,4 +1,6 @@
-#include <assert.h>
+#include <assert.h> // assert
+#include <stdlib.h> // malloc, free
+#include <stdio.h> // snprintf
 
 #include "game.h"
 #include "io.h"
@@ -17,6 +19,7 @@ bool request_exit = false;
 bool going_to_day = false;
 
 st_company_t *companies[COMPANIES];
+uint8_t selected_company = 0;
 uint32_t day = 0;
 int64_t money = 1000;
 
@@ -25,10 +28,15 @@ st_game_init ()
 {
 	st_io_init (ROWS, COLUMNS);
 
+	char *name = malloc (COLUMNS + 3);
+
 	for (uint16_t i = 0; i < COMPANIES; ++i)
 	{
-		st_company_construct (&(companies[i]), "Company Name That Is Really Long");
+		snprintf (name, COLUMNS + 3, "Company Number %u", i + 1);
+		st_company_construct (&(companies[i]), name);
 	}
+
+	free (name);
 
 	st_io_init_graph ();
 }
@@ -45,27 +53,33 @@ st_game_terminate ()
 }
 
 void
+st_game_over_screen ()
+{
+
+}
+
+void
 st_game_attempt_buy ()
 {
-	if (money < companies[1]->value * st_io_get_input_value ())
+	if (money < companies[selected_company]->value * st_io_get_input_value ())
 	{
 		return;
 	}
 
-	money -= companies[1]->value * st_io_get_input_value ();
-	companies[1]->owned_stocks += st_io_get_input_value ();
+	money -= companies[selected_company]->value * st_io_get_input_value ();
+	companies[selected_company]->owned_stocks += st_io_get_input_value ();
 }
 
 void
 st_game_attempt_sell ()
 {
-	if (companies[1]->owned_stocks < st_io_get_input_value ())
+	if (companies[selected_company]->owned_stocks < st_io_get_input_value ())
 	{
 		return;
 	}
 
-	money += companies[1]->value * st_io_get_input_value ();
-	companies[1]->owned_stocks -= st_io_get_input_value ();
+	money += companies[selected_company]->value * st_io_get_input_value ();
+	companies[selected_company]->owned_stocks -= st_io_get_input_value ();
 }
 
 void
@@ -135,9 +149,9 @@ st_game_run ()
 	{
 		st_game_update();
 		st_io_load_info_company (
-			companies[1]->name,
-			companies[1]->value,
-			companies[1]->owned_stocks
+			companies[selected_company]->name,
+			companies[selected_company]->value,
+			companies[selected_company]->owned_stocks
 		);
 		st_io_load_info_money (money);
 		st_io_draw ();
@@ -151,6 +165,7 @@ st_game_run ()
 		st_game_process_command();
 	}
 
+	st_game_over_screen ();
 	st_game_terminate ();
 
 	return request_exit;
