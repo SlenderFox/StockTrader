@@ -56,14 +56,13 @@ char *invalid_message;
  * @todo Does not check if overflowing the buffer width
  */
 void
-st_io_load_info (
+st_io_load_info_string (
 	uint8_t _offset,
 	char *_format,
-	char *_value,
-	uint8_t _valueLength
+	char *_value
 )
 {
-	int totalLength = strlen (_format) + _valueLength;
+	size_t totalLength = strlen (_format) + strlen (_value);
 	char *input = malloc (totalLength);
 	snprintf (input, totalLength, _format, _value);
 	st_buffer_data_row_insert (*buffer_active, info_offset + _offset, 0, input);
@@ -80,7 +79,7 @@ st_io_load_info_int(
 	int strLength = snprintf (NULL, 0, "%d", _value) + 1;
 	char *valString = malloc (strLength);
 	snprintf (valString, strLength, "%d", _value);
-	st_io_load_info (_offset, _format, valString, strLength);
+	st_io_load_info_string (_offset, _format, valString);
 	free (valString);
 }
 
@@ -94,7 +93,7 @@ st_io_load_info_uint(
 	int strLength = snprintf (NULL, 0, "%u", _value) + 1;
 	char *valString = malloc (strLength);
 	snprintf (valString, strLength, "%u", _value);
-	st_io_load_info (_offset, _format, valString, strLength);
+	st_io_load_info_string (_offset, _format, valString);
 	free (valString);
 }
 
@@ -109,19 +108,8 @@ st_io_load_info_double(
 	int strLength = snprintf (NULL, 0, "%.2f", _value) + 1;
 	char *valString = malloc (strLength);
 	snprintf (valString, strLength, "%.2f", _value);
-	st_io_load_info (_offset, _format, valString, strLength);
+	st_io_load_info_string (_offset, _format, valString);
 	free (valString);
-}
-
-void
-st_io_load_info_string(
-	uint8_t _offset,
-	char *_format,
-	char *_value
-)
-{
-	int strLength = strlen (_value) + 1;
-	st_io_load_info (_offset, _format, _value, strLength);
 }
 
 /** Parse stdin looking for a valid command */
