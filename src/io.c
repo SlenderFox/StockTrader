@@ -474,6 +474,7 @@ st_io_process_input ()
 	fflush (stdin);
 
 	// Print prompt
+	// TODO: Could use the moving cursor up feature to have this be inside the buffer
 	printf ("> ");
 	st_io_process_command ();
 	st_io_process_value ();
