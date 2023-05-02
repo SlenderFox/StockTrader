@@ -503,6 +503,7 @@ st_io_get_input_value ()
 void
 st_io_set_invalid_message (char *_message)
 {
+	command = st_io_command_invalid;
 	strncpy (invalid_message, _message, 99);
 }
 

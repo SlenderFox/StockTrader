@@ -6,6 +6,10 @@
 #include "io.h"
 #include "company.h"
 
+#ifndef MIN
+	#define MIN(_a, _b) ((_a < _b) ? _a : _b)
+#endif
+
 // Constants
 enum {
 	ROWS = 8,
@@ -16,11 +20,10 @@ enum {
 
 bool game_over = false;
 bool request_exit = false;
-bool going_to_day = false;
 
 st_company_t *companies[COMPANIES];
 uint8_t selected_company = 0;
-uint32_t day = 0;
+uint32_t day = 0, target_day = 0;
 int64_t money = 1000;
 
 void
@@ -59,6 +62,20 @@ st_game_over_screen ()
 }
 
 void
+st_game_attempt_goto ()
+{
+	if (st_io_get_input_value () > YEAR
+		|| st_io_get_input_value () <= day
+	)
+	{
+		st_io_set_invalid_message ("Invalid goto day");
+		return;
+	}
+
+	target_day = st_io_get_input_value ();
+}
+
+void
 st_game_attempt_buy ()
 {
 	if (money < companies[selected_company]->value * st_io_get_input_value ())
@@ -94,7 +111,7 @@ st_game_process_command ()
 	case st_io_command_endday:
 		break;
 	case st_io_command_gotoday:
-		going_to_day = true;
+		st_game_attempt_goto ();
 		break;
 	case st_io_command_select:
 		break;
@@ -116,6 +133,14 @@ st_game_process_command ()
 void
 st_game_update ()
 {
+	if (day == YEAR)
+	{
+		target_day = 0;
+		game_over = true;
+		request_exit = true; // TEMP
+		return;
+	}
+
 	if (st_io_get_command () != st_io_command_endday
 		&& st_io_get_command () != st_io_command_gotoday
 	)
@@ -124,10 +149,10 @@ st_game_update ()
 	}
 
 	if (st_io_get_command () == st_io_command_gotoday
-		&& st_io_get_input_value () <= day
+		&& target_day <= day
 	)
 	{
-		going_to_day = false;
+		target_day = 0;
 		return;
 	}
 
@@ -156,7 +181,7 @@ st_game_run ()
 		st_io_load_info_money (money);
 		st_io_draw ();
 
-		if (going_to_day)
+		if (target_day > 0)
 		{
 			continue;
 		}
