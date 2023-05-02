@@ -70,7 +70,7 @@ st_io_load_info_string (
 }
 
 void
-st_io_load_info_int(
+st_io_load_info_int (
 	uint8_t _offset,
 	char *_format,
 	int32_t _value
@@ -84,7 +84,7 @@ st_io_load_info_int(
 }
 
 void
-st_io_load_info_uint(
+st_io_load_info_uint (
 	uint8_t _offset,
 	char *_format,
 	uint32_t _value
@@ -98,7 +98,7 @@ st_io_load_info_uint(
 }
 
 void
-st_io_load_info_double(
+st_io_load_info_double (
 	uint8_t _offset,
 	char *_format,
 	double _value
@@ -319,7 +319,7 @@ st_io_init (uint16_t _rows, uint16_t _columns)
 	fflush (stdout);
 
 	// Initialise the invalid input message
-	invalid_message = malloc (sizeof(char) * 100);
+	invalid_message = malloc (100);
 
 	loaded = true;
 }

@@ -172,7 +172,7 @@ st_game_run ()
 
 	while (!game_over)
 	{
-		st_game_update();
+		st_game_update ();
 		st_io_load_info_company (
 			companies[selected_company]->name,
 			companies[selected_company]->value,
@@ -187,7 +187,7 @@ st_game_run ()
 		}
 
 		st_io_process_input ();
-		st_game_process_command();
+		st_game_process_command ();
 	}
 
 	st_game_over_screen ();
