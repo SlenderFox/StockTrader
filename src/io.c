@@ -253,37 +253,37 @@ st_io_process_value ()
 	ready_for_value = false;
 }
 
-void
-st_io_print_command ()
-{
-	switch (st_io_get_command ())
-	{
-	case st_io_command_invalid:
-		st_io_print_invalid_message ();
-		break;
-	case st_io_command_help:
-		printf ("Help\n");
-		break;
-	case st_io_command_endday:
-		printf ("Endday\n");
-		break;
-	case st_io_command_gotoday:
-		printf ("Gotoday %f\n", st_io_get_input_value ());
-		break;
-	case st_io_command_select:
-		printf ("Select %f\n", st_io_get_input_value ());
-		break;
-	case st_io_command_buy:
-		printf ("Buy %f\n", st_io_get_input_value ());
-		break;
-	case st_io_command_sell:
-		printf ("Sell %f\n", st_io_get_input_value ());
-		break;
-	case st_io_command_exit:
-		printf ("Exit now\n");
-		break;
-	}
-}
+//void
+//st_io_print_command ()
+//{
+//	switch (st_io_get_command ())
+//	{
+//	case st_io_command_invalid:
+//		st_io_print_invalid_message ();
+//		break;
+//	case st_io_command_help:
+//		printf ("Help\n");
+//		break;
+//	case st_io_command_endday:
+//		printf ("Endday\n");
+//		break;
+//	case st_io_command_gotoday:
+//		printf ("Gotoday %f\n", st_io_get_input_value ());
+//		break;
+//	case st_io_command_select:
+//		printf ("Select %f\n", st_io_get_input_value ());
+//		break;
+//	case st_io_command_buy:
+//		printf ("Buy %f\n", st_io_get_input_value ());
+//		break;
+//	case st_io_command_sell:
+//		printf ("Sell %f\n", st_io_get_input_value ());
+//		break;
+//	case st_io_command_exit:
+//		printf ("Exit now\n");
+//		break;
+//	}
+//}
 
 // ----- Public Functions -----
 
@@ -360,6 +360,8 @@ st_io_draw ()
 
 	// Move cursor back to start
 	//printf ("\e[%uF", total_rows + row_overflow);
+	// TODO: Maybe have a secondary refresh function simnilar
+	// to draw that uses the above only when doing a goto
 
 	// Temporarily clear whole screen instead of above
 	st_io_clear ();
@@ -376,7 +378,11 @@ st_io_draw ()
 		printf ("%s\n", out);
 	}
 	// TODO: Must do it this way until log messages as added to the buffer
-	st_io_print_command ();
+	//st_io_print_command ();
+	if (st_io_get_command () == st_io_command_invalid)
+	{
+		st_io_print_invalid_message ();
+	}
 	fflush (stdout);
 }
 
@@ -461,7 +467,7 @@ st_io_process_input ()
 
 	// Clear previous values
 	command = st_io_command_invalid;
-	input_value = 0;
+	input_value = 0.0;
 	st_io_set_invalid_message ("No command processed");
 
 	// Clear the input
@@ -494,5 +500,6 @@ st_io_set_invalid_message (char *_message)
 void
 st_io_print_invalid_message ()
 {
+	// TODO: Make it apply into buffer
 	printf ("%s\n", invalid_message);
 }
