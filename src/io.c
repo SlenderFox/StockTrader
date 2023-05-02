@@ -399,6 +399,8 @@ st_io_clear ()
 void
 st_io_load_title (char *_title)
 {
+	CHECK_LOADED
+	st_buffer_data_row_set (*buffer_active, 0, clear_char);
 	st_buffer_data_row_insert (*buffer_active, 0, 0, _title);
 }
 
@@ -428,6 +430,7 @@ st_io_load_graph_frame ()
 void
 st_io_load_graph_data ()
 {
+	CHECK_LOADED
 	/* TODO
 	 * graph_rows and graph_columns provide info about the dimensions of the graph
 	*/
@@ -437,6 +440,7 @@ void
 st_io_load_info_day  (uint32_t _day)
 {
 	CHECK_LOADED
+	st_buffer_data_row_set (*buffer_active, info_offset, clear_char);
 	st_io_load_info_uint (0, "Day: %s", _day);
 }
 
@@ -444,6 +448,7 @@ void
 st_io_load_info_money (double _money)
 {
 	CHECK_LOADED
+	st_buffer_data_row_set (*buffer_active, info_offset + 1, clear_char);
 	st_io_load_info_double (1, "Money: $%s", _money);
 }
 
@@ -455,6 +460,9 @@ st_io_load_info_company (
 )
 {
 	CHECK_LOADED
+	st_buffer_data_row_set (*buffer_active, info_offset + 2, clear_char);
+	st_buffer_data_row_set (*buffer_active, info_offset + 3, clear_char);
+	st_buffer_data_row_set (*buffer_active, info_offset + 4, clear_char);
 	st_io_load_info_string (2, "%s:", _name);
 	st_io_load_info_double (3, "   $%s per", _value);
 	st_io_load_info_uint (4, "   %s owned", _owned);
