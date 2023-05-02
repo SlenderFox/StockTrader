@@ -4,6 +4,8 @@
 
 bool running = true;
 
+// TODO: Add new game functionality
+
 int
 main (int argc, char *args[])
 {
