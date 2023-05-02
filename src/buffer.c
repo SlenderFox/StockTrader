@@ -99,18 +99,6 @@ st_buffer_data_row_set (
 }
 
 void
-st_buffer_data_row_clear (
-	st_buffer_t *_buffer,
-	uint16_t _row,
-	char _clear
-)
-{
-	CHECK_LOADED
-
-	st_buffer_data_row_set (_buffer, _row, _clear);
-}
-
-void
 st_buffer_data_row_insert (
 	st_buffer_t *_buffer,
 	uint16_t _row,

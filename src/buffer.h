@@ -94,18 +94,6 @@ st_buffer_data_row_set (
 	char _val
 );
 
-/** Set an entire row to the clear character (probably space)
- * @param _buffer The buffer struct to be modified
- * @param _row The row to be cleared
- * @param _clear The character used to clear with
- */
-void
-st_buffer_data_row_clear (
-	st_buffer_t *_buffer,
-	uint16_t _row,
-	char _clear
-);
-
 /** Insert a string into the row at an offset
  * Only as many characters will be inserted as can be fit
  * @param _buffer The buffer struct to be modified
