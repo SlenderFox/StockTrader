@@ -69,12 +69,6 @@ void
 st_io_print_invalid_message ();
 
 void
-st_io_load_title (char *_title);
-
-void
-st_io_load_graph_frame ();
-
-void
 st_io_load_graph_data ();
 
 void

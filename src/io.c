@@ -48,6 +48,37 @@ char *invalid_message;
 
 // ----- Local functions ------
 
+void
+st_io_load_title (char *_title)
+{
+	CHECK_LOADED
+	st_buffer_data_row_set (*buffer_active, 0, clear_char);
+	st_buffer_data_row_insert (*buffer_active, 0, 0, _title);
+}
+
+void
+st_io_load_graph_frame ()
+{
+	CHECK_LOADED
+
+	// Graph top edge
+	st_buffer_data_row_set (*buffer_active, 1, '=');
+	st_buffer_data_set (*buffer_active, 1, 0, '+');
+	st_buffer_data_set (*buffer_active, 1, total_columns - 1, '+');
+
+	// Graph side edges
+	for (uint16_t i = 0; i < graph_rows; ++i)
+	{
+		st_buffer_data_set (*buffer_active, i + 2, 0, '|');
+		st_buffer_data_set (*buffer_active, i + 2, total_columns - 1, '|');
+	}
+
+	// Graph bottom  edge
+	st_buffer_data_row_set (*buffer_active, info_offset - 1, '=');
+	st_buffer_data_set (*buffer_active, info_offset - 1, 0, '+');
+	st_buffer_data_set (*buffer_active, info_offset - 1, total_columns - 1, '+');
+}
+
 /** Will place a formatted value into the info panel
  * @param _offset The row offset within the info panel
  * @param _format The string formatting applied to the value (use %s for value)
@@ -464,37 +495,6 @@ st_io_set_invalid_message (char *_message)
 {
 	command = st_io_command_invalid;
 	strncpy (invalid_message, _message, 99);
-}
-
-void
-st_io_load_title (char *_title)
-{
-	CHECK_LOADED
-	st_buffer_data_row_set (*buffer_active, 0, clear_char);
-	st_buffer_data_row_insert (*buffer_active, 0, 0, _title);
-}
-
-void
-st_io_load_graph_frame ()
-{
-	CHECK_LOADED
-
-	// Graph top edge
-	st_buffer_data_row_set (*buffer_active, 1, '=');
-	st_buffer_data_set (*buffer_active, 1, 0, '+');
-	st_buffer_data_set (*buffer_active, 1, total_columns - 1, '+');
-
-	// Graph side edges
-	for (uint16_t i = 0; i < graph_rows; ++i)
-	{
-		st_buffer_data_set (*buffer_active, i + 2, 0, '|');
-		st_buffer_data_set (*buffer_active, i + 2, total_columns - 1, '|');
-	}
-
-	// Graph bottom  edge
-	st_buffer_data_row_set (*buffer_active, info_offset - 1, '=');
-	st_buffer_data_set (*buffer_active, info_offset - 1, 0, '+');
-	st_buffer_data_set (*buffer_active, info_offset - 1, total_columns - 1, '+');
 }
 
 void
