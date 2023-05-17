@@ -51,9 +51,7 @@ char *invalid_message;
 /** Will place a formatted value into the info panel
  * @param _offset The row offset within the info panel
  * @param _format The string formatting applied to the value (use %s for value)
- * @param *_value The string to be loaded into the info panel
- * @param _valueLength How long the string is
- * @todo Does not check if overflowing the buffer width
+ * @param _value The string to be loaded into the info panel
  */
 void
 st_io_load_info_string (
@@ -69,6 +67,11 @@ st_io_load_info_string (
 	free (input);
 }
 
+/** Will place a formatted value into the info panel
+ * @param _offset The row offset within the info panel
+ * @param _format The string formatting applied to the value (use %s for value)
+ * @param _value The string to be loaded into the info panel
+ */
 void
 st_io_load_info_int (
 	uint8_t _offset,
@@ -76,13 +79,20 @@ st_io_load_info_int (
 	int32_t _value
 )
 {
+	// Convert data to string
 	int strLength = snprintf (NULL, 0, "%d", _value) + 1;
 	char *valString = malloc (strLength);
 	snprintf (valString, strLength, "%d", _value);
+	// Load as string
 	st_io_load_info_string (_offset, _format, valString);
 	free (valString);
 }
 
+/** Will place a formatted value into the info panel
+ * @param _offset The row offset within the info panel
+ * @param _format The string formatting applied to the value (use %s for value)
+ * @param _value The string to be loaded into the info panel
+ */
 void
 st_io_load_info_uint (
 	uint8_t _offset,
@@ -90,13 +100,20 @@ st_io_load_info_uint (
 	uint32_t _value
 )
 {
+	// Convert data to string
 	int strLength = snprintf (NULL, 0, "%u", _value) + 1;
 	char *valString = malloc (strLength);
 	snprintf (valString, strLength, "%u", _value);
+	// Load as string
 	st_io_load_info_string (_offset, _format, valString);
 	free (valString);
 }
 
+/** Will place a formatted value into the info panel
+ * @param _offset The row offset within the info panel
+ * @param _format The string formatting applied to the value (use %s for value)
+ * @param _value The string to be loaded into the info panel
+ */
 void
 st_io_load_info_double (
 	uint8_t _offset,
@@ -104,10 +121,11 @@ st_io_load_info_double (
 	double _value
 )
 {
-
+	// Convert data to string
 	int strLength = snprintf (NULL, 0, "%.2f", _value) + 1;
 	char *valString = malloc (strLength);
 	snprintf (valString, strLength, "%.2f", _value);
+	// Load as string
 	st_io_load_info_string (_offset, _format, valString);
 	free (valString);
 }
