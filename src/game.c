@@ -2,9 +2,9 @@
 #include <stdlib.h> // malloc, free
 #include <stdio.h> // snprintf
 
-#include "game.h"
 #include "io.h"
 #include "company.h"
+#include "game.h"
 
 #ifndef MIN
 	#define MIN(_a, _b) ((_a < _b) ? _a : _b)

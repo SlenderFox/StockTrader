@@ -5,8 +5,8 @@
 #include <assert.h> // assert
 #include <stdlib.h> // system, malloc, free, strtod
 
-#include "io.h"
 #include "buffer.h"
+#include "io.h"
 
 #ifndef MAX
 	#define MAX(_a, _b) ((_a > _b) ? _a : _b)
