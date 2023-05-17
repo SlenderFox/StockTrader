@@ -9,7 +9,7 @@ extern "C" {
  * The buffer is accessed two dimensionally.
  * Every row is contiguous in memory,
  * meaning each rows are offset by sizeof (char) * column */
-typedef struct
+typedef struct st_buffer_t
 {
 	uint16_t m_rows, m_columns;
 	char *m_data;

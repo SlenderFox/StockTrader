@@ -6,7 +6,7 @@ extern "C" {
 #endif
 
 /** The state of the game that defines the behaviour for the next print */
-typedef enum
+typedef enum st_io_command_t
 {
 	st_io_command_invalid,
 	st_io_command_help,
