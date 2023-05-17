@@ -30,15 +30,43 @@ st_io_init (uint16_t _rows, uint16_t _columns);
 void
 st_io_terminate ();
 
-void
-st_io_init_graph ();
-
 /** Outputs the contents of the buffer to the standard output */
 void
 st_io_draw ();
 
+/** Clears the terminal on the current OS */
 void
 st_io_clear ();
+
+/** Take input from the user and convert it into a command */
+void
+st_io_process_input ();
+
+/** After processing the input, call this function to get the command
+ * @return [st_io_command_t] The command that was processed most recently
+ */
+st_io_command_t
+st_io_get_command ();
+
+/** Most inputs also require a value to be passed
+ * @return [double] The value received from the user
+ */
+double
+st_io_get_input_value ();
+
+/** Sets the message to be printed when the command is invalid
+ * @param _message The message
+ * @todo Cap message length
+ * @todo Load invalid message into buffer correctly
+ */
+void
+st_io_set_invalid_message (char *_message);
+
+/** Print the current invalid message
+ * @todo REMOVE
+*/
+void
+st_io_print_invalid_message ();
 
 void
 st_io_load_title (char *_title);
@@ -61,21 +89,6 @@ st_io_load_info_company (
 	double _value,
 	uint32_t _owned
 );
-
-void
-st_io_process_input ();
-
-st_io_command_t
-st_io_get_command ();
-
-double
-st_io_get_input_value ();
-
-void
-st_io_set_invalid_message (char *_message);
-
-void
-st_io_print_invalid_message ();
 
 #ifdef __cplusplus
 } // extern "C"

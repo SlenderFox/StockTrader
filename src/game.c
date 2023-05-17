@@ -40,8 +40,6 @@ st_game_init ()
 	}
 
 	free (name);
-
-	st_io_init_graph ();
 }
 
 void

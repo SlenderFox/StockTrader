@@ -24,8 +24,8 @@ enum {
 	INFO_LENGTH = 6
 };
 
-bool loaded = false;
-#define CHECK_LOADED assert (loaded && "io not yet loaded\n");
+bool buffers_loaded = false;
+#define CHECK_LOADED assert (buffers_loaded && "io not yet loaded\n");
 
 bool ready_for_value = false;
 
@@ -271,6 +271,26 @@ st_io_process_value ()
 	ready_for_value = false;
 }
 
+void
+st_io_swap_buffers ()
+{
+	buffer_active = buffer_inactive;
+	buffer_inactive = (*buffer_inactive == buffer_a ? &buffer_b : &buffer_a);
+}
+
+void
+st_io_load_static_elements (char *_title)
+{
+	CHECK_LOADED
+
+	st_io_load_title (_title);
+	st_io_load_graph_frame ();
+	st_io_load_info_day (0);
+	st_io_load_info_money (0);
+	st_io_load_info_company ("Unknown", 0.00, 0);
+	st_buffer_data_row_set (*buffer_active, info_offset + 5, '-');
+}
+
 //void
 //st_io_print_command ()
 //{
@@ -319,13 +339,19 @@ st_io_init (uint16_t _rows, uint16_t _columns)
 	st_buffer_construct (&buffer_a, total_rows, total_columns);
 	st_buffer_data_init (buffer_a);
 	st_buffer_data_clear (buffer_a, clear_char);
-	buffer_active = &buffer_a;
+	buffer_inactive = &buffer_a;
 
 	// Buffer b
 	st_buffer_construct (&buffer_b, total_rows, total_columns);
 	st_buffer_data_init (buffer_b);
 	st_buffer_data_clear (buffer_b, clear_char);
-	buffer_inactive = &buffer_b;
+	buffer_active = &buffer_b;
+
+	buffers_loaded = true;
+
+	st_io_load_static_elements("STOCKTRADER - b");
+	st_io_swap_buffers ();
+	st_io_load_static_elements("STOCKTRADER - a");
 
 	st_io_clear ();
 
@@ -338,8 +364,6 @@ st_io_init (uint16_t _rows, uint16_t _columns)
 
 	// Initialise the invalid input message
 	invalid_message = malloc (100);
-
-	loaded = true;
 }
 
 void
@@ -356,19 +380,6 @@ st_io_terminate ()
 	st_buffer_destruct (buffer_b);
 
 	free (invalid_message);
-}
-
-void
-st_io_init_graph ()
-{
-	CHECK_LOADED
-
-	st_io_load_title ("STOCKTRADER");
-	st_io_load_graph_frame ();
-	st_io_load_info_day (0);
-	st_io_load_info_money (0);
-	st_io_load_info_company ("Unknown", 0.00, 0);
-	st_buffer_data_row_set (*buffer_active, info_offset + 5, '-');
 }
 
 void
@@ -402,6 +413,8 @@ st_io_draw ()
 		st_io_print_invalid_message ();
 	}
 	fflush (stdout);
+
+	st_io_swap_buffers ();
 }
 
 void
@@ -412,6 +425,45 @@ st_io_clear ()
 	#else
 	 system ("clear");
 	#endif
+}
+
+void
+st_io_process_input ()
+{
+	CHECK_LOADED
+
+	// Clear previous values
+	command = st_io_command_invalid;
+	input_value = 0.0;
+	st_io_set_invalid_message ("No command processed");
+
+	// Clear the input
+	fflush (stdin);
+
+	// Print prompt
+	// TODO: Could use the moving cursor up feature to have this be inside the buffer
+	printf ("> ");
+	st_io_process_command ();
+	st_io_process_value ();
+}
+
+st_io_command_t
+st_io_get_command ()
+{
+	return command;
+}
+
+double
+st_io_get_input_value ()
+{
+	return input_value;
+}
+
+void
+st_io_set_invalid_message (char *_message)
+{
+	command = st_io_command_invalid;
+	strncpy (invalid_message, _message, 99);
 }
 
 void
@@ -484,45 +536,6 @@ st_io_load_info_company (
 	st_io_load_info_string (2, "%s:", _name);
 	st_io_load_info_double (3, "   $%s per", _value);
 	st_io_load_info_uint (4, "   %s owned", _owned);
-}
-
-void
-st_io_process_input ()
-{
-	CHECK_LOADED
-
-	// Clear previous values
-	command = st_io_command_invalid;
-	input_value = 0.0;
-	st_io_set_invalid_message ("No command processed");
-
-	// Clear the input
-	fflush (stdin);
-
-	// Print prompt
-	// TODO: Could use the moving cursor up feature to have this be inside the buffer
-	printf ("> ");
-	st_io_process_command ();
-	st_io_process_value ();
-}
-
-st_io_command_t
-st_io_get_command ()
-{
-	return command;
-}
-
-double
-st_io_get_input_value ()
-{
-	return input_value;
-}
-
-void
-st_io_set_invalid_message (char *_message)
-{
-	command = st_io_command_invalid;
-	strncpy (invalid_message, _message, 99);
 }
 
 void
