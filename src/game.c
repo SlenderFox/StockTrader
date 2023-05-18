@@ -1,6 +1,3 @@
-#include <assert.h> // assert
-#include <stdlib.h> // malloc, free
-
 #include "io.h"
 #include "company.h"
 #include "game.h"
@@ -21,7 +18,7 @@ bool game_over = false;
 bool request_exit = false;
 
 st_company_t *companies[COMPANIES];
-uint8_t selected_company = 0;
+uint16_t selected_company = 0;
 uint32_t day = 0, target_day = 0;
 int64_t money = 1000;
 
@@ -64,8 +61,8 @@ st_game_over_screen ()
 void
 st_game_attempt_goto ()
 {
-	if (st_io_get_input_value () > YEAR
-		|| st_io_get_input_value () <= day
+	if ((uint32_t)YEAR > st_io_get_input_value ()
+		|| day >= st_io_get_input_value ()
 	)
 	{
 		st_io_set_invalid_message ("Invalid goto day");
@@ -73,6 +70,19 @@ st_game_attempt_goto ()
 	}
 
 	target_day = st_io_get_input_value ();
+}
+
+void
+st_game_attempt_select ()
+{
+	if (0U > st_io_get_input_value ()
+		|| (uint16_t)COMPANIES > st_io_get_input_value ()
+	)
+	{
+		return;
+	}
+
+	selected_company = st_io_get_input_value () - 1;
 }
 
 void
@@ -114,6 +124,7 @@ st_game_process_command ()
 		st_game_attempt_goto ();
 		break;
 	case st_io_command_select:
+		st_game_attempt_select ();
 		break;
 	case st_io_command_buy:
 		st_game_attempt_buy ();
@@ -133,6 +144,7 @@ st_game_process_command ()
 void
 st_game_update ()
 {
+	// Game end
 	if (day == YEAR)
 	{
 		target_day = 0;
@@ -141,6 +153,7 @@ st_game_update ()
 		return;
 	}
 
+	// Do no increment the day
 	if (st_io_get_command () != st_io_command_endday
 		&& st_io_get_command () != st_io_command_gotoday
 	)
@@ -148,6 +161,7 @@ st_game_update ()
 		return;
 	}
 
+	// Cancel goto
 	if (st_io_get_command () == st_io_command_gotoday
 		&& target_day <= day
 	)
@@ -181,7 +195,7 @@ st_game_run ()
 		st_io_load_info_money (money);
 		st_io_draw ();
 
-		if (target_day > 0)
+		if (target_day > day)
 		{
 			continue;
 		}
