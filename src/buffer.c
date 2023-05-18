@@ -80,7 +80,7 @@ st_buffer_data_set (
 	CHECK_BOUNDS
 
 	uint16_t pos = (_row * _buffer->m_columns) + _column;
-	_buffer->m_data [pos] = _val;
+	_buffer->m_data[pos] = _val;
 }
 
 void
@@ -139,5 +139,5 @@ st_buffer_data_get (
 	CHECK_BOUNDS
 
 	uint16_t pos = (_row * _buffer->m_columns) + _column;
-	return _buffer->m_data [pos];
+	return _buffer->m_data[pos];
 }
