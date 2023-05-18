@@ -1,6 +1,5 @@
 #include <assert.h> // assert
 #include <stdlib.h> // malloc, free
-#include <stdio.h> // snprintf
 
 #include "io.h"
 #include "company.h"
@@ -26,20 +25,23 @@ uint8_t selected_company = 0;
 uint32_t day = 0, target_day = 0;
 int64_t money = 1000;
 
+char *company_names[COMPANIES] = {
+	"Company Number 1",
+	"Company Number 2",
+	"Company Number 3",
+	"Company Number 4",
+	"Company Number 5"
+};
+
 void
 st_game_init ()
 {
 	st_io_init (ROWS, COLUMNS);
 
-	char *name = malloc (ST_COMPANY_NAME_MAX);
-
 	for (uint16_t i = 0; i < COMPANIES; ++i)
 	{
-		snprintf (name, ST_COMPANY_NAME_MAX, "Company Number %u", i + 1);
-		st_company_construct (&(companies[i]), name);
+		st_company_construct (&(companies[i]), company_names[i]);
 	}
-
-	free (name);
 }
 
 void
