@@ -61,52 +61,48 @@ st_game_over_screen ()
 void
 st_game_attempt_goto ()
 {
-	if ((uint32_t)YEAR > st_io_get_input_value ()
-		|| day >= st_io_get_input_value ()
-	)
+	uint32_t val = st_io_get_input_value ();
+	if (val > YEAR || day >= val)
 	{
 		st_io_set_invalid_message ("Invalid goto day");
 		return;
 	}
-
-	target_day = st_io_get_input_value ();
+	target_day = val;
 }
 
 void
 st_game_attempt_select ()
 {
-	if (0U > st_io_get_input_value ()
-		|| (uint16_t)COMPANIES > st_io_get_input_value ()
-	)
+	uint16_t val = st_io_get_input_value ();
+	if (val < 0U || val > COMPANIES)
 	{
 		return;
 	}
-
-	selected_company = st_io_get_input_value () - 1;
+	selected_company = val - 1;
 }
 
 void
 st_game_attempt_buy ()
 {
-	if (money < companies[selected_company]->value * st_io_get_input_value ())
+	uint32_t val = st_io_get_input_value ();
+	if (money < companies[selected_company]->value * val)
 	{
 		return;
 	}
-
-	money -= companies[selected_company]->value * st_io_get_input_value ();
-	companies[selected_company]->owned_stocks += st_io_get_input_value ();
+	money -= companies[selected_company]->value * val;
+	companies[selected_company]->owned_stocks += val;
 }
 
 void
 st_game_attempt_sell ()
 {
-	if (companies[selected_company]->owned_stocks < st_io_get_input_value ())
+	uint32_t val = st_io_get_input_value ();
+	if (companies[selected_company]->owned_stocks < val)
 	{
 		return;
 	}
-
-	money += companies[selected_company]->value * st_io_get_input_value ();
-	companies[selected_company]->owned_stocks -= st_io_get_input_value ();
+	money += companies[selected_company]->value * val;
+	companies[selected_company]->owned_stocks -= val;
 }
 
 void
@@ -153,7 +149,7 @@ st_game_update ()
 		return;
 	}
 
-	// Do no increment the day
+	// Do not increment the day
 	if (st_io_get_command () != st_io_command_endday
 		&& st_io_get_command () != st_io_command_gotoday
 	)
