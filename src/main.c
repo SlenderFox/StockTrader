@@ -1,21 +1,20 @@
+#include <stdbool.h> // bool, true, false
 #include <stdio.h> // printf
 
 #include "game.h"
 
-bool running = true;
+bool running = false;
 
 // TODO: Add new game functionality
 
 int
 main (int argc, char *args[])
 {
-	while (running)
+	do
 	{
-		if (st_game_run ())
-		{
-			running = false;
-		}
+		st_game_run ();
 	}
+	while (running);
 
 	printf ("Bye\n");
 	return 0;

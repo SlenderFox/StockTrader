@@ -1,3 +1,5 @@
+#include <stdbool.h> // bool, true, false
+
 #include "io.h"
 #include "company.h"
 #include "game.h"
@@ -15,7 +17,6 @@ enum {
 };
 
 bool game_over = false;
-bool request_exit = false;
 
 st_company_t *companies[COMPANIES];
 uint16_t selected_company = 0;
@@ -129,8 +130,6 @@ st_game_process_command ()
 		st_game_attempt_sell ();
 		break;
 	case st_io_command_exit:
-		// End game and ask to shutdown
-		request_exit = true;
 		game_over = true;
 		break;
 	default:
@@ -145,7 +144,6 @@ st_game_update ()
 	{
 		target_day = 0;
 		game_over = true;
-		request_exit = true; // TEMP
 		return;
 	}
 
@@ -175,7 +173,7 @@ st_game_update ()
 	}
 }
 
-bool
+void
 st_game_run ()
 {
 	st_game_init ();
@@ -202,6 +200,4 @@ st_game_run ()
 
 	st_game_over_screen ();
 	st_game_terminate ();
-
-	return request_exit;
 }

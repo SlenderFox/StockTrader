@@ -1,8 +1,5 @@
 #pragma once
-#include <stdbool.h> // bool, true, false
 
-/** Execute a single game
- * @return [bool] Should the program exit
- */
-bool
+/** Execute a single game */
+void
 st_game_run ();
